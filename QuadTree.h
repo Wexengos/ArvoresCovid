@@ -2,8 +2,12 @@
 #include <cmath> 
 using namespace std; 
 
+
+
+
 struct Ponto
 {   
+    //Mudar para Long ou float
     int latitude;
     int longitude;
 
@@ -24,7 +28,47 @@ struct Ponto
 struct No
 {
     Ponto position;
+    //Mudar para string
     int info;
-    
+   
+
+    No(Ponto pos_, int info_)
+    {   
+        position=pos_;
+        info = info_;
+    }
+
+    No()
+    {
+        info = 0;
+    }
+
+
 };
+
+
+
+class QuadTree
+{
+    private:
+        Ponto cimaEsq;
+        Ponto baixoDir;
+        No *n;
+        QuadTree *cimaEsqArv;
+        QuadTree *cimaDirArv;
+        QuadTree *baixoEsqArv;
+        QuadTree *baixoDirArv;
+
+    public:
+        
+        QuadTree();
+        void setQuadTree(Ponto cimaEsq,Ponto baixoDir);
+        void insere(No *);
+        No* procura(Ponto);
+        bool contemPonto(Ponto p);
+        
+
+};
+
+
 
