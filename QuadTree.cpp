@@ -10,19 +10,20 @@ struct No;
 
 QuadTree::QuadTree()
 {       
-       
-        this-> cimaEsq = Ponto(0,0);
+        
+        this->cimaEsq = Ponto(0,0);
         this->baixoDir = Ponto(0,0);
         this->cimaEsqArv=NULL;
         this->cimaDirArv=NULL;
         this->baixoEsqArv=NULL;
         this->baixoDirArv=NULL;
         this->n=NULL;
+
 }
 
 void QuadTree::setQuadTree(Ponto cimaEsq,Ponto baixoDir)
 {
-        this-> cimaEsq = cimaEsq;
+        this->cimaEsq = cimaEsq;
         this->baixoDir = baixoDir;
         this->cimaEsqArv=NULL;
         this->cimaDirArv=NULL;
@@ -58,7 +59,7 @@ void QuadTree::insere(No *no)
                 cimaEsqArv = new QuadTree();
                 cimaEsqArv->setQuadTree(Ponto(cimaEsq.latitude, cimaEsq.longitude), Ponto((cimaEsq.latitude + baixoDir.latitude) / 2, (cimaEsq.longitude + baixoDir.longitude) / 2));
             }
-            cout<<"Inserido o no1: "<<no->info<<endl;
+            
             cimaEsqArv->insere(no);
         }
         else
@@ -67,7 +68,7 @@ void QuadTree::insere(No *no)
                 baixoEsqArv = new QuadTree();
                 baixoEsqArv->setQuadTree(Ponto(cimaEsq.latitude, (cimaEsq.longitude + baixoDir.longitude) / 2), Ponto((cimaEsq.latitude + baixoDir.latitude) / 2, baixoDir.longitude));
             }
-            cout<<"Inserido o no2: "<<no->info<<endl;
+           
             baixoEsqArv->insere(no);
 
        
@@ -83,7 +84,7 @@ void QuadTree::insere(No *no)
                 cimaDirArv = new QuadTree();
                 cimaDirArv->setQuadTree(Ponto((cimaEsq.latitude + baixoDir.latitude)/2,cimaEsq.longitude),Ponto(baixoDir.latitude,(cimaEsq.longitude + baixoDir.longitude)/2));
             }
-              cout<<"Inserido o no3: "<<no->info<<endl;
+              
             cimaDirArv->insere(no);
         }
         else
@@ -92,7 +93,7 @@ void QuadTree::insere(No *no)
                 baixoDirArv = new QuadTree();
                 baixoDirArv->setQuadTree(Ponto((cimaEsq.latitude + baixoDir.latitude)/2,(cimaEsq.longitude + baixoDir.longitude)/2),Ponto(baixoDir.latitude, baixoDir.longitude));
             }
-              cout<<"Inserido o no4: "<<no->info<<endl;
+            
             baixoDirArv->insere(no);
         }
     }
@@ -144,3 +145,5 @@ void QuadTree::insere(No *no)
                 p.longitude >= cimaEsq.longitude && 
                 p.longitude <= baixoDir.longitude);
     }
+    
+    

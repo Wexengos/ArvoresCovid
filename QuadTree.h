@@ -8,10 +8,10 @@ using namespace std;
 struct Ponto
 {   
     //Mudar para Long ou float
-    int latitude;
-    int longitude;
+    float latitude;
+    float longitude;
 
-    Ponto(int latitude_,int longitude_)
+    Ponto(float latitude_,float longitude_)
     {
         latitude = latitude_;
         longitude = longitude_;
@@ -29,20 +29,23 @@ struct No
 {
     Ponto position;
     //Mudar para string
-    int info;
+    string nome;
+    string capital;
    
 
-    No(Ponto pos_, int info_)
+    No(Ponto pos_, string nom, string _capital)
     {   
         position=pos_;
-        info = info_;
+        nome = nom;
+        capital = _capital;
     }
 
     No()
     {
-        info = 0;
+        nome=nullptr;
+        capital = false;
     }
-
+    
 
 };
 
@@ -66,6 +69,7 @@ class QuadTree
         void insere(No *);
         No* procura(Ponto);
         bool contemPonto(Ponto p);
+        void imprimiTree(No *aux);
         
 
 };
