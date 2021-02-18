@@ -8,6 +8,7 @@
 #include <climits>
 #include <stdio.h>
 #include "QuadTree.h"
+#include "AVLTree.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -46,7 +47,7 @@ void primeiraLeitura(QuadTree *centro,int N)
 
         Ponto ponto(lat,longe);//criando ponto
         No no(ponto,nome,capital);//criando no
-        //cout<<"Latitude: "<<ponto.latitude<<"/"<<"Longitude: "<<ponto.longitude<<"/"<<"Nome da cidade: "<<nome<<endl;
+        cout<<"Latitude: "<<ponto.latitude<<"/"<<"Longitude: "<<ponto.longitude<<"/"<<"Nome da cidade: "<<nome<<endl;
          
         centro->insere(&no);// inserindo info da linha
 
@@ -68,10 +69,17 @@ int main()
     centro->setQuadTree(Ponto(-100,-100),Ponto(0,0));
 
 
-    primeiraLeitura(centro,5571);
-    
-    
-   
-    return 0;
-}
+    //primeiraLeitura(centro,5571);
 
+    AVLTree *robinho = new AVLTree();
+    robinho->insere(12); robinho->insere(51);
+    robinho->insere(54); robinho->insere(11);
+    robinho->insere(28); robinho->insere(99);
+
+    robinho->imprime();
+
+    cout << "a altura de robinho eh " << robinho->altura() << endl;
+
+    return 0;
+    
+}

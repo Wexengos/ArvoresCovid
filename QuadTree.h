@@ -2,9 +2,6 @@
 #include <cmath> 
 using namespace std; 
 
-
-
-
 struct Ponto
 {   
     //Mudar para Long ou float
