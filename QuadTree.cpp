@@ -1,149 +1,167 @@
 #include <iostream>
-#include <cmath>
+#include <fstream>
+#include <string>
+#include <cstdlib>
+#include <chrono>
+#include <sstream>
+#include <algorithm> 
+#include <climits>
 #include "QuadTree.h"
 
 using namespace std;
 
-struct Ponto;
-struct No;
-
-
 QuadTree::QuadTree()
-{       
-        
-        this->cimaEsq = Ponto(0,0);
-        this->baixoDir = Ponto(0,0);
-        this->cimaEsqArv=NULL;
-        this->cimaDirArv=NULL;
-        this->baixoEsqArv=NULL;
-        this->baixoDirArv=NULL;
-        this->n=NULL;
-
+{
+    raiz = NULL;
 }
 
-void QuadTree::setQuadTree(Ponto cimaEsq,Ponto baixoDir)
+QuadTree::~QuadTree()
 {
-        this->cimaEsq = cimaEsq;
-        this->baixoDir = baixoDir;
-        this->cimaEsqArv=NULL;
-        this->cimaDirArv=NULL;
-        this->baixoEsqArv=NULL;
-        this->baixoDirArv=NULL;
-        this->n=NULL;
+  
 }
 
-
-void QuadTree::insere(No *no)
+NoArvQuad* QuadTree::compara(NoArvQuad *r,NoArvQuad *p)
 {
+    
+    if(p->getLatitude()<r->getLatitude()){
 
-    if (no == NULL)
-        return;
+        if(p->getLongitude()<r->getLongitude())
+            return p->getSW();
+        else
+            return p->getNW();
+    }else{
 
-    if (!contemPonto(no->position))
-        return;
-
-    if (abs(cimaEsq.latitude - baixoDir.latitude) <= 1 && abs(cimaEsq.longitude - baixoDir.longitude) <= 1)
-    {
-        if (n == NULL)
-            n = no;
-        return;
+        if(p->getLongitude()<r->getLongitude())
+            return p->getSE();
+        else
+            return p->getNE();
     }
 
-    if ((cimaEsq.latitude + baixoDir.latitude) / 2 >= no->position.latitude)
-    {
-        //Arvore cimaEsq
+}
 
-        if ((cimaEsq.longitude + baixoDir.longitude) / 2 >= no->position.longitude)
-        {
-            if (cimaEsqArv == NULL){
-                cimaEsqArv = new QuadTree();
-                cimaEsqArv->setQuadTree(Ponto(cimaEsq.latitude, cimaEsq.longitude), Ponto((cimaEsq.latitude + baixoDir.latitude) / 2, (cimaEsq.longitude + baixoDir.longitude) / 2));
-            }
-            
-            cimaEsqArv->insere(no);
-        }
+NoArvQuad* QuadTree::quadrante(NoArvQuad *q,NoArvQuad *p)
+{
+    
+    if(p->getLatitude()<q->getLatitude()){
+
+        if(p->getLongitude()<q->getLongitude())
+            return q->getSW();
         else
-        {
-            if (baixoEsqArv == NULL){
-                baixoEsqArv = new QuadTree();
-                baixoEsqArv->setQuadTree(Ponto(cimaEsq.latitude, (cimaEsq.longitude + baixoDir.longitude) / 2), Ponto((cimaEsq.latitude + baixoDir.latitude) / 2, baixoDir.longitude));
-            }
-           
-            baixoEsqArv->insere(no);
+            return q->getNW();
+    }else{
 
+        if(p->getLongitude()<q->getLongitude())
+            return q->getSE();
+        else
+            return q->getNE();
+    }
+}
+
+void QuadTree::insere(NoArvQuad *r){
+
+    NoArvQuad *p = auxInsere(raiz,r);
+
+    if(raiz == NULL){
+        raiz = p;
+
+    }
+
+
+}
+
+NoArvQuad* QuadTree::auxInsere(NoArvQuad *r,NoArvQuad *p)
+{
+    if(r==NULL)
+    {   
+        
+        r=new NoArvQuad();
+        r->setLatitude(p->getLatitude());
+        r->setLongitude(p->getLongitude());
+        r->setNome(p->getNome());
+        r->setNE(NULL);
+        r->setNW(NULL);
+        r->setSE(NULL);
+        r->setSW(NULL);
+      
+    }else if(p->getLatitude()<r->getLatitude()){
+
+        if(p->getLongitude()<r->getLongitude())
+             r->setSW(auxInsere(r->getSW(),p));
+        else
+            r->setNW(auxInsere(r->getNW(),p));
+    }else{
+
+        if(p->getLongitude()<r->getLongitude())
+            r->setSE(auxInsere(r->getSE(),p));
+        else
+            r->setNE(auxInsere(r->getNE(),p));
+    }
+    return r;
+}
+
+void QuadTree::imprime()
+{   
+   
+    auxImprime(raiz);
+    
+    cout << endl;
+}
+
+void QuadTree::auxImprime(NoArvQuad *p)
+{   
+    
+
+    if(p!=NULL)
+    {   
+        
+        cout<<"Nome: "<<p->getNome()<<"/Lat: "<<p->getLatitude()<<"/Long: "<<p->getLongitude()<<endl;
+        auxImprime(p->getSW());
+        auxImprime(p->getNW());
+        auxImprime(p->getSE());
+        auxImprime(p->getNE());   
        
-        }
+    }
+}
 
+NoArvQuad* QuadTree::buscaValor(NoArvQuad *p)
+{
+    
+    NoArvQuad *q = raiz;
 
-       
+    if(raiz == NULL)
+    {
+        cout<<"Arvore vazia"<<endl;
+        return NULL;
+
     }else
     {
-        if((cimaEsq.longitude + baixoDir.longitude)/2 >= no->position.longitude)
+        while (q!=NULL)
         {
-            if(cimaDirArv == NULL){
-                cimaDirArv = new QuadTree();
-                cimaDirArv->setQuadTree(Ponto((cimaEsq.latitude + baixoDir.latitude)/2,cimaEsq.longitude),Ponto(baixoDir.latitude,(cimaEsq.longitude + baixoDir.longitude)/2));
-            }
-              
-            cimaDirArv->insere(no);
-        }
-        else
-        {
-            if(baixoDirArv == NULL){
-                baixoDirArv = new QuadTree();
-                baixoDirArv->setQuadTree(Ponto((cimaEsq.latitude + baixoDir.latitude)/2,(cimaEsq.longitude + baixoDir.longitude)/2),Ponto(baixoDir.latitude, baixoDir.longitude));
-            }
+
             
-            baixoDirArv->insere(no);
-        }
-    }
-  
+            if((p->getLatitude() == q->getLatitude())&&(p->getLongitude()==q->getLongitude()))
+            {
+                cout<<"Achado"<<endl;
+                cout<<"Nome Cidade: "<<q->getNome()<<"/Lat: "<<q->getLatitude()<<"/Longe: "<<q->getLongitude()<<endl;
+                return q;
+            }else if(q->getLatitude()<p->getLatitude()){
 
-    }
-    No* QuadTree::procura(Ponto p)
-    {
-        if(!contemPonto(p))
-            return NULL;
-        
-        if(n!=NULL)
-            return n;
-        
-        if((cimaEsq.latitude + baixoDir.latitude)/2 >= p.latitude)
-        {   
-            if((cimaEsq.longitude + baixoDir.longitude)/2 >= p.longitude)
-            {
-                if(cimaEsqArv == NULL)
-                    return NULL;
-                return cimaEsqArv->procura(p);
-             }
-            else
-            {
-                if(baixoEsqArv == NULL)
-                    return NULL;
-                return baixoEsqArv->procura(p);
+                    if(q->getLongitude()<p->getLongitude())
+                        q=q->getSW();
+                    else
+                        q=q->getNW();
+            }else{
+
+                if(q->getLongitude()>p->getLongitude())
+                    q=q->getSE();
+                else
+                    q=q->getNE();
             }
-        }else
-        {
-            if((cimaEsq.longitude + baixoDir.longitude)/2 >= p.longitude)
-            {
-                if(cimaDirArv == NULL)
-                    return NULL;
-                return cimaDirArv->procura(p);
-            }else
-            {
-                if(baixoDirArv == NULL)
-                    return NULL;
-                return baixoDirArv->procura(p);
-            }
+        
+            cout<<"N tem"<<endl; 
         }
+        
+        return NULL; 
     }
 
-    bool QuadTree::contemPonto(Ponto p)
-    {
-        return (p.latitude >= cimaEsq.latitude && 
-                p.latitude <= baixoDir.latitude &&
-                p.longitude >= cimaEsq.longitude && 
-                p.longitude <= baixoDir.longitude);
-    }
-    
-    
+}

@@ -10,12 +10,14 @@
 #include "QuadTree.h"
 #include "AVLTree.h"
 
+
+
 using namespace std;
 using namespace std::chrono;
 //g++ -o teste -O3 *.cpp 
 //./teste
 
-void primeiraLeitura(QuadTree *centro,int N)
+void primeiraLeitura(QuadTree *arv,int N)
 {
     ifstream arq("brazil_cities_coordinates.csv");
 
@@ -23,9 +25,9 @@ void primeiraLeitura(QuadTree *centro,int N)
         cout<<"ERRO LEITURA DE ARQUIVO!"<<endl;
         return;
     }
-    string linha,capital,nome,stringT,stringT2,stringT3,cidadeCodigo;
+    string linha,capital,nom,stringT,stringT2,stringT3,cidadeCodigo;
     int estadoCodigo;
-    float lat,longe;
+    double lat,longe;
     int contaLinha = 0;
 
    //Pula a primeira linha; 
@@ -37,19 +39,22 @@ void primeiraLeitura(QuadTree *centro,int N)
         getline(ss,stringT,',');
         istringstream(stringParaInt);
         getline(ss,cidadeCodigo,',');
-        getline(ss,nome,',');
+        getline(ss,nom,',');
         getline(ss,stringT2,',');
         istringstream(stringT2)>>lat;
         getline(ss,stringT3,',');
         istringstream(stringT3)>>longe;
         getline(ss,capital,',');
         
+        NoArvQuad *notest = new NoArvQuad();
+        notest->setLatitude(lat);
+        notest->setLongitude(longe);
+        notest->setNome(nom);
 
-        Ponto ponto(lat,longe);//criando ponto
-        No no(ponto,nome,capital);//criando no
-        cout<<"Latitude: "<<ponto.latitude<<"/"<<"Longitude: "<<ponto.longitude<<"/"<<"Nome da cidade: "<<nome<<endl;
+        arv->insere(notest);
+        //cout<<"Latitude: "<<lat<<"/"<<"Longitude: "<<longe<<"/"<<"Nome da cidade: "<<nom<<endl;
          
-        centro->insere(&no);// inserindo info da linha
+        
 
         if(contaLinha>N)
             break;
@@ -62,23 +67,51 @@ void primeiraLeitura(QuadTree *centro,int N)
 
 }
 
-int main()
+
+int main(void)
 {
     
-    QuadTree *centro = new QuadTree(); 
-    centro->setQuadTree(Ponto(-100,-100),Ponto(0,0));
+    QuadTree *arv = new QuadTree();
 
+    primeiraLeitura(arv,5571);
+    
+    /*
+    NoArvQuad *notest = new NoArvQuad();
+    notest->setLatitude(-23.1256);
+    notest->setLongitude(-53.3678);
+    notest->setNome("LULU");
 
-    //primeiraLeitura(centro,5571);
+    NoArvQuad *notest1 = new NoArvQuad();
+    notest1->setLatitude(-12.74545);
+    notest1->setLongitude(-6.85256);
+    notest1->setNome("LULU2");
 
-    AVLTree *robinho = new AVLTree();
-    robinho->insere(12); robinho->insere(51);
-    robinho->insere(54); robinho->insere(11);
-    robinho->insere(28); robinho->insere(99);
+    
+    NoArvQuad *notest2 = new NoArvQuad();
+    notest2->setLatitude(-89.7874);
+    notest2->setLongitude(-65.5532);
+    notest2->setNome("LULU3");
 
-    robinho->imprime();
+    
+    
 
-    cout << "a altura de robinho eh " << robinho->altura() << endl;
+    arv->insere(notest);
+    arv->insere(notest1);
+    arv->insere(notest2);
+
+    */
+   // arv->buscaValor(procura);
+    
+
+    NoArvQuad *procura = new NoArvQuad();
+    procura->setLatitude(-27.2662);
+    procura->setLongitude(-49.708);
+
+   
+    
+    //arv->imprime();
+    arv->buscaValor(procura);
+    cout<<"Fim"<<endl;
 
     return 0;
     
