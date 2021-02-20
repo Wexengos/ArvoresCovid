@@ -13,19 +13,15 @@ public:
     AVLTree();
     ~AVLTree();
     void imprime();
+    int max(int, int);
+    int getBalanceada(NoArv*);
     void insere(int x);
-    // Questao 1  -------------------------------------------------------------
-    int numNosAltura(int a);
-    // Questao 2  -------------------------------------------------------------
-    int caminho(int ch);
-    // Questao 3  -------------------------------------------------------------
-    float mediaIntervalo(int a, int b);
-
     int impares();
     int soma();
     int maiorValor();
     int menorValor();
     int altura();
+    int alturaNo(NoArv*);
     int numNos();
     bool eCheia();
     float media();
@@ -41,6 +37,10 @@ public:
     NoArv* buscaValor(int val);
     int classificaNo(int val);
     void remove(int x);
+    NoArv* rotacaoSimplesEsquerda(NoArv*);
+    NoArv* rotacaoSimplesDireita(NoArv*);
+    NoArv* rotacaoDuplaEsquerda(NoArv*);
+    NoArv* rotacaoDuplaDireita(NoArv*);
 
 private:
     NoArv *raiz;
@@ -48,11 +48,11 @@ private:
     // funcoes auxiliares
     NoArv* auxInsere(NoArv *p, int x);
     void auxImprime(NoArv *p);
+    int auxAltura(NoArv* p);
     void auxImpares(NoArv *p, int *impa);
     void auxSoma(NoArv *p, int *soma);
     void auxMaiorValor(NoArv *p, int *maior);
     void auxMenorValor(NoArv *p, int *menor);
-    int auxAltura(NoArv *p);
     void auxNumNos(NoArv *p, int *nos);
     void auxMedia(NoArv *p, int *cont, float *media);
     void auxMaiores(NoArv *p, int val, int *maior);
