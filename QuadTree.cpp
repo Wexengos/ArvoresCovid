@@ -69,34 +69,34 @@ void QuadTree::insere(NoArvQuad *r){
 
 }
 
-NoArvQuad* QuadTree::auxInsere(NoArvQuad *r,NoArvQuad *p)
+NoArvQuad* QuadTree::auxInsere(NoArvQuad *p,NoArvQuad *r)
 {
-    if(r==NULL)
+    if(p==NULL)
     {   
         
-        r=new NoArvQuad();
-        r->setLatitude(p->getLatitude());
-        r->setLongitude(p->getLongitude());
-        r->setNome(p->getNome());
-        r->setNE(NULL);
-        r->setNW(NULL);
-        r->setSE(NULL);
-        r->setSW(NULL);
+        p=new NoArvQuad();
+        p->setLatitude(r->getLatitude());
+        p->setLongitude(r->getLongitude());
+        p->setNome(r->getNome());
+        p->setNE(NULL);
+        p->setNW(NULL);
+        p->setSE(NULL);
+        p->setSW(NULL);
       
     }else if(p->getLatitude()<r->getLatitude()){
 
         if(p->getLongitude()<r->getLongitude())
-             r->setSW(auxInsere(r->getSW(),p));
+             p->setSW(auxInsere(p->getSW(),r));
         else
-            r->setNW(auxInsere(r->getNW(),p));
+            p->setNW(auxInsere(p->getNW(),r));
     }else{
 
         if(p->getLongitude()<r->getLongitude())
-            r->setSE(auxInsere(r->getSE(),p));
+            p->setSE(auxInsere(p->getSE(),r));
         else
-            r->setNE(auxInsere(r->getNE(),p));
+            p->setNE(auxInsere(p->getNE(),r));
     }
-    return r;
+    return p;
 }
 
 void QuadTree::imprime()
@@ -123,11 +123,38 @@ void QuadTree::auxImprime(NoArvQuad *p)
     }
 }
 
+void QuadTree::imprimeCapital()
+{   
+   
+    auxImprimeCapital(raiz);
+    
+    cout << endl;
+}
+
+void QuadTree::auxImprimeCapital(NoArvQuad *p)
+{   
+    
+
+    if(p!=NULL)
+    {   
+        
+        if(p->getCapital()){
+            cout<<"Nome Capital: "<<p->getNome()<<endl;
+            
+
+        }
+        auxImprimeCapital(p->getSW());
+        auxImprimeCapital(p->getNW());
+        auxImprimeCapital(p->getSE());
+        auxImprimeCapital(p->getNE());   
+       
+    }
+}
+
 NoArvQuad* QuadTree::buscaValor(NoArvQuad *p)
 {
     
     NoArvQuad *q = raiz;
-
     if(raiz == NULL)
     {
         cout<<"Arvore vazia"<<endl;
@@ -139,7 +166,7 @@ NoArvQuad* QuadTree::buscaValor(NoArvQuad *p)
         {
 
             
-            if((p->getLatitude() == q->getLatitude())&&(p->getLongitude()==q->getLongitude()))
+            if((p->getLatitude() == q->getLatitude() )&& (p->getLongitude()==q->getLongitude()))
             {
                 cout<<"Achado"<<endl;
                 cout<<"Nome Cidade: "<<q->getNome()<<"/Lat: "<<q->getLatitude()<<"/Longe: "<<q->getLongitude()<<endl;
@@ -152,7 +179,7 @@ NoArvQuad* QuadTree::buscaValor(NoArvQuad *p)
                         q=q->getNW();
             }else{
 
-                if(q->getLongitude()>p->getLongitude())
+                if(q->getLongitude()<p->getLongitude())
                     q=q->getSE();
                 else
                     q=q->getNE();

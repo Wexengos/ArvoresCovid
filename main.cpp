@@ -15,7 +15,20 @@
 using namespace std;
 using namespace std::chrono;
 //g++ -o teste -O3 *.cpp 
-//./teste
+//
+
+bool verificaCapital(string capital)
+{
+   
+    string verifica = "TRUE";
+    int comparaString= verifica.compare(capital);
+
+    if(comparaString == 0)
+    {
+        return true;
+    }
+    return false;
+}
 
 void primeiraLeitura(QuadTree *arv,int N)
 {
@@ -46,10 +59,21 @@ void primeiraLeitura(QuadTree *arv,int N)
         istringstream(stringT3)>>longe;
         getline(ss,capital,',');
         
+        
+        
         NoArvQuad *notest = new NoArvQuad();
         notest->setLatitude(lat);
         notest->setLongitude(longe);
         notest->setNome(nom);
+        
+
+        if(verificaCapital(capital))
+        {
+            notest->setCapital(true);
+
+        }else{
+            notest->setCapital(false);
+        }
 
         arv->insere(notest);
         //cout<<"Latitude: "<<lat<<"/"<<"Longitude: "<<longe<<"/"<<"Nome da cidade: "<<nom<<endl;
@@ -68,49 +92,23 @@ void primeiraLeitura(QuadTree *arv,int N)
 }
 
 
-int main(void)
-{
+int main(int argc, char *argv[])
+{   
     
     QuadTree *arv = new QuadTree();
 
     primeiraLeitura(arv,5571);
-    
-    /*
-    NoArvQuad *notest = new NoArvQuad();
-    notest->setLatitude(-23.1256);
-    notest->setLongitude(-53.3678);
-    notest->setNome("LULU");
-
-    NoArvQuad *notest1 = new NoArvQuad();
-    notest1->setLatitude(-12.74545);
-    notest1->setLongitude(-6.85256);
-    notest1->setNome("LULU2");
-
-    
-    NoArvQuad *notest2 = new NoArvQuad();
-    notest2->setLatitude(-89.7874);
-    notest2->setLongitude(-65.5532);
-    notest2->setNome("LULU3");
-
-    
-    
-
-    arv->insere(notest);
-    arv->insere(notest1);
-    arv->insere(notest2);
-
-    */
-   // arv->buscaValor(procura);
-    
 
     NoArvQuad *procura = new NoArvQuad();
-    procura->setLatitude(-27.2662);
-    procura->setLongitude(-49.708);
+    procura->setLatitude(-7.74149);
+    procura->setLongitude(-35.2193);
 
    
     
     //arv->imprime();
     arv->buscaValor(procura);
+    //arv->imprimeCapital();
+
     cout<<"Fim"<<endl;
 
     return 0;

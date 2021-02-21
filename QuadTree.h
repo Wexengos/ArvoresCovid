@@ -21,6 +21,8 @@ class QuadTree
         NoArvQuad* quadrante(NoArvQuad *r,NoArvQuad *p);
         NoArvQuad* buscaValor(NoArvQuad *r);
         void imprime();
+        void imprimeCapital();
+        void auxImprimeCapital(NoArvQuad *p);
         
         
 
