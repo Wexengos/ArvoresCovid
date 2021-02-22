@@ -9,6 +9,9 @@
 #include <stdio.h>
 #include "QuadTree.h"
 #include "AVLTree.h"
+#include "Registro.h"
+#include "RegistroCoordinates.h"
+#define TAMANHOMAX 1431490
 
 
 
@@ -30,74 +33,24 @@ bool verificaCapital(string capital)
     return false;
 }
 
-void primeiraLeitura(QuadTree *arv,int N)
-{
-    ifstream arq("brazil_cities_coordinates.csv");
+//Funções para teste das Estruturas para liberar a Main
+void arvQuadTree(RegistroCoordinates *r, int N){
 
-    if(!arq.is_open()){
-        cout<<"ERRO LEITURA DE ARQUIVO!"<<endl;
-        return;
-    }
-    string linha,capital,nom,stringT,stringT2,stringT3,cidadeCodigo;
-    int estadoCodigo;
-    double lat,longe;
-    int contaLinha = 0;
-
-   //Pula a primeira linha; 
-    getline(arq,linha);
-
-    while (getline(arq,linha))
+     QuadTree *arv = new QuadTree();
+     int cont=0;
+    
+    //Isere os registros na ARVQUAD
+    for(int i=1;i<N;i++)
     {
-        stringstream ss(linha);
-        getline(ss,stringT,',');
-        istringstream(stringParaInt);
-        getline(ss,cidadeCodigo,',');
-        getline(ss,nom,',');
-        getline(ss,stringT2,',');
-        istringstream(stringT2)>>lat;
-        getline(ss,stringT3,',');
-        istringstream(stringT3)>>longe;
-        getline(ss,capital,',');
-        
-        
-        
-        NoArvQuad *notest = new NoArvQuad();
-        notest->setLatitude(lat);
-        notest->setLongitude(longe);
-        notest->setNome(nom);
-        
-
-        if(verificaCapital(capital))
-        {
-            notest->setCapital(true);
-
-        }else{
-            notest->setCapital(false);
-        }
-
-        arv->insere(notest);
-        //cout<<"Latitude: "<<lat<<"/"<<"Longitude: "<<longe<<"/"<<"Nome da cidade: "<<nom<<endl;
-         
-        
-
-        if(contaLinha>N)
-            break;
-        contaLinha++;
-
+        NoArvQuad *no = new NoArvQuad();
+        no->setLatitude(r[i].getLatitude());
+        no->setLongitude(r[i].getLongitude());
+        no->setNome(r[i].getcidade_nome());
+        arv->insere(no);
+        cont++;
     }
-    cout<<"Inserido->"<<contaLinha<<" na QuadTree"<<endl;
-    arq.close();
-    
 
-}
-
-
-int main(int argc, char *argv[])
-{   
-    
-    QuadTree *arv = new QuadTree();
-
-    primeiraLeitura(arv,5571);
+    cout<<"Cont: "<<cont<<endl;
 
     NoArvQuad *procura = new NoArvQuad();
     procura->setLatitude(-21.0276);
@@ -110,14 +63,18 @@ int main(int argc, char *argv[])
 
     cout<<"Fim"<<endl; 
 
-    //AVLTree *piloto = new AVLTree();
+}
 
-    /*TESTE ESQUERDA SIMPLES
+void avlTree(){
+
+    AVLTree *piloto = new AVLTree();
+
+    //TESTE ESQUERDA SIMPLES
 
     piloto->insere(10); piloto->insere(8);
     piloto->insere(16); piloto->insere(13);
     piloto->insere(19); piloto->insere(22);
-    */
+    
 
     /*TESTE ESQUERDA DUPLA 
 
@@ -127,6 +84,25 @@ int main(int argc, char *argv[])
     
     piloto->imprime(); */
 
+}
+
+int main(int argc, char *argv[])
+{   
+    /*
+    int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000, TAMANHOMAX};
+    Registro *registros = new Registro[tamanhoN[5]];
+
+    registros->leArquivo(registros,tamanhoN[0]);
+    registros->exibeRegistros(registros,tamanhoN[0]); 
+    */
+
+    int N = 5571;
+    RegistroCoordinates *registrosCoordinate = new RegistroCoordinates[N];
+    registrosCoordinate->leArquivoCoordi(registrosCoordinate,N);
+    arvQuadTree(registrosCoordinate,N);
+    
+
+   
     return 0;
     
 }
