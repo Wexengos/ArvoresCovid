@@ -15,7 +15,7 @@
 using namespace std;
 using namespace std::chrono;
 //g++ -o teste -O3 *.cpp 
-//
+//.teste
 
 bool verificaCapital(string capital)
 {
