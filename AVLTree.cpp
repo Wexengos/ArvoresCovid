@@ -58,6 +58,7 @@ NoArv* AVLTree::rotacaoSimplesEsquerda(NoArv *p)
     p->setDir(q->getEsq());
     q->setEsq(p);
 
+    raiz = q;
     return q;
 }
 
@@ -67,6 +68,7 @@ NoArv* AVLTree::rotacaoSimplesDireita(NoArv *p)
     p->setEsq(q->getDir());
     q->setDir(p);
 
+    raiz = q;
     return q;
 }
 
@@ -81,6 +83,7 @@ NoArv* AVLTree::rotacaoDuplaEsquerda(NoArv *p)
     r->setEsq(p);
     r->setDir(q);
 
+    raiz = r;
     return r;
 }
 
@@ -95,6 +98,7 @@ NoArv* AVLTree::rotacaoDuplaDireita(NoArv *p)
     r->setDir(p);
     r->setEsq(q);
 
+    raiz = r;
     return r;
 }
 
@@ -122,8 +126,6 @@ NoArv* AVLTree::auxInsere(NoArv *p, int x)
     else
         return p;
 
-    /* Atualiza a altura desse no */
-
     /* checa se o No esta balanceado*/
 
     int equilibrio = getBalanceada(p); 
@@ -136,14 +138,15 @@ NoArv* AVLTree::auxInsere(NoArv *p, int x)
     // Rotacao simples a esquerda:
     
     if((getBalanceada(p) == 2) && (  getBalanceada(p->getDir()) == 1  || 
-                                     getBalanceada(p->getDir()) == 0     ))
-
+                                     getBalanceada(p->getDir()) == 0  ))
+    {
+        cout << "achouuuu!" << endl;
         return rotacaoSimplesEsquerda(p);
-
+    }
     // Rotacao simples a direita:
 
     if((getBalanceada(p) ==-2) && (  getBalanceada(p->getEsq()) == 1  ||
-                                     getBalanceada(p->getEsq()) == 0     ))
+                                     getBalanceada(p->getEsq()) == 0  ))
 
         return rotacaoSimplesDireita(p);
 

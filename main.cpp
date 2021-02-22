@@ -100,16 +100,32 @@ int main(int argc, char *argv[])
     primeiraLeitura(arv,5571);
 
     NoArvQuad *procura = new NoArvQuad();
-    procura->setLatitude(-7.74149);
-    procura->setLongitude(-35.2193);
-
+    procura->setLatitude(-21.0276);
+    procura->setLongitude(-44.3204);
    
     
     //arv->imprime();
     arv->buscaValor(procura);
     //arv->imprimeCapital();
 
-    cout<<"Fim"<<endl;
+    cout<<"Fim"<<endl; 
+
+    //AVLTree *piloto = new AVLTree();
+
+    /*TESTE ESQUERDA SIMPLES
+
+    piloto->insere(10); piloto->insere(8);
+    piloto->insere(16); piloto->insere(13);
+    piloto->insere(19); piloto->insere(22);
+    */
+
+    /*TESTE ESQUERDA DUPLA 
+
+    piloto->insere(10); piloto->insere(8);
+    piloto->insere(16); piloto->insere(14);
+    piloto->insere(12); piloto->insere(22);
+    
+    piloto->imprime(); */
 
     return 0;
     
