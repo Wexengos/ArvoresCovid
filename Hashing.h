@@ -8,7 +8,7 @@ using namespace std;
 class Hashing
 {
 private:
-    int *vet;
+    Registro *tabelaRegistros;
     int tam;
     int chavesArmazenadas;
 
@@ -16,8 +16,8 @@ private:
 public:
     Hashing(int tam);
     ~Hashing();
-    int busca(int val);
-    void insere(int val);
+    int hash(int val);
+    void insere(int codigo, Registro r);
     void imprime();
     int getChavesArmazenadas();
 

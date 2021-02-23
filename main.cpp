@@ -11,6 +11,8 @@
 #include "AVLTree.h"
 #include "Registro.h"
 #include "RegistroCoordinates.h"
+#include "Hashing.h"
+#include "ArvB.h"
 #define TAMANHOMAX 1431490
 
 
@@ -32,7 +34,7 @@ bool verificaCapital(string capital)
     }
     return false;
 }
-
+/*
 //Funções para teste das Estruturas para liberar a Main
 void arvQuadTree(RegistroCoordinates *r, int N){
 
@@ -82,27 +84,79 @@ void avlTree(){
     piloto->insere(16); piloto->insere(14);
     piloto->insere(12); piloto->insere(22);
     
-    piloto->imprime(); */
+    piloto->imprime(); 
 
 }
+
+void testeHash(Registro *r, int N)
+{
+    Hashing *hashteste = new Hashing(N);
+
+
+    for(int i=0;i<N;i++)
+    {   
+        hashteste->insere(r[i].getCodigoCidade(),r[i]);
+    
+    }
+
+    cout<<"Num chaves: "<<hashteste->getChavesArmazenadas()<<endl;
+    
+}
+*/
 
 int main(int argc, char *argv[])
 {   
     /*
     int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000, TAMANHOMAX};
     Registro *registros = new Registro[tamanhoN[5]];
-
     registros->leArquivo(registros,tamanhoN[0]);
+    //registros->transformaCasosAcumuladosEmCasosDiarios();
+    /*
     registros->exibeRegistros(registros,tamanhoN[0]); 
-    */
-
+    
+   
+    
     int N = 5571;
     RegistroCoordinates *registrosCoordinate = new RegistroCoordinates[N];
     registrosCoordinate->leArquivoCoordi(registrosCoordinate,N);
     arvQuadTree(registrosCoordinate,N);
     
+    testeHash(registros,tamanhoN[0]);
+    */
 
+   ArvB *teste = new ArvB();
    
+   teste->insereArvB(8);
+   teste->insereArvB(9);
+   teste->insereArvB(10);
+   teste->insereArvB(11);
+   teste->insereArvB(12);
+   teste->insereArvB(15);
+   teste->insereArvB(16);
+   teste->insereArvB(17);
+   teste->insereArvB(18);
+   teste->insereArvB(10);
+   teste->insereArvB(20);
+   teste->insereArvB(23);
+    
+   cout<<"Fim";
+
+    teste->imprimeArv();
+   int k = 10;
+  (teste->busca(k) != NULL) ? cout << endl
+                 << k << " is found"
+              : cout << endl
+                 << k << " is not Found";
+
+  k = 2;
+  (teste->busca(k) != NULL) ? cout << endl
+                 << k << " is found"
+              : cout << endl
+                 << k << " is not Found\n";
+
+   cout<<"Fim";
+
+
     return 0;
     
 }

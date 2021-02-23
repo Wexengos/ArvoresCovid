@@ -2,44 +2,50 @@
 #include <cstdlib>
 #include <stdio.h>
 #include <vector>
-
+#include "Registro.h"
 #include "Hashing.h"
 
 using namespace std;
 
 Hashing::Hashing(int n)
 {
-    tam = n;
-    vet = new int[tam];
+    tam = n + (n/2);
+    tabelaRegistros = new Registro[tam];
     chavesArmazenadas = 0;
-    for(int i = 0; i < tam; i++)
-    {
-        vet[i] = -1;
-    }
+
+    
 }
 Hashing::~Hashing()
 {
-    //delete vet;
+    //delete tabelaRegistros;
 }
-int Hashing::busca(int val)
-{
+int Hashing::hash(int val)
+{   
+    
     int f1 = val%17;
     int f2 = 1+(val%13);
     int i = 0;
     int h = f1 +(i*f2);
+    
+
+    //Tratamento de colisão sodagem dupla
     while(h < tam)
     {
-        if(vet[h] == -1)
-        {
+        if(tabelaRegistros[h].getCasos() == -1)
+        {   
+            
             chavesArmazenadas ++;
             return h;
         }
+        cout<<"ColidiuAntes: "<<h<<endl;
         i++;
         h = f1 +(i*f2);
+         cout<<"ColidiuDepois: "<<h<<endl;
+
     }
     for(int i = 0; i < tam; i++)
     {
-        if(vet[i] == -1)
+        if(tabelaRegistros[i].getCasos() == -1)
         {
             chavesArmazenadas ++;
             return h;
@@ -48,16 +54,17 @@ int Hashing::busca(int val)
     return -1;
 
 }
-void Hashing::insere(int val)
+void Hashing::insere(int codigo, Registro r)
 {
-    int h = busca(val);
+    cout<<"Cod: "<<codigo;
+    int h = hash(codigo);
     if(h == -1)
     {
-        cout<<"nao foi possivel inserir o elemento "<<val<<endl;
+        cout<<"nao foi possivel inserir o elemento "<<endl;
     }
     else
     {
-        vet[h] = val;
+        tabelaRegistros[h] = r;
     }
 
 }
@@ -65,9 +72,9 @@ void Hashing::imprime()
 {
     for(int i =0; i <tam; i++)
     {
-        if(vet[i] != -1)
+        if(tabelaRegistros[i].getCasos()!=-1)
         {
-            cout<<vet[i]<<" ";
+            cout<<tabelaRegistros[i].getCidade()<<" ";
         }
 
     }
