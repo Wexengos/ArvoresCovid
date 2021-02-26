@@ -110,13 +110,13 @@ void testeHash(Registro *r, int N)
 
 int main(int argc, char *argv[])
 {   
-    
+    /*
     int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000, TAMANHOMAX};
     Registro *registros = new Registro[tamanhoN[5]];
     registros->leArquivo(registros,tamanhoN[0]);
     testeHash(registros,tamanhoN[0]);
     //registros->transformaCasosAcumuladosEmCasosDiarios();
-    /*
+    
     registros->exibeRegistros(registros,tamanhoN[0]); 
     
    
@@ -128,39 +128,31 @@ int main(int argc, char *argv[])
     
     testeHash(registros,tamanhoN[0]);
     */
-   /*
-   ArvB *teste = new ArvB(3);
+   
+   ArvB *teste = new ArvB(4);
    int i = 0;
-   teste->insereArvB(10);
-   teste->insereArvB(20);
-   teste->insereArvB(5);
-   teste->insereArvB(6);
-   teste->insereArvB(12);
-   teste->insereArvB(30);
-   teste->insereArvB(7);
-   teste->insereArvB(17);
-   teste->insereArvB(18);
-  
-   teste->insereArvB(23);
+   int id;
+
+    srand(time(NULL));
+    for(int i=0;i<10;i++)    
+    {   
+        id = rand()%1000;//hashteste->insere(r[i].getCodigoCidade(),r[i]);
+        cout<<"Qual vai inserir: "<<id<<endl;
+        teste->insereArvB(id);
+    }
    cout<<"Fim";
 
     teste->imprimeArv();
     cout<<"Fim";
-    
-   int k = 10;
-     if(!teste->busca(k))
-  {
-      cout<<"N tem"<<endl;
-  }
-
-  k = 12;
+   
+  int k = 23;
   if(!teste->busca(k))
   {
       cout<<"N tem"<<endl;
   }
 
    cout<<"Fim";
-    */
+    
     
     return 0;
     

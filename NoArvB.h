@@ -10,7 +10,7 @@ private:
     
     int *chaves;
     NoArvB **filhos;
-    int n=0;
+    int n;
     bool folha;
     int tam;
    
@@ -20,6 +20,10 @@ public:
     void insertFilho(int k);
     void split(int i,NoArvB *p);
     void imprime();
+    int getN(){return n;};
+    int getTam(){return tam;};
+    bool getFolha(){return folha;};
+    void setN(int i){n+=i;};
     NoArvB* busca_no_No(int k); 
     ~NoArvB();
 
