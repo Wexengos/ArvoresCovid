@@ -9,8 +9,9 @@ class ArvB
 {
 private:
     NoArvB *raiz;
+    int tamanhodoNo;
 public:
-    ArvB();
+    ArvB(int tam);
     ~ArvB();
     //NoArvB* buscaArvB(int chave, NoArvB *p);
     void insereArvB(int chave);

@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <math.h>
 #include "NoArv.h"
+#include "Hashing.h"
 
 using namespace std;
 
@@ -15,7 +16,7 @@ public:
     void imprime();
     int max(int, int);
     int getBalanceada(NoArv*);
-    void insere(int x);
+    void insere(int x, Hashing *tabela);
     int impares();
     int soma();
     int maiorValor();
@@ -46,7 +47,7 @@ private:
     NoArv *raiz;
 
     // funcoes auxiliares
-    NoArv* auxInsere(NoArv *p, int x);
+    NoArv* auxInsere(NoArv *p, int x,Hashing *tabela);
     void auxImprime(NoArv *p);
     int auxAltura(NoArv* p);
     void auxImpares(NoArv *p, int *impa);

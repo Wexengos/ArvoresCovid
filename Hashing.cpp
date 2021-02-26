@@ -2,7 +2,6 @@
 #include <cstdlib>
 #include <stdio.h>
 #include <vector>
-#include "Registro.h"
 #include "Hashing.h"
 
 using namespace std;
@@ -37,10 +36,10 @@ int Hashing::hash(int val)
             chavesArmazenadas ++;
             return h;
         }
-        cout<<"ColidiuAntes: "<<h<<endl;
+      
         i++;
         h = f1 +(i*f2);
-         cout<<"ColidiuDepois: "<<h<<endl;
+        
 
     }
     for(int i = 0; i < tam; i++)
@@ -54,10 +53,11 @@ int Hashing::hash(int val)
     return -1;
 
 }
-void Hashing::insere(int codigo, Registro r)
+int Hashing::insere(int codigo, Registro r)
 {
-    cout<<"Cod: "<<codigo;
+    
     int h = hash(codigo);
+   
     if(h == -1)
     {
         cout<<"nao foi possivel inserir o elemento "<<endl;
@@ -66,7 +66,7 @@ void Hashing::insere(int codigo, Registro r)
     {
         tabelaRegistros[h] = r;
     }
-
+    return h;
 }
 void Hashing::imprime()
 {
@@ -79,7 +79,23 @@ void Hashing::imprime()
 
     }
 }
-int Hashing::getChavesArmazenadas()
+int Hashing::getCodigo(int i)
 {
-    return chavesArmazenadas;
+    return tabelaRegistros[i].getCodigoCidade();
+}
+int Hashing::getData(int i)
+{   
+    string str1 =tabelaRegistros[i].getDataCompleta();
+    string str2;
+
+   for(int contador = 0; contador <str1.size(); contador++){
+
+        if(str1[contador]!='-'){
+            str2+=str1[contador];
+        }
+   }
+   int data = stoi(str2);
+ 
+    
+    return data;
 }

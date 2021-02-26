@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <cstdlib>
+#include "Registro.h"
 #ifndef HASHING_H_INCLUDED
 #define HASHING_H_INCLUDED
 
@@ -17,9 +18,10 @@ public:
     Hashing(int tam);
     ~Hashing();
     int hash(int val);
-    void insere(int codigo, Registro r);
+    int insere(int codigo, Registro r);
     void imprime();
-    int getChavesArmazenadas();
+    int getCodigo(int i);
+    int getData(int i);
 
 
 

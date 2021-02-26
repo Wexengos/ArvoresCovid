@@ -6,108 +6,128 @@
 
 using namespace std;
 
-void NoArvB::split(int i,NoArvB *p)
+NoArvB::NoArvB(int tamanho,bool f)
 {
-    NoArvB *q = new NoArvB();
-    q->setFolha(p->getFolha());
-    q->setN(N -1);
+    tam = tamanho;
+    folha = f;
+    chaves = new int [2*tam-1];
+    filhos = new NoArvB * [2*tam];
+    n = 0;
+}
 
-   
-    for(int j = 0 ; j<N-1;j++){
-        q->setChaves(p->getChave(j+N),j);
-        cout<<"chave: "<<q->getChave(j);
+void NoArvB::split(int i,NoArvB *r)
+{
+    NoArvB *q = new NoArvB(r->tam,r->folha);
+    q->n = tam - 1;
+
+    for(int j=tam+1 ;j<2*tam;j++)
+    {   
+        //Transfere as chaves com valores maiores para o novo No
+        q->chaves[j] = r->chaves[j];
+        cout<<" "<<q->chaves[j]<<endl;
     }
-    cout<<"Folha? "<< p->getFolha();
 
-    if(p->getFolha() == false){
-        cout<<"entrou aqui"<<endl;
-        for(int j = 0;j<N;j++)
-            q->setFilhos(p->getFilhos(j+N),j);
+    if(r->folha==false)
+    {
+        for(int j=tam+1;j<2*tam;j++){
+            q->filhos[j] = r->filhos[j];
+        }
+
     }
 
-    p->setN(N-1);
+    r->n=tam-1;
+
+    for(int j=n;j>=i+1;j--)
+    {
+        filhos[j+1]=filhos[j];
+    }
     
-    for(int j=p->getN(); j>= i+1;j--)
-        filhos[j+1] = filhos[j];
+    filhos[i+1]=q;
 
-    filhos[i+1] = q;
-
-    for(int j=p->getN()-1; j>= i;j--){
-        chaves[j+1] = chaves[j];
-        cout<<"chave: "<<chaves[i]<<endl;
+    for (int j = n - 1; j >= i; j--)
+    {
+        chaves[j + 1] = chaves[j]; 
     }
-    chaves[i] = p->getChave(N-1);
-
-    p->setN(n+1);
+       
    
-    
 
-
-        
+    chaves[i] = q->chaves[tam - 1];
+    n = n + 1;
 }
 
 
-void NoArvB::insertFilho(int k){
-
+void NoArvB::insertFilho(int k)
+{
     int i = n - 1;
-       
 
-    if(getFolha()==true)
-    {   
-        
-        while (i>= 0 && chaves[i] > k)
-        {
-            chaves[i+1] = chaves[i];
+    //Se for folha inseria a chave na posição correta 
+    if(folha==true){
+
+        while (i>=0 && chaves[i]>k)
+        {   
+            //Ajusta as chaves dentro do No
+            chaves[i+1]=chaves[i];
             i--;
         }
-
+        
         chaves[i+1] = k;
-        n = n + 1; 
+        cout<<"Inserido: "<<chaves[i+1]<<endl;
+        n=n+1;
 
     }else{
-         
-        while (i>= 0 && chaves[i]>k)  
+        
+        while (i>=0 && chaves[i]>k)
+        {
             i--;
-
-        if(filhos[i+1]->n == 2 * N -1){
+        }
+        
+        if(filhos[i+1]->n == 2*tam-1)
+        {
             split(i+1,filhos[i+1]);
 
             if(chaves[i+1]<k)
                 i++;
         }
-
         filhos[i+1]->insertFilho(k);
-        
-         
     }
+   
 }
 
-NoArvB* NoArvB::busca(int chave)
+NoArvB* NoArvB::busca_no_No(int k)
 {
-    int i = 0 ;
+   int i=0;
 
-    while (i<n && chave>chaves[i])
-        i++;
+    while (i<n && k>chaves[i])
+    {
+       i++;
+    }
 
-    if(chaves[i]==chave)
+    if(chaves[i] == k){
+        cout<<"Chave encotrada: "<<chaves[i]<<endl;
         return this;
-    if(getFolha()==true)
+    }
+    
+    if(folha == true)
         return NULL;
 
-    return filhos[i]->busca(chave);
+    return filhos[i]->busca_no_No(k);
 }
 
 void NoArvB::imprime()
-{
+{   
     int i;
-    for(i= 0; i<n;i++)
+    for(i = 0; i<n;i++)
     {
-        if(getFolha() == false)
+        if(folha == false)
+        {
             filhos[i]->imprime();
+        }
 
-        cout<<"Chaves: "<<chaves[i];
+        cout<<"Ch: "<< chaves[i] <<endl;
+
     }
 
-    if(getFolha() == false)
-       filhos[i]->imprime();
+    if(folha == false){
+        filhos[i]->imprime();
+    }
 }
