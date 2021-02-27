@@ -42,14 +42,7 @@ int Hashing::hash(int val)
         
 
     }
-    for(int i = 0; i < tam; i++)
-    {
-        if(tabelaRegistros[i].getCasos() == -1)
-        {
-            chavesArmazenadas ++;
-            return h;
-        }
-    }
+   
     return -1;
 
 }
