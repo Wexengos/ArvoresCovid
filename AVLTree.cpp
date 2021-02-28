@@ -53,21 +53,21 @@ int AVLTree::getBalanceada(NoArv *N)
         return alturaNo(N->getDir()) - alturaNo(N->getEsq()); 
 } 
 
-NoArv* AVLTree::rotacaoSimplesEsquerda(NoArv *p)
+NoArv* AVLTree::rotacaoSimplesEsquerda(NoArv *no)
 {
-    NoArv* q = p->getDir();
-    p->setDir(q->getEsq());
-    q->setEsq(p);
+    NoArv* q = no->getDir();
+    no->setDir(q->getEsq());
+    q->setEsq(no);
 
     //raiz = q;
     return q;
 }
 
-NoArv* AVLTree::rotacaoSimplesDireita(NoArv *p)
+NoArv* AVLTree::rotacaoSimplesDireita(NoArv *no)
 {
-    NoArv* q = p->getEsq();
-    p->setEsq(q->getDir());
-    q->setDir(p);
+    NoArv* q = no->getEsq();
+    no->setEsq(q->getDir());
+    q->setDir(no);
 
     //raiz = q;
     return q;
@@ -101,13 +101,11 @@ NoArv* AVLTree::rotacaoDuplaDireita(NoArv *p)
 
     //raiz = r;
     return r;
-}
+} 
 
 void AVLTree::insere(int x,Hashing *tabela)
 {
-    NoArv *p = auxInsere(raiz, x,tabela);
-    if(raiz == NULL)
-        raiz = p;
+    raiz = auxInsere(raiz, x,tabela);
 }
 
 NoArv* AVLTree::auxInsere(NoArv *p, int x,Hashing *tabela)
@@ -118,16 +116,18 @@ NoArv* AVLTree::auxInsere(NoArv *p, int x,Hashing *tabela)
         p->setInfo(x);
         p->setEsq(NULL);
         p->setDir(NULL);
-        p->setAltura(1);
-    } else if(x < p->getInfo())
+       // p->setAltura(1);
+    } 
+    
+    /*else if(x < p->getInfo())
         p->setEsq(auxInsere(p->getEsq(), x,tabela));
     else if(x > p->getInfo())
         p->setDir(auxInsere(p->getDir(), x,tabela));
     else
-        return p;
+        return p; */
 
 
-    /*
+    
     else if(tabela->getCodigo(x) < tabela->getCodigo(p->getInfo()))
         p->setEsq(auxInsere(p->getEsq(), x,tabela));
     else if(tabela->getCodigo(x) > tabela->getCodigo(p->getInfo()))
@@ -141,20 +141,20 @@ NoArv* AVLTree::auxInsere(NoArv *p, int x,Hashing *tabela)
 
     }else
         return p;
-    */
+    
     // checa se o No esta balanceado
 
     int equilibrio = getBalanceada(p); 
 
     //cout << "o no com chave " << p->getInfo() << " tem balanceamento "     << equilibrio  << endl; 
     p->setAltura(alturaNo(p));
-    //cout << "o no com chave " << p->getInfo() << " possui altura igual a " << p->getAltura() << endl;
+    //cout << "o no com chave " << p->getInfo() << " possui altura igual a " << p->getAltura() << endl; 
  
     // Se está desbalanceada, vai ser um dos 4 casos:
     // Rotacao simples a esquerda:
     
-    if((getBalanceada(p) == 2) && (  getBalanceada(p->getDir()) == 1  || 
-                                     getBalanceada(p->getDir()) == 0  ))
+    if((getBalanceada(p) > 2) && (  getBalanceada(p->getDir()) == 1  || 
+                                    getBalanceada(p->getDir()) == 0  ))
     {
         
         return rotacaoSimplesEsquerda(p);
@@ -171,12 +171,16 @@ NoArv* AVLTree::auxInsere(NoArv *p, int x,Hashing *tabela)
     if((getBalanceada(p) == 2) && (  getBalanceada(p->getDir()) ==-1  ))
 
         return rotacaoDuplaEsquerda(p);
+        //p->setDir(rotacaoSimplesDireita(p->getDir()));
+        //return rotacaoSimplesEsquerda(p);
 
     // Rotacao dupla a direita:
 
     if((getBalanceada(p) ==-2) && (  getBalanceada(p->getEsq()) == 1  ))
 
         return rotacaoDuplaDireita(p); 
+        //p->setEsq(rotacaoSimplesEsquerda(p->getEsq()));
+        //return rotacaoSimplesDireita(p);
  
    
     return p; 
