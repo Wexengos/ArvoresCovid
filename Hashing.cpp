@@ -8,10 +8,11 @@ using namespace std;
 
 Hashing::Hashing(int n)
 {
-    tam = n + (n/2);
+    tam = n+100;
+    cout<<"TAM: "<<tam;
     tabelaRegistros = new Registro[tam];
     chavesArmazenadas = 0;
-
+    contaColisao = 0;
     
 }
 Hashing::~Hashing()
@@ -21,28 +22,28 @@ Hashing::~Hashing()
 int Hashing::hash(int val)
 {   
     
-    int f1 = val%17;
-    int f2 = 1+(val%13);
+    int f1 = val%250103;
+    int f2 = 1+(val%250001);
     int i = 0;
     int h = f1 +(i*f2);
-    
+   
 
     //Tratamento de colisão sodagem dupla
     while(h < tam)
     {
-        if(tabelaRegistros[h].getCasos() == -1)
+        if(tabelaRegistros[h].getVisitado() == false)
         {   
             
             chavesArmazenadas ++;
             return h;
         }
-      
+        contaColisao++;
         i++;
         h = f1 +(i*f2);
         
 
     }
-   
+    
     return -1;
 
 }
@@ -50,7 +51,8 @@ int Hashing::insere(int codigo, Registro r)
 {
     
     int h = hash(codigo);
-   
+    
+    //cout<<"Posi: "<<h<<endl;
     if(h == -1)
     {
         cout<<"nao foi possivel inserir o elemento "<<endl;
@@ -58,6 +60,8 @@ int Hashing::insere(int codigo, Registro r)
     else
     {
         tabelaRegistros[h] = r;
+        tabelaRegistros[h].setVisitado(true);
+        
     }
     return h;
 }

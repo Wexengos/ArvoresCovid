@@ -20,26 +20,26 @@ ArvB::~ArvB(){}
 
 
 
-void ArvB::insereArvB(int chave)
+void ArvB::insereArvB(int chave,Hashing *tabela)
 {
     if(raiz == NULL)
     {   
         
         raiz = new NoArvB(tamanhodoNo,true);
-        raiz->chaves[0] = chave;
+        raiz->setChave(0, chave);
         raiz->setN(1);
         cout<<"tam: "<<raiz->getN()<<endl;
 
             
     }else{
 
-        if(raiz->getN() == raiz->getTam()-1){
+        if(raiz->getN() == 2*tamanhodoNo-1){
             
             //Se raiz estiver cheia
           
             NoArvB *p = new NoArvB(tamanhodoNo, false);
-            p->filhos[0]=raiz;
-            p->split(0,raiz);
+            p->setFilhos(0,raiz);
+            p->split(0,raiz,tabela);
 
             //Aumenta o index para a achar a chave corresponde
             //que seja maior do que a chave que quer ser inserida assim ligando a folha correta
@@ -49,11 +49,11 @@ void ArvB::insereArvB(int chave)
                 i++; 
             }
 
-            p->filhos[i]->insertFilho(chave);
+            p->getFilhos(i)->insertFilho(chave,tabela);
             raiz = p;
         }else
             cout<<"Raiz n ta cheia"<<endl;
-            raiz->insertFilho(chave);
+            raiz->insertFilho(chave,tabela);
         
     }
 }

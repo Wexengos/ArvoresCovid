@@ -9,8 +9,9 @@
 #include <stdio.h>
 #include "QuadTree.h"
 #include "AVLTree.h"
-#include "RegistroCoordinates.h"
 #include "ArvB.h"
+#include "RegistroCoordinates.h"
+
 
 #define TAMANHOMAX 1431490
 
@@ -96,7 +97,8 @@ void testeHash(Registro *r, int N)
     srand(time(NULL));
     for(int i=0;i<10;i++)    
     {   
-        id = rand()%1000;//hashteste->insere(r[i].getCodigoCidade(),r[i]);
+        int chave = r[i].getCodigoCidade() + r[i].getDataInt();
+        cout<<"Chave: "<<chave<<endl;
         cout<<"id: "<<id<<"codigo: "<<r[i].getCodigoCidade()<<endl;
         avl->insere(id,hashteste);
         
@@ -108,12 +110,45 @@ void testeHash(Registro *r, int N)
 }
 
 
+void testeArvB(Registro *r,int N)
+{
+    ArvB *teste = new ArvB(3);
+    int i = 0;
+    int chave;
+    Hashing *hashteste = new Hashing(N);
+    srand(time(NULL));
+
+    for(int i=0;i<N;i++)    
+    {   
+
+        chave = r[i].getCodigoCidade() + r[i].getDataInt();
+        //cout<<"Chave: "<<chave<<endl;
+        int id=hashteste->insere(chave,r[i]);
+        //cout<<"Qual vai inserir: "<<id<<endl;
+        //teste->insereArvB(id,hashteste);
+    }
+    /*
+    teste->imprimeArv();
+    cout<<"Fim";
+    
+    int k = 20;
+    if(!teste->busca(k))
+    {
+        cout<<"N tem"<<endl;
+    }
+    */
+    cout<<endl;
+    cout<<"Fim";
+    cout<<"Quant Colid: "<<hashteste->getContaColisao()<<endl;
+}
+
 int main(int argc, char *argv[])
 {   
-    /*
+    
     int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000, TAMANHOMAX};
     Registro *registros = new Registro[tamanhoN[5]];
-    registros->leArquivo(registros,tamanhoN[0]);
+    registros->leArquivo(registros,tamanhoN[3]);
+    /*
     testeHash(registros,tamanhoN[0]);
     //registros->transformaCasosAcumuladosEmCasosDiarios();
     
@@ -129,30 +164,8 @@ int main(int argc, char *argv[])
     testeHash(registros,tamanhoN[0]);
     */
    
-   ArvB *teste = new ArvB(4);
-   int i = 0;
-   int id;
-
-    srand(time(NULL));
-    for(int i=0;i<10;i++)    
-    {   
-        id = rand()%1000;//hashteste->insere(r[i].getCodigoCidade(),r[i]);
-        cout<<"Qual vai inserir: "<<id<<endl;
-        teste->insereArvB(id);
-    }
-   cout<<"Fim";
-
-    teste->imprimeArv();
-    cout<<"Fim";
-   
-  int k = 23;
-  if(!teste->busca(k))
-  {
-      cout<<"N tem"<<endl;
-  }
-
-   cout<<"Fim";
-    
+    testeArvB(registros,tamanhoN[3]);
+  
     
     return 0;
     

@@ -3,6 +3,8 @@
 #include <math.h>
 #include "NoArvB.h"
 
+
+
 using namespace std;
 
 class ArvB
@@ -14,7 +16,7 @@ public:
     ArvB(int tam);
     ~ArvB();
     //NoArvB* buscaArvB(int chave, NoArvB *p);
-    void insereArvB(int chave);
+    void insereArvB(int chave, Hashing *tabela);
     void imprimeArv();
     NoArvB* busca(int chave);
 };

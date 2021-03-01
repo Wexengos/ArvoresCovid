@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <vector>
 #include "NoArvB.h"
-#include <bits/stdc++.h> 
+
 
 using namespace std;
 
@@ -12,62 +12,67 @@ NoArvB::NoArvB(int tamanho,bool f)
 {
     tam = tamanho;
     folha = f;
-    chaves = new int [tam-1];
-    filhos = new NoArvB * [tam];
+    chaves = new int [2*tam-1];
+    filhos = new NoArvB * [2*tam];
     n = 0;
 }
 
-void NoArvB::split(int i,NoArvB *r)
+void NoArvB::split(int i,NoArvB *r, Hashing *tabela)
 {
+    cout<<"Split"<<endl;
     NoArvB *q = new NoArvB(r->getTam(),r->getFolha());
-    q->setN(tam);
-
+    q->setN(tam-1);
+    
+    int k;
     for(int j=0;j<tam-1;j++)
     {   
         //Transfere as chaves com valores maiores para o novo No
-        q->chaves[j] = r->chaves[j+tam];
-        
+        q->setChave(j,r->getChaves(j+tam));
+        cout<<"Chaves K: "<<q->getChaves(j)<<endl;
+        cout<<"Chaves J: "<<r->getChaves(j+tam)<<endl;
     }
 
     if(r->getFolha()==false)
     {
-        for(int j=0;j<tam-1;j++){
-            q->filhos[j] = r->filhos[j+tam];
+        for(int j=0;j<tam;j++){
+            q->setFilhos(j,r->getFilhos(j+tam));
         }
 
     }
-
+    
     r->setN(tam-1);
+    
 
     for(int j=n;j>=i+1;j--)
     {
         filhos[j+1]=filhos[j];
+        this->setFilhos(j+1,this->getFilhos(j));
     }
     
-    filhos[i+1]=q;
+    this->setFilhos(i+1,q);
    
 
-    for (int j =n; j >= i; j--)
+    for (int j=n-1; j >= i; j--)
     {
-       this-> chaves[j + 1] = this->chaves[j]; 
+       this->setChave(j + 1, this->getChaves(j)); 
     }
        
     
-   
-    chaves[i]=q->chaves[tam/2];
-    n =n + 1;
+    this->setChave(i, r->getChaves(tam-1)); 
+    //chaves[i]=q->chaves[tam-1];
+    n=n + 1;
 }
 
 
-void NoArvB::insertFilho(int k)
+void NoArvB::insertFilho(int k, Hashing *tabela)
 {
-    int i = n;
+    int i = n-1;
 
-    
+    cout<<"N: "<<n<<endl;
     //Se for folha inseria a chave na posição correta 
     if(folha==true){
         
-        while (i>=0 && this->chaves[i]>k)
+        while (i>=0 && chaves[i]>k)
         {   
             //Ajusta as chaves dentro do No
             chaves[i+1]=chaves[i];
@@ -76,7 +81,7 @@ void NoArvB::insertFilho(int k)
 
         
         chaves[i+1] = k;
-        n++;
+        n=n+1;
         /*
         int aux=chaves[0];
           for (int i = 0; i < tam; i++)
@@ -100,15 +105,15 @@ void NoArvB::insertFilho(int k)
         {
             i--;
         }
-        
-        if(filhos[i+1]->getN() == filhos[i+1]->getTam())
+       
+        if(filhos[i+1]->getN()==2*tam-1)
         {
-            split(i+1,this->filhos[i+1]);
+            split(i+1,filhos[i+1],tabela);
 
             if(chaves[i+1]<k)
                 i++;
         }
-       filhos[i+1]->insertFilho(k);
+       filhos[i+1]->insertFilho(k,tabela);
     }
    
 }

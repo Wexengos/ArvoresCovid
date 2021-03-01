@@ -12,6 +12,7 @@ private:
     Registro *tabelaRegistros;
     int tam;
     int chavesArmazenadas;
+    int contaColisao;
 
 
 public:
@@ -22,6 +23,7 @@ public:
     void imprime();
     int getCodigo(int i);
     int getData(int i);
+    int getContaColisao(){return contaColisao;};
 
 
 

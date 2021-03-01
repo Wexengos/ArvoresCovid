@@ -217,3 +217,19 @@ int Registro::getMortes()
 {
     return mortes;
 }
+int Registro::getDataInt()
+{
+    string str1=dataCompleta;
+    string str2;
+
+   for(int contador = 0; contador <str1.size(); contador++){
+
+        if(str1[contador]!='-'){
+            str2+=str1[contador];
+        }
+   }
+   int data = stoi(str2);
+ 
+    
+    return data;
+}

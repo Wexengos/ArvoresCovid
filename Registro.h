@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <chrono>
 #include <sstream>
+#ifndef REGISTRO_H_INCLUDED
+#define REGISTRO_H_INCLUDED
 
 
 using namespace std;
@@ -40,4 +42,7 @@ public:
     void exibeRegistrosPreProcessados(Registro *registros, int N);
     void exibeRegistros(Registro *registros, int N);
     void escreveSaidaTxt(Registro *r, int size, string nomeSaidaArquivo);
+    int getDataInt();
 };
+
+#endif 
