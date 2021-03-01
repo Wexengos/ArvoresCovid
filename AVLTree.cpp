@@ -617,7 +617,7 @@ void AVLTree::auxImprimeDecrescente(NoArv *p)
     return;
 }*/
 
-NoArv* AVLTree::buscaValor(int val)
+NoArv* AVLTree::buscaValor(int val, Hashing *tabela)
 {
     NoArv* p = raiz;
     if(raiz == NULL)
@@ -625,7 +625,9 @@ NoArv* AVLTree::buscaValor(int val)
         cout << "Arvore vazia!";
         return NULL;
     }
-    else
+
+    //teste com AVL padrão
+    /*else
     {
         while(p != NULL)
         {
@@ -634,12 +636,39 @@ NoArv* AVLTree::buscaValor(int val)
                 return p;
             }
             else if(p->getInfo() < val)
-                p = p->getEsq();
-            else if(p->getInfo() > val)
                 p = p->getDir();
+            else if(p->getInfo() > val)
+                p = p->getEsq();
         }
         return NULL;
+    } */
+
+    //teste com a AVL do trab memo
+    else
+    {
+        while(p != NULL)
+        {
+            if( tabela->getCodigo(p->getInfo()) == tabela->getCodigo(val) )
+            {
+                if( tabela->getData(p->getInfo()) == tabela->getData(val) )
+                    return p;
+                else if( tabela->getData(p->getInfo()) < tabela->getData(val) )
+                    p = p->getDir();
+                else if( tabela->getData(p->getInfo()) > tabela->getData(val) )
+                    p = p->getEsq();
+            }
+        
+            else if( tabela->getCodigo(p->getInfo()) < tabela->getCodigo(val) )
+                p = p->getEsq();
+            else if( tabela->getCodigo(p->getInfo()) > tabela->getCodigo(val) )
+                p = p->getDir();
+        }
+        
+        //valor nao encontrado
+        return NULL;
     }
+    
+
 }
 
 /*int AVLTree::classificaNo(int val)
