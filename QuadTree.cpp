@@ -190,5 +190,79 @@ NoArvQuad* QuadTree::buscaValor(NoArvQuad *p)
         
         return NULL; 
     }
-
 }
+
+void QuadTree::cidadesNoIntervalo(float x0, float x, float y0, float y)
+{
+    if(raiz == NULL)
+    {
+        cout << "Arvore vazia! " << endl;
+        return;
+    }
+    else
+    {
+        cout << "Casos no intervalo de latitude " << x0 << " a " << x << 
+                                  " e longitude " << y0 << " a " << y << endl;
+
+        auxCidadesNoIntervalo(raiz, x0, x, y0, y);
+    }
+}
+
+void QuadTree::auxCidadesNoIntervalo(NoArvQuad *p, float x0, float x, float y0, float y)
+{
+    if(p != NULL)
+    {
+        //caso esteja dentro da regiao
+        if(p->getLatitude() >= x0 && p->getLatitude() <= x)
+        {
+            if(p->getLongitude() >= y0 && p->getLongitude() <= y)
+            {
+                cout << "tem! " << endl;
+                auxCidadesNoIntervalo(p->getNE(), x0, x, y0, y);
+                cout << "Cidade: " << p->getNome() << ", " << endl;
+                auxCidadesNoIntervalo(p->getNW(), x0, x, y0, y);
+                cout << "Cidade: " << p->getNome() << ", " << endl;
+                auxCidadesNoIntervalo(p->getSE(), x0, x, y0, y);
+                cout << "Cidade: " << p->getNome() << ", " << endl;
+                auxCidadesNoIntervalo(p->getSW(), x0, x, y0, y);
+            }
+        }
+        
+        //cidade fora do intervalo
+        else if( p->getLatitude() < x0 )
+        {
+            //cout << "ta fora do x0..." << endl;
+            auxCidadesNoIntervalo(p->getNE(), x0, x, y0, y);
+            auxCidadesNoIntervalo(p->getNW(), x0, x, y0, y);
+            auxCidadesNoIntervalo(p->getSE(), x0, x, y0, y);
+            auxCidadesNoIntervalo(p->getSW(), x0, x, y0, y);
+        }
+        else if( p->getLatitude() > x )
+        {
+            //cout << "ta fora do x..."  << endl;
+            auxCidadesNoIntervalo(p->getNE(), x0, x, y0, y);
+            auxCidadesNoIntervalo(p->getNW(), x0, x, y0, y);
+            auxCidadesNoIntervalo(p->getSE(), x0, x, y0, y);
+            auxCidadesNoIntervalo(p->getSW(), x0, x, y0, y);
+        }
+        else if( p->getLongitude() < y0 )
+        {
+            //cout << "ta fora do y0..." << endl;
+            auxCidadesNoIntervalo(p->getNE(), x0, x, y0, y);
+            auxCidadesNoIntervalo(p->getNW(), x0, x, y0, y);
+            auxCidadesNoIntervalo(p->getSE(), x0, x, y0, y);
+            auxCidadesNoIntervalo(p->getSW(), x0, x, y0, y);
+        }
+        else if( p->getLongitude() > y )
+        {
+            //cout << "ta fora do y..."  << endl;
+            auxCidadesNoIntervalo(p->getNE(), x0, x, y0, y);
+            auxCidadesNoIntervalo(p->getNW(), x0, x, y0, y);
+            auxCidadesNoIntervalo(p->getSE(), x0, x, y0, y);
+            auxCidadesNoIntervalo(p->getSW(), x0, x, y0, y);
+        }
+        else
+            return;
+    }
+}
+

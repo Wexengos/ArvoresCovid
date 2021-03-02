@@ -11,6 +11,7 @@ class QuadTree
         NoArvQuad *raiz;
         NoArvQuad* auxInsere(NoArvQuad *r,NoArvQuad *p);
         void auxImprime(NoArvQuad *p);
+        void auxCidadesNoIntervalo(NoArvQuad *p, float x0, float x, float y0, float y);
       
 
     public:
@@ -23,6 +24,7 @@ class QuadTree
         void imprime();
         void imprimeCapital();
         void auxImprimeCapital(NoArvQuad *p);
+        void cidadesNoIntervalo(float x0, float x, float y0, float y);
         
         
 
