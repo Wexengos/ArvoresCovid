@@ -28,8 +28,8 @@ void NoArvB::split(int i,NoArvB *r, Hashing *tabela)
     {   
         //Transfere as chaves com valores maiores para o novo No
         q->setChave(j,r->getChaves(j+tam));
-        cout<<"Chaves K: "<<q->getChaves(j)<<endl;
-        cout<<"Chaves J: "<<r->getChaves(j+tam)<<endl;
+        //cout<<"Chaves K: "<<q->getChaves(j)<<endl;
+        //cout<<"Chaves J: "<<r->getChaves(j+tam)<<endl;
     }
 
     if(r->getFolha()==false)
@@ -68,7 +68,7 @@ void NoArvB::insertFilho(int k, Hashing *tabela)
 {
     int i = n-1;
 
-    cout<<"N: "<<n<<endl;
+    //cout<<"N: "<<n<<endl;
     //Se for folha inseria a chave na posição correta 
     if(folha==true){
         
@@ -118,7 +118,7 @@ void NoArvB::insertFilho(int k, Hashing *tabela)
    
 }
 
-NoArvB* NoArvB::busca_no_No(int k)
+NoArvB* NoArvB::busca_no_No(int k,Hashing tabela)
 {
    int i=0;
     
@@ -128,14 +128,15 @@ NoArvB* NoArvB::busca_no_No(int k)
     }
 
     if(chaves[i] == k){
-        cout<<"Chave encotrada: "<<chaves[i]<<endl;
+        //cout<<"Chave encotrada: "<<chaves[i]<<endl;
+        cout<<"Nome: "<<tabela.buscaNome(k);
         return this;
     }
     
     if(folha == true)
         return NULL;
     
-    return filhos[i]->busca_no_No(k);
+    return filhos[i]->busca_no_No(k,tabela);
 }
 
 void NoArvB::imprime()

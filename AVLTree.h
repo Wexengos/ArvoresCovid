@@ -13,7 +13,8 @@ class AVLTree
 public:
     AVLTree();
     ~AVLTree();
-    void imprime();
+    void imprime(Hashing *tabela);
+    int dataigual(int x,NoArv *p,Hashing *tabela);
     int max(int, int);
     int getBalanceada(NoArv*);
     void insere(int x, Hashing *tabela);
@@ -48,7 +49,7 @@ private:
 
     // funcoes auxiliares
     NoArv* auxInsere(NoArv *p, int x,Hashing *tabela);
-    void auxImprime(NoArv *p);
+    void auxImprime(NoArv *p,Hashing *tabela);
     int auxAltura(NoArv* p);
     void auxImpares(NoArv *p, int *impa);
     void auxSoma(NoArv *p, int *soma);

@@ -28,7 +28,7 @@ void ArvB::insereArvB(int chave,Hashing *tabela)
         raiz = new NoArvB(tamanhodoNo,true);
         raiz->setChave(0, chave);
         raiz->setN(1);
-        cout<<"tam: "<<raiz->getN()<<endl;
+        //cout<<"tam: "<<raiz->getN()<<endl;
 
             
     }else{
@@ -52,7 +52,7 @@ void ArvB::insereArvB(int chave,Hashing *tabela)
             p->getFilhos(i)->insertFilho(chave,tabela);
             raiz = p;
         }else
-            cout<<"Raiz n ta cheia"<<endl;
+            //cout<<"Raiz n ta cheia"<<endl;
             raiz->insertFilho(chave,tabela);
         
     }
@@ -73,8 +73,8 @@ void ArvB::imprimeArv()
 }
 
 
-NoArvB* ArvB::busca(int chave)
+NoArvB* ArvB::busca(int chave,Hashing tabela)
 {
-    return (raiz == NULL) ? NULL : raiz->busca_no_No(chave);
+    return (raiz == NULL) ? NULL : raiz->busca_no_No(chave,tabela);
 }
 

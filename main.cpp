@@ -92,24 +92,27 @@ void testeHash(Registro *r, int N)
 {
     Hashing *hashteste = new Hashing(N);
     AVLTree *avl = new AVLTree();
-    int id;
-
+    int chave;
     srand(time(NULL));
-    for(int i=0;i<10;i++)    
+    for(int i=0;i<N;i++)    
     {   
-        int chave = r[i].getCodigoCidade() + r[i].getDataInt();
-        cout<<"Chave: "<<chave<<endl;
-        cout<<"id: "<<id<<"codigo: "<<r[i].getCodigoCidade()<<endl;
+        chave = r[i].getCodigoCidade() + r[i].getDataInt();
+        //cout<<"Chave: "<<chave<<endl;
+        int id = hashteste->insere(chave,r[i]);
+        //cout<<"id: "<<id<<endl;
+        //cout<<"Codigo: "<<hashteste->getCodigo(id)<<endl;
+        //cout<<"Data: "<<hashteste->getData(id)<<endl;
         avl->insere(id,hashteste);
         
     
     }
-    avl->imprime();
+    cout<<"Fim"<<endl;
+    avl->imprime(hashteste);
     //cout<<"Num chaves: "<<hashteste->getChavesArmazenadas()<<endl;
     
 }
 
-
+/*
 void testeArvB(Registro *r,int N)
 {
     ArvB *teste = new ArvB(3);
@@ -117,39 +120,39 @@ void testeArvB(Registro *r,int N)
     int chave;
     Hashing *hashteste = new Hashing(N);
     srand(time(NULL));
-
+    int id;
     for(int i=0;i<N;i++)    
     {   
 
         chave = r[i].getCodigoCidade() + r[i].getDataInt();
         //cout<<"Chave: "<<chave<<endl;
-        int id=hashteste->insere(chave,r[i]);
+        id=hashteste->insere(chave,r[i]);
         //cout<<"Qual vai inserir: "<<id<<endl;
-        //teste->insereArvB(id,hashteste);
+        teste->insereArvB(id,hashteste);
     }
-    /*
+    
     teste->imprimeArv();
     cout<<"Fim";
     
-    int k = 20;
-    if(!teste->busca(k))
+    int k = 120;
+    if(!teste->busca(k,*hashteste))
     {
         cout<<"N tem"<<endl;
     }
-    */
+    
     cout<<endl;
     cout<<"Fim";
     cout<<"Quant Colid: "<<hashteste->getContaColisao()<<endl;
 }
-
+*/
 int main(int argc, char *argv[])
 {   
     
     int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000, TAMANHOMAX};
     Registro *registros = new Registro[tamanhoN[5]];
     registros->leArquivo(registros,tamanhoN[3]);
-    /*
     testeHash(registros,tamanhoN[0]);
+    /*
     //registros->transformaCasosAcumuladosEmCasosDiarios();
     
     registros->exibeRegistros(registros,tamanhoN[0]); 
@@ -164,7 +167,8 @@ int main(int argc, char *argv[])
     testeHash(registros,tamanhoN[0]);
     */
    
-    testeArvB(registros,tamanhoN[3]);
+    //testeArvB(registros,tamanhoN[0]);
+    //testeHash(registros,tamanhoN[0]);
   
     
     return 0;

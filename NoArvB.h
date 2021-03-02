@@ -33,7 +33,7 @@ public:
     int getChaves(int i){return chaves[i];};
     int comparaChaveHashing(int ch,Hashing *tabela);
 
-    NoArvB* busca_no_No(int k); 
+    NoArvB* busca_no_No(int k,Hashing tabela); 
     ~NoArvB();
 
     friend class ArvB;

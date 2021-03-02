@@ -102,14 +102,26 @@ NoArv* AVLTree::rotacaoDuplaDireita(NoArv *p)
     //raiz = r;
     return r;
 } 
+int AVLTree::dataigual(int x,NoArv *p,Hashing *tabela)
+{
+  
+    if(tabela->getData(x) < tabela->getData(p->getInfo()))
+        return 1;
+    else 
+        return 0;
 
+    
+}
 void AVLTree::insere(int x,Hashing *tabela)
 {
     raiz = auxInsere(raiz, x,tabela);
 }
 
 NoArv* AVLTree::auxInsere(NoArv *p, int x,Hashing *tabela)
-{
+{   
+    
+    
+   
     if(p == NULL)
     {
         p = new NoArv();
@@ -118,32 +130,27 @@ NoArv* AVLTree::auxInsere(NoArv *p, int x,Hashing *tabela)
         p->setDir(NULL);
        // p->setAltura(1);
     } 
-    
-    /*else if(x < p->getInfo())
+    /*
+    else if(x < p->getInfo())
         p->setEsq(auxInsere(p->getEsq(), x,tabela));
     else if(x > p->getInfo())
         p->setDir(auxInsere(p->getDir(), x,tabela));
     else
-        return p; */
-
-
-    
+        return p; 
+    */
+   
     else if(tabela->getCodigo(x) < tabela->getCodigo(p->getInfo()))
         p->setEsq(auxInsere(p->getEsq(), x,tabela));
     else if(tabela->getCodigo(x) > tabela->getCodigo(p->getInfo()))
         p->setDir(auxInsere(p->getDir(),x,tabela));
-    else if(tabela->getCodigo(x) == tabela->getCodigo(p->getInfo()))
-    {
-        if(tabela->getData(x) < tabela->getData(p->getInfo()))
-            p->setEsq(auxInsere(p->getEsq(), x,tabela));
-        else
-            p->setDir(auxInsere(p->getDir(), x,tabela));
-
-    }else
-        return p;
+    else if(dataigual(x,p,tabela))
+         p->setEsq(auxInsere(p->getEsq(), x,tabela));
+    else 
+        p->setDir(auxInsere(p->getDir(),x,tabela));
     
+    return p;
     // checa se o No esta balanceado
-
+    
     int equilibrio = getBalanceada(p); 
 
     //cout << "o no com chave " << p->getInfo() << " tem balanceamento "     << equilibrio  << endl; 
@@ -186,9 +193,9 @@ NoArv* AVLTree::auxInsere(NoArv *p, int x,Hashing *tabela)
     return p; 
 }
 
-void AVLTree::imprime()
+void AVLTree::imprime(Hashing *tabela)
 {
-    auxImprime(raiz);
+    auxImprime(raiz,tabela);
     cout << endl;
 }
 
@@ -197,13 +204,13 @@ int AVLTree::max(int a, int b)
     return (a > b) ? a : b;
 }
 
-void AVLTree::auxImprime(NoArv *p)
+void AVLTree::auxImprime(NoArv *p,Hashing *tabela)
 {
     if(p != NULL)
     {
-        cout << p->getInfo() << " ";
-        auxImprime(p->getEsq());
-        auxImprime(p->getDir());
+        cout << p->getInfo() << " "<<"MEU CU ASSADINHO: "<<tabela->getCodigo(p->getInfo())<<"MEU PIRUZINHO: "<<tabela->getData(p->getInfo())<<endl;
+        auxImprime(p->getEsq(),tabela);
+        auxImprime(p->getDir(),tabela);
     }
 }
 

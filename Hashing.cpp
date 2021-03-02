@@ -2,13 +2,14 @@
 #include <cstdlib>
 #include <stdio.h>
 #include <vector>
+#include <math.h>
 #include "Hashing.h"
 
 using namespace std;
 
 Hashing::Hashing(int n)
 {
-    tam = n+100;
+    tam = n+(n/2);
     cout<<"TAM: "<<tam;
     tabelaRegistros = new Registro[tam];
     chavesArmazenadas = 0;
@@ -22,12 +23,13 @@ Hashing::~Hashing()
 int Hashing::hash(int val)
 {   
     
-    int f1 = val%250103;
-    int f2 = 1+(val%250001);
+    double a = (sqrt(5)-1)/2;
+    int f1 = floor(((val*a) - floor(val*a))*tam);
+    int f2 = 1+(val%17);
     int i = 0;
     int h = f1 +(i*f2);
+    //cout<<"h: "<<h<<endl;
    
-
     //Tratamento de colisão sodagem dupla
     while(h < tam)
     {
@@ -52,7 +54,7 @@ int Hashing::insere(int codigo, Registro r)
     
     int h = hash(codigo);
     
-    //cout<<"Posi: "<<h<<endl;
+    cout<<"Posi: "<<h<<endl;
     if(h == -1)
     {
         cout<<"nao foi possivel inserir o elemento "<<endl;
@@ -77,22 +79,18 @@ void Hashing::imprime()
     }
 }
 int Hashing::getCodigo(int i)
-{
+{   
+
+    
     return tabelaRegistros[i].getCodigoCidade();
+    
+}
+string Hashing::buscaNome(int i)
+{
+    return tabelaRegistros[i].getCidade();
 }
 int Hashing::getData(int i)
 {   
-    string str1 =tabelaRegistros[i].getDataCompleta();
-    string str2;
-
-   for(int contador = 0; contador <str1.size(); contador++){
-
-        if(str1[contador]!='-'){
-            str2+=str1[contador];
-        }
-   }
-   int data = stoi(str2);
- 
     
-    return data;
+    return tabelaRegistros[i].getDataInt();
 }

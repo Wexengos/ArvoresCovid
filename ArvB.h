@@ -18,7 +18,7 @@ public:
     //NoArvB* buscaArvB(int chave, NoArvB *p);
     void insereArvB(int chave, Hashing *tabela);
     void imprimeArv();
-    NoArvB* busca(int chave);
+    NoArvB* busca(int chave,Hashing tabela);
 };
 
 
