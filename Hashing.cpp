@@ -13,7 +13,7 @@ using namespace std;
 Hashing::Hashing(int n)
 {
     tam = n;
-    tamPorao = n / 3;
+    tamPorao = n;
     tamMax = tam + tamPorao;
     vet = new Tabela[tamMax];
     poraoLivre = tamMax - 1;
@@ -59,17 +59,16 @@ int Hashing::insere(int codigo, Registro r)
         {
 
             if (vet[tamMax - 1].getNext() == -1)
-                for (int i = tam - 1; i >= 0; i--)
-                {
-                    if (vet[i].getNext() == -2)
-                    {
-                        vet[i].setInfo(r);
-                        vet[i].setNext(-1);
-                        vet[tamMax - 1].setNext(i);
-                        chavesArmazenadas++;
-                        return i;
-                    }
-                }
+            {
+
+                 int x = indiceLivre(tam-1);
+                vet[x].setInfo(r);
+                vet[x].setNext(-1);
+                vet[tamMax-1].setNext(x);
+                chavesArmazenadas ++;
+                return x;
+
+            }
             else
             {
                 int aux = vet[tamMax - 1].getNext();
@@ -85,18 +84,12 @@ int Hashing::insere(int codigo, Registro r)
                         aux = vet[aux].getNext();
                     }
                 }
-                for (int i = aux; i >= 0; i--)
-                {
-
-                    if (vet[i].getNext() == -2)
-                    {
-                        vet[i].setInfo(r);
-                        vet[i].setNext(-1);
-                        vet[aux].setNext(i);
-                        chavesArmazenadas++;
-                        return i;
-                    }
-                }
+                int temp = indiceLivre(aux);
+                    vet[temp].setInfo(r);
+                    vet[temp].setNext(-1);
+                    vet[aux].setNext(temp);
+                    chavesArmazenadas ++;
+                    return temp;
             }
         }
     }
@@ -147,4 +140,17 @@ int Hashing::getChavesArmazenadas()
 int Hashing::getContaColisoes()
 {
     return contaColisoes;
+}
+int Hashing::indiceLivre(int h)
+{
+    for(int i = h; i >= 0; i--)
+    {
+
+        if(vet[i].getNext() == -2)
+        {
+
+            return i;
+        }
+    }
+
 }
