@@ -27,6 +27,7 @@ public:
      void imprime();
      int getChavesArmazenadas();
      int getContaColisoes();
+     int indiceLivre(int h); //indice livre
 
 };
 
