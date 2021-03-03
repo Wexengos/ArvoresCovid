@@ -34,7 +34,7 @@ bool verificaCapital(string capital)
     }
     return false;
 }
-/*
+
 //Funções para teste das Estruturas para liberar a Main
 void arvQuadTree(RegistroCoordinates *r, int N){
 
@@ -54,19 +54,22 @@ void arvQuadTree(RegistroCoordinates *r, int N){
 
     cout<<"Cont: "<<cont<<endl;
 
-    NoArvQuad *procura = new NoArvQuad();
-    procura->setLatitude(-21.0276);
-    procura->setLongitude(-44.3204);
+    //NoArvQuad *procura = new NoArvQuad();
+    //procura->setLatitude(-21.0276);
+    //procura->setLongitude(-44.3204);
    
     
     //arv->imprime();
-    arv->buscaValor(procura);
+    //arv->buscaValor(procura);
+
+    arv->cidadesNoIntervalo(-22.0000, -20.0000, -45.0000, -42.0000);
     //arv->imprimeCapital();
 
     cout<<"Fim"<<endl; 
 
 }
 /*
+
 void avlTree(){
 
     AVLTree *piloto = new AVLTree();
@@ -148,14 +151,14 @@ void testeArvB(Registro *r,int N)
 int main(int argc, char *argv[])
 {   
     
-    int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000, TAMANHOMAX};
-    Registro *registros = new Registro[tamanhoN[5]];
-    registros->leArquivo(registros,tamanhoN[3]);
-    testeHash(registros,tamanhoN[0]);
-    /*
+    //int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000, TAMANHOMAX};
+    //Registro *registros = new Registro[tamanhoN[5]];
+    //registros->leArquivo(registros,tamanhoN[3]);
+    //testeHash(registros,tamanhoN[0]);
+    
     //registros->transformaCasosAcumuladosEmCasosDiarios();
     
-    registros->exibeRegistros(registros,tamanhoN[0]); 
+    //registros->exibeRegistros(registros,tamanhoN[0]); 
     
    
     
@@ -164,8 +167,7 @@ int main(int argc, char *argv[])
     registrosCoordinate->leArquivoCoordi(registrosCoordinate,N);
     arvQuadTree(registrosCoordinate,N);
     
-    testeHash(registros,tamanhoN[0]);
-    */
+    //testeHash(registros,tamanhoN[0]);
    
     //testeArvB(registros,tamanhoN[0]);
     //testeHash(registros,tamanhoN[0]);
