@@ -151,10 +151,10 @@ void testeArvB(Registro *r,int N)
 int main(int argc, char *argv[])
 {   
     
-    //int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000, TAMANHOMAX};
-    //Registro *registros = new Registro[tamanhoN[5]];
-    //registros->leArquivo(registros,tamanhoN[3]);
-    //testeHash(registros,tamanhoN[0]);
+    int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000, TAMANHOMAX};
+    Registro *registros = new Registro[tamanhoN[5]];
+    registros->leArquivo(registros,tamanhoN[5]);
+    testeHash(registros,tamanhoN[3]);
     
     //registros->transformaCasosAcumuladosEmCasosDiarios();
     
@@ -162,10 +162,10 @@ int main(int argc, char *argv[])
     
    
     
-    int N = 5571;
-    RegistroCoordinates *registrosCoordinate = new RegistroCoordinates[N];
-    registrosCoordinate->leArquivoCoordi(registrosCoordinate,N);
-    arvQuadTree(registrosCoordinate,N);
+    //int N = 5571;
+    //RegistroCoordinates *registrosCoordinate = new RegistroCoordinates[N];
+    //registrosCoordinate->leArquivoCoordi(registrosCoordinate,N);
+    //arvQuadTree(registrosCoordinate,N);
     
     //testeHash(registros,tamanhoN[0]);
    

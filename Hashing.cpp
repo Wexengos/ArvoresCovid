@@ -27,8 +27,9 @@ Hashing::~Hashing()
 
 int Hashing::funcaoHash(int val)
 {
-    double a = (sqrt(5) - 1) / 2;
-    return floor(((val * a) - floor(val * a)) * tam);
+    //double a = (sqrt(5)-1)/2;
+    //return floor(((val*a) - floor(val*a))*tam);
+    return val%(tam+17);
 }
 int Hashing::insere(int codigo, Registro r)
 {
