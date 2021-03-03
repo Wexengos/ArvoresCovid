@@ -218,18 +218,19 @@ void QuadTree::auxCidadesNoIntervalo(NoArvQuad *p, float x0, float x, float y0, 
             if(p->getLongitude() >= y0 && p->getLongitude() <= y)
             {
                 cout << "tem! " << endl;
+                cout << "Cidade: " << p->getNome() << ", " << endl;
                 auxCidadesNoIntervalo(p->getNE(), x0, x, y0, y);
-                cout << "Cidade: " << p->getNome() << ", " << endl;
                 auxCidadesNoIntervalo(p->getNW(), x0, x, y0, y);
-                cout << "Cidade: " << p->getNome() << ", " << endl;
                 auxCidadesNoIntervalo(p->getSE(), x0, x, y0, y);
-                cout << "Cidade: " << p->getNome() << ", " << endl;
                 auxCidadesNoIntervalo(p->getSW(), x0, x, y0, y);
             }
         }
         
         //cidade fora do intervalo
-        else if( p->getLatitude() < x0 )
+        else if( (p->getLatitude() < x0) ||
+                 (p->getLatitude() > x ) ||
+                 (p->getLongitude()< y0) ||
+                 (p->getLongitude()> y )  )
         {
             //cout << "ta fora do x0..." << endl;
             auxCidadesNoIntervalo(p->getNE(), x0, x, y0, y);
@@ -237,6 +238,7 @@ void QuadTree::auxCidadesNoIntervalo(NoArvQuad *p, float x0, float x, float y0, 
             auxCidadesNoIntervalo(p->getSE(), x0, x, y0, y);
             auxCidadesNoIntervalo(p->getSW(), x0, x, y0, y);
         }
+        /*
         else if( p->getLatitude() > x )
         {
             //cout << "ta fora do x..."  << endl;
@@ -260,7 +262,7 @@ void QuadTree::auxCidadesNoIntervalo(NoArvQuad *p, float x0, float x, float y0, 
             auxCidadesNoIntervalo(p->getNW(), x0, x, y0, y);
             auxCidadesNoIntervalo(p->getSE(), x0, x, y0, y);
             auxCidadesNoIntervalo(p->getSW(), x0, x, y0, y);
-        }
+        } */
         else
             return;
     }

@@ -109,6 +109,8 @@ int AVLTree::dataigual(int x,NoArv *p,Hashing *tabela)
         return 1;
     else 
         return 0;
+
+    
 }
 void AVLTree::insere(int x,Hashing *tabela)
 {

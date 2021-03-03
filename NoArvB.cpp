@@ -129,7 +129,7 @@ NoArvB* NoArvB::busca_no_No(int k,Hashing tabela)
 
     if(chaves[i] == k){
         //cout<<"Chave encotrada: "<<chaves[i]<<endl;
-        cout<<"Nome: "<<tabela.buscaNome(k);
+        //cout<<"Nome: "<<tabela.buscaNome(k);
         return this;
     }
     
