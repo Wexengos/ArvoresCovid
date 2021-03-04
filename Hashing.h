@@ -28,7 +28,7 @@ public:
     void verificaRedistribuicao(int n);
     void imprime();
     int getCodigo(int i);
-    int getData(int i); //thdthetrhetbedtrhwrgwergwsrgsergrdytrgy
+    int getData(int i); 
 
 
 
