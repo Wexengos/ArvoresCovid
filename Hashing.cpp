@@ -3,93 +3,195 @@
 #include <stdio.h>
 #include <vector>
 #include <math.h>
+
+#include "Registro.h"
 #include "Hashing.h"
 
+
 using namespace std;
+static bool verificaPrimo(int n)
+{
+    if(n == 0)
+    {
+        return false;
+    }
+    int cont = 0;
+    for(int i = 1; i <= n; i++)
+    {
+        if(n%i == 0)
+        {
+            cont ++;
+            if(cont > 2)
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+
+}
+static int encontraPrimo(int n)
+{
+    int h = n;
+    while(verificaPrimo(h) == false)
+    {
+        h++;
+
+    }
+    return h;
+}
+
 
 Hashing::Hashing(int n)
 {
-    tam = n*66;
-    cout<<"TAM: "<<tam;
-    tabelaRegistros = new Registro[tam];
+    tam = encontraPrimo(n);
+    tabelaHash = new Registro[tam];
     chavesArmazenadas = 0;
-    contaColisao = 0;
-    
+    /*for(int i = 0; i < tam; i++)
+    {
+        tabelaHash[i]. = -1;
+    }*/
+
 }
 Hashing::~Hashing()
 {
-    //delete tabelaRegistros;
+    delete []tabelaHash;
+    chavesArmazenadas = 0;
 }
-int Hashing::hash(int val)
-{   
-    
-    double a = (sqrt(5)-1)/2;
-    int f1 = floor(((val*a) - floor(val*a))*tam);
-    int f2 = 1+(val%17);
-    int i = 0;
-    int h = f1 +(i*f2);
-    //cout<<"h: "<<h<<endl;
-   
-    //Tratamento de colisão sodagem dupla
-    while(h < tam)
-    {
-        if(tabelaRegistros[h].getVisitado() == false)
-        {   
-            
-            chavesArmazenadas ++;
-            return h;
-        }
-        contaColisao++;
-        i++;
-        h = f1 +(i*f2);
-        
+int Hashing::funcaoHash(int val,int i)
+{
 
-    }
-    
-    return -1;
+    int h = ((val%tam)+i)%tam;
+    return h;
+}
+int Hashing::auxInsere(Registro *v,int codigo,Registro r) 
+{
 
+     verificaRedistribuicao(fatorCarga(chavesArmazenadas, tam));
+     int h,hInicial;
+     int i = 0;
+     h = funcaoHash(codigo,i);
+     hInicial = h;
+     while(tabelaHash[h].getCasos()!= -1)
+     {
+         
+         /*if(tabelaHash[h] == val)
+         {
+             chavesArmazenadas --;
+             break;
+         }*/
+         i++;
+         h = funcaoHash(codigo,i);
+
+         if(h == hInicial)
+         {
+             return -1;
+         }
+
+     }
+     tabelaHash[h] = r;
+     chavesArmazenadas ++;
+     return h;
 }
 int Hashing::insere(int codigo, Registro r)
 {
     
-    int h = hash(codigo);
-    
-    //cout<<"Posi: "<<h<<endl;
-    if(h == -1)
+    int a = auxInsere(tabelaHash,codigo, r);
+    //cout<<auxInsere(tabelaHash,codigo, r)<<endl;
+    //cout<<codigo<<endl;
+    return a;
+}
+
+int Hashing::getChavesArmazenadas()
+{
+    return chavesArmazenadas;
+}
+double Hashing::fatorCarga(int n, int d)
+{
+      return (double)n/d * 100;
+
+}
+ void Hashing::verificaRedistribuicao(int n)
+{
+    if(n >= 50)
     {
-        cout<<"nao foi possivel inserir o elemento "<<endl;
+        cout<<"Aumentando e redtribuindo"<<endl;
+         Registro* nova;
+         Registro* antiga;
+         int n = tam;
+         tam = encontraPrimo(tam*2);
+         chavesArmazenadas = 0;
+         nova = new Registro[tam];
+         /*for(int i = 0; i< tam ; i++)
+         {
+             nova[i]. = -1;
+         }*/
+        antiga = tabelaHash;
+        tabelaHash = nova;
+        for(int i = 0; i < n; i++)
+        {
+             if(antiga[i].getCasos() != -1)
+             {
+                  auxInsere(tabelaHash,getCodigo(i),antiga[i]);
+             }
+        }
+        delete []antiga;
     }
-    else
+
+}
+
+void Hashing::imprimeTXT(std::ofstream& myfile)
+{   
+    int i;
+    for( i =0; i <tam; i++)
     {
-        tabelaRegistros[h] = r;
-        tabelaRegistros[h].setVisitado(true);
-        
+        if(tabelaHash[i].getCasos()!=-1)
+        {
+            myfile<<"Cidade: "<<tabelaHash[i].getCidade()<<"|Data: "<<tabelaHash[i].getDataCompleta()<<"|Casos dia: "<<tabelaHash[i].getCasos()<<endl;
+        }
+
     }
-    return h;
+    myfile<<"Quant registros Hash: "<<i<<endl;
 }
 void Hashing::imprime()
 {
     for(int i =0; i <tam; i++)
     {
-        if(tabelaRegistros[i].getCasos()!=-1)
+        if(tabelaHash[i].getCasos()!=-1)
         {
-            cout<<tabelaRegistros[i].getCidade()<<" ";
+            cout<<"Cidade: "<<tabelaHash[i].getCidade()<<endl;
         }
 
     }
 }
+void Hashing::casosTotaisCidade(int codigoCidade)
+{   
+    int casosCidade = 0;
+    string cidade;
+    for(int i =0; i <tam; i++)
+    {
+        if(tabelaHash[i].getCodigoCidade() == codigoCidade)
+        {
+           casosCidade = casosCidade + tabelaHash[i].getCasos();
+           cidade = tabelaHash[i].getCidade();
+        }
+
+    }
+
+    cout<<"A cidade "<<cidade<<"teve "<< casosCidade <<"casos"<<endl;
+}
 int Hashing::getCodigo(int i)
 {   
 
-    return tabelaRegistros[i].getCodigoCidade();
+    return tabelaHash[i].getCodigoCidade();
     
 }
 string Hashing::buscaNome(int i)
 {
-    return tabelaRegistros[i].getCidade();
+    return tabelaHash[i].getCidade();
 }
 int Hashing::getData(int i)
 {   
     
-    return tabelaRegistros[i].getDataInt();
+    return tabelaHash[i].getDataInt();
 }

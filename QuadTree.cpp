@@ -89,7 +89,7 @@ NoArvQuad* QuadTree::auxInsere(NoArvQuad *p,NoArvQuad *r)
              p->setSW(auxInsere(p->getSW(),r));
         else
             p->setNW(auxInsere(p->getNW(),r));
-    }else{
+    }else {
 
         if(p->getLongitude()<r->getLongitude())
             p->setSE(auxInsere(p->getSE(),r));
@@ -98,6 +98,7 @@ NoArvQuad* QuadTree::auxInsere(NoArvQuad *p,NoArvQuad *r)
     }
     return p;
 }
+
 
 void QuadTree::imprime()
 {   
@@ -119,6 +120,30 @@ void QuadTree::auxImprime(NoArvQuad *p)
         auxImprime(p->getNW());
         auxImprime(p->getSE());
         auxImprime(p->getNE());   
+       
+    }
+}
+void QuadTree::imprimeTXT(std::ofstream& myfile)
+{   
+   
+    auxImprimeTXT(raiz,myfile);
+    
+    cout << endl;
+}
+
+void QuadTree::auxImprimeTXT(NoArvQuad *p,std::ofstream& myfile)
+{   
+    
+
+    if(p!=NULL)
+    {   
+        
+        
+        auxImprimeTXT(p->getSW(),myfile);//
+        auxImprimeTXT(p->getNW(),myfile);
+        myfile<<"Nome: "<<p->getNome()<<"/Lat: "<<p->getLatitude()<<"/Long: "<<p->getLongitude()<<endl;
+        auxImprimeTXT(p->getSE(),myfile);
+        auxImprimeTXT(p->getNE(),myfile);   
        
     }
 }
@@ -218,18 +243,19 @@ void QuadTree::auxCidadesNoIntervalo(NoArvQuad *p, float x0, float x, float y0, 
             if(p->getLongitude() >= y0 && p->getLongitude() <= y)
             {
                 cout << "tem! " << endl;
+                cout << "Cidade: " << p->getNome() << ", " << endl;
                 auxCidadesNoIntervalo(p->getNE(), x0, x, y0, y);
-                cout << "Cidade: " << p->getNome() << ", " << endl;
                 auxCidadesNoIntervalo(p->getNW(), x0, x, y0, y);
-                cout << "Cidade: " << p->getNome() << ", " << endl;
                 auxCidadesNoIntervalo(p->getSE(), x0, x, y0, y);
-                cout << "Cidade: " << p->getNome() << ", " << endl;
                 auxCidadesNoIntervalo(p->getSW(), x0, x, y0, y);
             }
         }
         
         //cidade fora do intervalo
-        else if( p->getLatitude() < x0 )
+        else if( (p->getLatitude() < x0) ||
+                 (p->getLatitude() > x ) ||
+                 (p->getLongitude()< y0) ||
+                 (p->getLongitude()> y )  )
         {
             //cout << "ta fora do x0..." << endl;
             auxCidadesNoIntervalo(p->getNE(), x0, x, y0, y);
@@ -237,6 +263,7 @@ void QuadTree::auxCidadesNoIntervalo(NoArvQuad *p, float x0, float x, float y0, 
             auxCidadesNoIntervalo(p->getSE(), x0, x, y0, y);
             auxCidadesNoIntervalo(p->getSW(), x0, x, y0, y);
         }
+        /*
         else if( p->getLatitude() > x )
         {
             //cout << "ta fora do x..."  << endl;
@@ -260,7 +287,7 @@ void QuadTree::auxCidadesNoIntervalo(NoArvQuad *p, float x0, float x, float y0, 
             auxCidadesNoIntervalo(p->getNW(), x0, x, y0, y);
             auxCidadesNoIntervalo(p->getSE(), x0, x, y0, y);
             auxCidadesNoIntervalo(p->getSW(), x0, x, y0, y);
-        }
+        } */
         else
             return;
     }

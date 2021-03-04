@@ -13,172 +13,152 @@
 #include "RegistroCoordinates.h"
 
 
-#define TAMANHOMAX 1431490
-
-
-
 using namespace std;
+
+
 using namespace std::chrono;
+#define TAMANHOMAX 1431490
+#define QUANTCIDADES 5571
+
 //g++ -o teste -O3 *.cpp 
 //.teste
 
-bool verificaCapital(string capital)
-{
-   
-    string verifica = "TRUE";
-    int comparaString= verifica.compare(capital);
-
-    if(comparaString == 0)
-    {
-        return true;
-    }
-    return false;
+void criaArquivoSaidaTxt(string nomeArquivo){
+    ofstream arq(nomeArquivo);
+    arq.close();
 }
 
-//Funções para teste das Estruturas para liberar a Main
-void arvQuadTree(RegistroCoordinates *r, int N){
-
-     QuadTree *arv = new QuadTree();
-     int cont=0;
-    
-    //Isere os registros na ARVQUAD
-    for(int i=1;i<N;i++)
-    {
-        NoArvQuad *no = new NoArvQuad();
-        no->setLatitude(r[i].getLatitude());
-        no->setLongitude(r[i].getLongitude());
-        no->setNome(r[i].getcidade_nome());
-        arv->insere(no);
-        cont++;
-    }
-
-    cout<<"Cont: "<<cont<<endl;
-
-    //NoArvQuad *procura = new NoArvQuad();
-    //procura->setLatitude(-21.0276);
-    //procura->setLongitude(-44.3204);
-   
-    
-    //arv->imprime();
-    //arv->buscaValor(procura);
-
-    arv->cidadesNoIntervalo(-22.0000, -20.0000, -45.0000, -42.0000);
-    //arv->imprimeCapital();
-
-    cout<<"Fim"<<endl; 
-
-}
-/*
-
-void avlTree(){
-
-    AVLTree *piloto = new AVLTree();
-
-    //TESTE ESQUERDA SIMPLES
-
-    piloto->insere(10); piloto->insere(8);
-    piloto->insere(16); piloto->insere(13);
-    piloto->insere(19); piloto->insere(22);
-    
-
-    //TESTE ESQUERDA DUPLA 
-
-    piloto->insere(10); piloto->insere(8);
-    piloto->insere(16); piloto->insere(14);
-    piloto->insere(12); piloto->insere(22);
-    
-    piloto->imprime(); 
-
-}
-*/
-void testeHash(Registro *r, int N)
-{
-    Hashing *hashteste = new Hashing(N);
-    AVLTree *avl = new AVLTree();
-    ArvB *teste = new ArvB(3);
-    int chave;
-    srand(time(NULL));
-    high_resolution_clock::time_point inicio = high_resolution_clock::now();
-    for(int i=0;i<N;i++)    
-    {   
-        chave = r[i].getCodigoCidade() + r[i].getDataInt();
-        //cout<<"Chave: "<<chave<<endl;
-        int id = hashteste->insere(chave,r[i]);
-        //cout<<"id: "<<id<<endl;
-        //cout<<"Codigo: "<<hashteste->getCodigo(id)<<endl;
-        //cout<<"Data: "<<hashteste->getData(id)<<endl;
-        //avl->insere(id,hashteste);
-        teste->insereArvB(id,hashteste);
-        
-    
-    }
-    high_resolution_clock::time_point fim = high_resolution_clock::now();
-    cout<< "Tempo: " << duration_cast<duration<double>>(fim - inicio).count() << "s.   " ;
-    cout<<"Fim"<<endl;
-    teste->imprimeArv();
-    
-    cout<<"Fim"<<endl;
-    //cout<<"Num chaves: "<<hashteste->getChavesArmazenadas()<<endl;
-    
-}
-
-/*
-void testeArvB(Registro *r,int N)
-{
-    ArvB *teste = new ArvB(3);
-    int i = 0;
-    int chave;
-    Hashing *hashteste = new Hashing(N);
-    srand(time(NULL));
-    int id;
-    for(int i=0;i<N;i++)    
-    {   
-
-        chave = r[i].getCodigoCidade() + r[i].getDataInt();
-        //cout<<"Chave: "<<chave<<endl;
-        id=hashteste->insere(chave,r[i]);
-        //cout<<"Qual vai inserir: "<<id<<endl;
-        teste->insereArvB(id,hashteste);
-    }
-    
-    teste->imprimeArv();
-    cout<<"Fim";
-    
-    int k = 120;
-    if(!teste->busca(k,*hashteste))
-    {
-        cout<<"N tem"<<endl;
-    }
-    
-    cout<<endl;
-    cout<<"Fim";
-    cout<<"Quant Colid: "<<hashteste->getContaColisao()<<endl;
-}
-*/
-int main(int argc, char *argv[])
+void testeQuadTree(RegistroCoordinates *registroCidades,int N)
 {   
     
+    QuadTree *quad = new QuadTree();
+
+    //arq."Cidades Inseridades na QuadTree"<<endl;
+
+    for(int i = 0; i < N; i++)
+    {   
+        NoArvQuad *no = new NoArvQuad();
+        no->setLatitude(registroCidades[i].getLatitude());
+        no->setLongitude(registroCidades[i].getLongitude());
+        no->setNome(registroCidades[i].getcidade_nome());
+        quad->insere(no);
+        //arq<<"Nome Cidade: "<<no->getNome()<<endl;
+    }
+
+    if(N <= 20){
+        cout<<"Saida Console"<<endl;
+        quad->imprime(); 
+    }else{
+        cout<<"Arquivo TXT criado"<<endl;
+        ofstream arq;// ("a:lista.dat", ios::ate | ios::out | ios::in)
+        arq.open("QuadTreeTXT", ios::ate| ios::out | ios::in);
+        quad->imprimeTXT(arq);
+        arq.close();
+    }
+    
+    cout<<"Final"<<endl;
+
+
+
+}
+
+void testeHash(Registro *registro,int N)
+{   
+    
+    Hashing *hash = new Hashing(N);
+
+    //arq."Cidades Inseridades na QuadTree"<<endl;
+
+    for(int i = 0; i < N; i++)
+    {   
+        int chave = registro[i].getCodigoCidade() + registro[i].getDataInt();
+        hash->insere(chave,registro[i]);
+        
+    }
+
+    if(N <= 20){
+        cout<<"Saida no Console ===> Cidades Inseridas na Hash"<<endl;
+        hash->imprime();
+
+    }else{
+        cout<<"Arquivo TXT criado"<<endl;
+        ofstream arq;// ("a:lista.dat", ios::ate | ios::out | ios::in)
+        arq.open("HashingTXT", ios::ate| ios::out | ios::in);
+        hash->imprimeTXT(arq); 
+        hash->casosTotaisCidade(330010);
+        arq.close();
+    }
+    
+    cout<<"Final"<<endl;
+
+
+
+}
+
+void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades)
+{   
+    
+    int menuTeste,n;
+    cout << "===============Modulo de Teste===============" << endl;
+    cout << "[1] Inserção de N cidades na quad tree"<<endl;
+    cout << "[2] Inserção de N registros na tabela hash "<<endl;
+    cout << "[3] Inserção de N chaves na árvore AVL"<<endl;
+    cout << "[4] Inserção de N chaves na árvore B"<<endl;
+    
+    cin>> menuTeste;
+
+    
+    
+    switch (menuTeste)
+    {
+    case 1:
+            cout<<"Digite N cidades que sera inseridas"<<endl;
+            cin >> n;
+            criaArquivoSaidaTxt("QuadTreeTXT");
+            testeQuadTree(registroCidades,n);
+
+        break;
+    case 2:
+            cout<<"Digite  N registro que sera inseridos"<<endl;
+            cin >> n;
+            criaArquivoSaidaTxt("HashingTXT");
+            testeHash(registro,n);
+            
+        break;
+    case 3:
+            cout<<"Digite N chaves que sera inseridas na AVL"<<endl;
+            cin >> n;
+        break;
+    
+    case 4:
+            cout<<"Digite N cidades que sera inseridas na ARV B"<<endl;
+            cin >> n;
+
+        break;
+    
+    default:
+        break;
+    }
+
+}   
+
+
+
+int main(int argc, char *argv[])
+{   
+    setlocale(LC_ALL,"UTF-8");
+
     int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000, TAMANHOMAX};
     Registro *registros = new Registro[tamanhoN[5]];
-    registros->leArquivo(registros,tamanhoN[3]);
-    testeHash(registros,tamanhoN[3]);
+    registros->leArquivo(registros,tamanhoN[5]);
+    registros->transformaCasosAcumuladosEmCasosDiarios(registros,tamanhoN[5]);
+
+
+    RegistroCoordinates *registrosCoordinate = new RegistroCoordinates[QUANTCIDADES];
+    registrosCoordinate->leArquivoCoordi(registrosCoordinate,QUANTCIDADES);
     
-    //registros->transformaCasosAcumuladosEmCasosDiarios();
-    
-    //registros->exibeRegistros(registros,tamanhoN[0]); 
-    
+    moduloTeste(registros,registrosCoordinate);
    
-    /*
-    int N = 5571;
-    RegistroCoordinates *registrosCoordinate = new RegistroCoordinates[N];
-    registrosCoordinate->leArquivoCoordi(registrosCoordinate,N);
-    arvQuadTree(registrosCoordinate,N);
-    */
-    //testeHash(registros,tamanhoN[0]);
-   
-    //testeArvB(registros,tamanhoN[0]);
-    //testeHash(registros,tamanhoN[0]);
-  
     
     return 0;
     
