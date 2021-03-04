@@ -74,6 +74,7 @@ int Hashing::auxInsere(Registro *v,int codigo,Registro r)
      hInicial = h;
      while(tabelaHash[h].getCasos()!= -1)
      {
+         
          /*if(tabelaHash[h] == val)
          {
              chavesArmazenadas --;
@@ -82,7 +83,7 @@ int Hashing::auxInsere(Registro *v,int codigo,Registro r)
          i++;
          h = funcaoHash(codigo,i);
 
-         if(h = hInicial)
+         if(h == hInicial)
          {
              return -1;
          }
@@ -94,7 +95,10 @@ int Hashing::auxInsere(Registro *v,int codigo,Registro r)
 }
 int Hashing::insere(int codigo, Registro r)
 {
+    
     int a = auxInsere(tabelaHash,codigo, r);
+    //cout<<auxInsere(tabelaHash,codigo, r)<<endl;
+    //cout<<codigo<<endl;
     return a;
 }
 
@@ -111,7 +115,7 @@ double Hashing::fatorCarga(int n, int d)
 {
     if(n >= 50)
     {
-
+        cout<<"Aumentando e redtribuindo"<<endl;
          Registro* nova;
          Registro* antiga;
          int n = tam;
@@ -147,7 +151,6 @@ void Hashing::imprime()
         }
     }
     cout<<endl;
-    cout<<"tamanho da hash: "<<tam<<endl;
 }
 int Hashing::getCodigo(int i)
 {
