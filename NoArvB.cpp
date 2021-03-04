@@ -19,7 +19,7 @@ NoArvB::NoArvB(int tamanho,bool f)
 
 void NoArvB::split(int i,NoArvB *r, Hashing *tabela)
 {
-    cout<<"Split"<<endl;
+    //cout<<"Split"<<endl;
     NoArvB *q = new NoArvB(r->getTam(),r->getFolha());
     q->setN(tam-1);
     

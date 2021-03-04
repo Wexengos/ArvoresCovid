@@ -9,7 +9,7 @@ using namespace std;
 
 Hashing::Hashing(int n)
 {
-    tam = n+(n/2);
+    tam = n*66;
     cout<<"TAM: "<<tam;
     tabelaRegistros = new Registro[tam];
     chavesArmazenadas = 0;
@@ -54,7 +54,7 @@ int Hashing::insere(int codigo, Registro r)
     
     int h = hash(codigo);
     
-    cout<<"Posi: "<<h<<endl;
+    //cout<<"Posi: "<<h<<endl;
     if(h == -1)
     {
         cout<<"nao foi possivel inserir o elemento "<<endl;
@@ -81,7 +81,6 @@ void Hashing::imprime()
 int Hashing::getCodigo(int i)
 {   
 
-    
     return tabelaRegistros[i].getCodigoCidade();
     
 }

@@ -95,8 +95,10 @@ void testeHash(Registro *r, int N)
 {
     Hashing *hashteste = new Hashing(N);
     AVLTree *avl = new AVLTree();
+    ArvB *teste = new ArvB(3);
     int chave;
     srand(time(NULL));
+    high_resolution_clock::time_point inicio = high_resolution_clock::now();
     for(int i=0;i<N;i++)    
     {   
         chave = r[i].getCodigoCidade() + r[i].getDataInt();
@@ -105,12 +107,17 @@ void testeHash(Registro *r, int N)
         //cout<<"id: "<<id<<endl;
         //cout<<"Codigo: "<<hashteste->getCodigo(id)<<endl;
         //cout<<"Data: "<<hashteste->getData(id)<<endl;
-        avl->insere(id,hashteste);
+        //avl->insere(id,hashteste);
+        teste->insereArvB(id,hashteste);
         
     
     }
+    high_resolution_clock::time_point fim = high_resolution_clock::now();
+    cout<< "Tempo: " << duration_cast<duration<double>>(fim - inicio).count() << "s.   " ;
     cout<<"Fim"<<endl;
-    avl->imprime(hashteste);
+    teste->imprimeArv();
+    
+    cout<<"Fim"<<endl;
     //cout<<"Num chaves: "<<hashteste->getChavesArmazenadas()<<endl;
     
 }
@@ -151,22 +158,22 @@ void testeArvB(Registro *r,int N)
 int main(int argc, char *argv[])
 {   
     
-    //int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000, TAMANHOMAX};
-    //Registro *registros = new Registro[tamanhoN[5]];
-    //registros->leArquivo(registros,tamanhoN[3]);
-    //testeHash(registros,tamanhoN[0]);
+    int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000, TAMANHOMAX};
+    Registro *registros = new Registro[tamanhoN[5]];
+    registros->leArquivo(registros,tamanhoN[3]);
+    testeHash(registros,tamanhoN[3]);
     
     //registros->transformaCasosAcumuladosEmCasosDiarios();
     
     //registros->exibeRegistros(registros,tamanhoN[0]); 
     
    
-    
+    /*
     int N = 5571;
     RegistroCoordinates *registrosCoordinate = new RegistroCoordinates[N];
     registrosCoordinate->leArquivoCoordi(registrosCoordinate,N);
     arvQuadTree(registrosCoordinate,N);
-    
+    */
     //testeHash(registros,tamanhoN[0]);
    
     //testeArvB(registros,tamanhoN[0]);
