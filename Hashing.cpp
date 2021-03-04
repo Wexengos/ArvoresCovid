@@ -4,105 +4,158 @@
 #include <vector>
 #include <math.h>
 
-#include "Tabela.h"
-#include "Hashing.h"
 #include "Registro.h"
+#include "Hashing.h"
+
 
 using namespace std;
+static bool verificaPrimo(int n)
+{
+    if(n == 0)
+    {
+        return false;
+    }
+    int cont = 0;
+    for(int i = 1; i <= n; i++)
+    {
+        if(n%i == 0)
+        {
+            cont ++;
+            if(cont > 2)
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+
+}
+static int encontraPrimo(int n)
+{
+    int h = n;
+    while(verificaPrimo(h) == false)
+    {
+        h++;
+
+    }
+    return h;
+}
+
 
 Hashing::Hashing(int n)
 {
-    tam = n;
-    tamPorao = n;
-    tamMax = tam + tamPorao;
-    vet = new Tabela[tamMax];
-    poraoLivre = tamMax - 1;
+    tam = encontraPrimo(n);
+    tabelaHash = new Registro[tam];
     chavesArmazenadas = 0;
-    contaColisoes = 0;
+    /*for(int i = 0; i < tam; i++)
+    {
+        tabelaHash[i]. = -1;
+    }*/
+
 }
 Hashing::~Hashing()
 {
-    //delete vet;
-};
-
-int Hashing::funcaoHash(int val)
+    delete []tabelaHash;
+    chavesArmazenadas = 0;
+}
+int Hashing::funcaoHash(int val,int i)
 {
-    //double a = (sqrt(5)-1)/2;
-    //return floor(((val*a) - floor(val*a))*tam);
-    return val%(tam+17);
+
+    int h = ((val%tam)+i)%tam;
+    return h;
+}
+int Hashing::auxInsere(Registro *v,int codigo,Registro r) 
+{
+
+     verificaRedistribuicao(fatorCarga(chavesArmazenadas, tam));
+     int h,hInicial;
+     int i = 0;
+     h = funcaoHash(codigo,i);
+     hInicial = h;
+     while(tabelaHash[h].getCasos()!= -1)
+     {
+         /*if(tabelaHash[h] == val)
+         {
+             chavesArmazenadas --;
+             break;
+         }*/
+         i++;
+         h = funcaoHash(codigo,i);
+
+         if(h = hInicial)
+         {
+             return -1;
+         }
+
+     }
+     tabelaHash[h] = r;
+     chavesArmazenadas ++;
+     return h;
 }
 int Hashing::insere(int codigo, Registro r)
 {
+    int a = auxInsere(tabelaHash,codigo, r);
+    return a;
+}
 
-    int h = funcaoHash(codigo);
-    if (vet[h].getNext() == -2)
+int Hashing::getChavesArmazenadas()
+{
+    return chavesArmazenadas;
+}
+double Hashing::fatorCarga(int n, int d)
+{
+      return (double)n/d * 100;
+
+}
+ void Hashing::verificaRedistribuicao(int n)
+{
+    if(n >= 50)
     {
-        vet[h].setInfo(r);
-        vet[h].setNext(-1);
-        chavesArmazenadas++;
-        return h;
-    }
-    else
-    {
-        contaColisoes++;
-        if (poraoLivre >= tam)
+
+         Registro* nova;
+         Registro* antiga;
+         int n = tam;
+         tam = encontraPrimo(tam*2);
+         chavesArmazenadas = 0;
+         nova = new Registro[tam];
+         /*for(int i = 0; i< tam ; i++)
+         {
+             nova[i]. = -1;
+         }*/
+        antiga = tabelaHash;
+        tabelaHash = nova;
+        for(int i = 0; i < n; i++)
         {
-
-            vet[poraoLivre].setInfo(r);
-            vet[poraoLivre].setNext(-1);
-            vet[h].setNext(poraoLivre);
-            int temp = poraoLivre;
-            poraoLivre--;
-            chavesArmazenadas++;
-            return temp;
+             if(antiga[i].getCasos() != -1)
+             {
+                  auxInsere(tabelaHash,getCodigo(i),antiga[i]);
+             }
         }
-        else
+        delete []antiga;
+    }
+
+}
+void Hashing::imprime()
+{
+
+    for(int i = 0; i < tam; i++)
+    {
+        if(tabelaHash[i].getCasos() != -1)
         {
+            cout<<tabelaHash[i].getCasos()<<" ";
 
-            if (vet[tamMax - 1].getNext() == -1)
-            {
-
-                 int x = indiceLivre(tam-1);
-                vet[x].setInfo(r);
-                vet[x].setNext(-1);
-                vet[tamMax-1].setNext(x);
-                chavesArmazenadas ++;
-                return x;
-
-            }
-            else
-            {
-                int aux = vet[tamMax - 1].getNext();
-                int res = 0;
-                while (res != -1)
-                {
-                    if (vet[aux].getNext() == -1)
-                    {
-                        res = -1;
-                    }
-                    else
-                    {
-                        aux = vet[aux].getNext();
-                    }
-                }
-                int temp = indiceLivre(aux);
-                    vet[temp].setInfo(r);
-                    vet[temp].setNext(-1);
-                    vet[aux].setNext(temp);
-                    chavesArmazenadas ++;
-                    return temp;
-            }
         }
     }
-    return -1;
+    cout<<endl;
+    cout<<"tamanho da hash: "<<tam<<endl;
 }
 int Hashing::getCodigo(int i)
 {
-    return vet[i].getInfo().getCodigoCidade();
+    return tabelaHash[i].getCodigoCidade();
 }
 int Hashing::getData(int i)
 {
-    string str1 = vet[i].getInfo().getDataCompleta();
+    string str1 = tabelaHash[i].getDataCompleta();
     string str2;
 
     for (int contador = 0; contador < str1.size(); contador++)
@@ -116,42 +169,4 @@ int Hashing::getData(int i)
     int data = stoi(str2);
 
     return data;
-}
-
-void Hashing::imprime()
-{
-    cout << endl;
-    for (int i = 0; i < tamMax; i++)
-    {
-        if (i == tam)
-        {
-            cout << "Porao: " << endl;
-        }
-           if(vet[i].getInfo().getCasos() != -1)
-            {
-                cout<< vet[i].getInfo().getCidade() << " ";
-            }
-        
-    }
-}
-int Hashing::getChavesArmazenadas()
-{
-    return chavesArmazenadas;
-}
-int Hashing::getContaColisoes()
-{
-    return contaColisoes;
-}
-int Hashing::indiceLivre(int h)
-{
-    for(int i = h; i >= 0; i--)
-    {
-
-        if(vet[i].getNext() == -2)
-        {
-
-            return i;
-        }
-    }
-
 }

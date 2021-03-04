@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
     int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000, TAMANHOMAX};
     Registro *registros = new Registro[tamanhoN[5]];
     registros->leArquivo(registros,tamanhoN[5]);
-    testeHash(registros,tamanhoN[3]);
+    testeHash(registros,tamanhoN[0]);
     
     //registros->transformaCasosAcumuladosEmCasosDiarios();
     
