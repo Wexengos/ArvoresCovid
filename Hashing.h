@@ -1,35 +1,38 @@
-#ifndef HASHING_H_INCLUDED
-#define HASHING_H_INCLUDED
-#include "Tabela.h"
+#include <vector>
+#include <iostream>
+#include <cstdlib>
+
 #include "Registro.h"
 
-using namespace std;
+#ifndef HASHING_H_INCLUDED
+#define HASHING_H_INCLUDED
 
+
+
+using namespace std;
 class Hashing
 {
 private:
-    Tabela *vet;
+    Registro *tabelaHash;
     int tam;
-    int tamPorao;
-    int tamMax;
-    int poraoLivre;
     int chavesArmazenadas;
-    int contaColisoes;
-
 
 public:
-     Hashing(int n);
-     ~Hashing();
-     int funcaoHash(int val);
-     int insere(int codigo, Registro r);
-     int getCodigo(int i);
-     int getData(int i);
-     void imprime();
-     int getChavesArmazenadas();
-     int getContaColisoes();
-     int indiceLivre(int h); //indice livre
+    Hashing(int tam);
+    ~Hashing();
+    int funcaoHash(int val,int i);
+    int insere(int codigo,Registro r);
+    int auxInsere(Registro* v,int codigo, Registro r);
+    int getChavesArmazenadas();
+    double fatorCarga(int n, int d);
+    void verificaRedistribuicao(int n);
+    void imprime();
+    int getCodigo(int i);
+    int getData(int i); //thdthetrhetbedtrhwrgwergwsrgsergrdytrgy
+
+
+
 
 };
-
 
 #endif // HASHING_H_INCLUDED
