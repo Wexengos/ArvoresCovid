@@ -22,7 +22,7 @@ public:
     NoArvB(int tamanho,bool f);
     void insertFilho(int k,Hashing *tabela);
     void split(int i,NoArvB *p,Hashing *tabela);
-    void imprime();
+    void imprime(Hashing  *tabela);
     int getN(){return n;};
     int getTam(){return tam;};
     bool getFolha(){return folha;};
@@ -32,8 +32,10 @@ public:
     NoArvB* getFilhos(int i){return filhos[i];};
     int getChaves(int i){return chaves[i];};
     int comparaChaveHashing(int ch,Hashing *tabela);
-
-    NoArvB* busca_no_No(int k,Hashing tabela); 
+    int comparaData(int x,int *ch,Hashing *tabela,int i);
+    int compara(int x,int *ch,Hashing *tabela,int i);
+    void imprimeTXT(Hashing  *tabela,std::ofstream& myfile);
+    NoArvB* busca_no_No(int k,Hashing *tabela); 
     ~NoArvB();
 
     friend class ArvB;

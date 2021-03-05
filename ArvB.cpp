@@ -18,6 +18,30 @@ ArvB::ArvB(int tam)
 }
 ArvB::~ArvB(){}
 
+int ArvB::comparaData(int x,int *ch,Hashing *tabela,int i)
+{
+  
+    if(tabela->getData(x) < tabela->getData(ch[i]))
+        return -2;
+    else 
+        return 2;
+}
+
+int ArvB::compara(int x,int *ch,Hashing *tabela,int i)
+{
+  
+    if(tabela->getCodigo(x) < tabela->getCodigo(ch[i]))
+        return -1;
+    else if(tabela->getCodigo(x) > tabela->getCodigo(ch[i]))
+        return 1;
+    else if(tabela->getCodigo(x) == tabela->getCodigo(ch[i]))
+    {
+        int comp = comparaData(x,ch,tabela,i);
+        return comp;
+    }
+    return 0;
+}
+
 
 
 void ArvB::insereArvB(int chave,Hashing *tabela)
@@ -45,35 +69,42 @@ void ArvB::insereArvB(int chave,Hashing *tabela)
             //que seja maior do que a chave que quer ser inserida assim ligando a folha correta
             int i = 0;
             
-            if(p->chaves[0]<chave){
-                i++; 
+         
+            if((compara(chave,p->chaves,tabela,0) == 1 ||compara(chave,p->chaves,tabela,0) == 2 )){
+                i++;
             }
 
             p->getFilhos(i)->insertFilho(chave,tabela);
             raiz = p;
-        }else
+        }else{
             //cout<<"Raiz n ta cheia"<<endl;
             raiz->insertFilho(chave,tabela);
-        
+        }
     }
 }
 
-void ArvB::imprimeArv()
+void ArvB::imprimeArv(Hashing *tabela)
 {
     if(raiz!=NULL)
     {
-        raiz->imprime();
+        raiz->imprime(tabela);
     }
 
+    /*
     for (int i = 0; i < raiz->getN(); i++)
     {
         cout<<" /"<<raiz->chaves[i];
     }
-    
+    */
 }
-
-
-NoArvB* ArvB::busca(int chave,Hashing tabela)
+void ArvB::imprimeArvTXT(Hashing *tabela,std::ofstream& myfile)
+{
+    if(raiz!=NULL)
+    {
+        raiz->imprimeTXT(tabela,myfile);
+    }
+}
+NoArvB* ArvB::busca(int chave,Hashing *tabela)
 {
     return (raiz == NULL) ? NULL : raiz->busca_no_No(chave,tabela);
 }

@@ -16,6 +16,28 @@ NoArvB::NoArvB(int tamanho,bool f)
     filhos = new NoArvB * [2*tam];
     n = 0;
 }
+int NoArvB::comparaData(int x,int *ch,Hashing *tabela,int i)
+{
+  
+    if(tabela->getData(x) < tabela->getData(ch[i]))
+        return -2;
+    else 
+        return 2;
+}
+int NoArvB::compara(int x,int *ch,Hashing *tabela,int i)
+{
+  
+    if(tabela->getCodigo(x) < tabela->getCodigo(ch[i]))
+        return -1;
+    else if(tabela->getCodigo(x) > tabela->getCodigo(ch[i]))
+        return 1;
+    else if(tabela->getCodigo(x) == tabela->getCodigo(ch[i]))
+    {
+        int comp = comparaData(x,ch,tabela,i);
+        return comp;
+    }
+    return 0;
+}
 
 void NoArvB::split(int i,NoArvB *r, Hashing *tabela)
 {
@@ -64,6 +86,7 @@ void NoArvB::split(int i,NoArvB *r, Hashing *tabela)
 }
 
 
+
 void NoArvB::insertFilho(int k, Hashing *tabela)
 {
     int i = n-1;
@@ -72,14 +95,12 @@ void NoArvB::insertFilho(int k, Hashing *tabela)
     //Se for folha inseria a chave na posição correta 
     if(folha==true){
         
-        while (i>=0 && chaves[i]>k)
+        while (i>=0 && (compara(k,chaves,tabela,i) == -1 ||compara(k,chaves,tabela,i) == -2 )/*chaves[i]>k*/)
         {   
             //Ajusta as chaves dentro do No
             chaves[i+1]=chaves[i];
             i--;
         }
-
-        
         chaves[i+1] = k;
         n=n+1;
         /*
@@ -101,7 +122,7 @@ void NoArvB::insertFilho(int k, Hashing *tabela)
     }else{
         
         
-        while (i>=0 && this->chaves[i]>k)
+        while (i>=0 && (compara(k,chaves,tabela,i) == -1 ||compara(k,chaves,tabela,i) == -2 ))
         {
             i--;
         }
@@ -110,7 +131,7 @@ void NoArvB::insertFilho(int k, Hashing *tabela)
         {
             split(i+1,filhos[i+1],tabela);
 
-            if(chaves[i+1]<k)
+            if((compara(k,chaves,tabela,i+1) == 1 ||compara(k,chaves,tabela,i+1) == 2 ))
                 i++;
         }
        filhos[i+1]->insertFilho(k,tabela);
@@ -118,18 +139,18 @@ void NoArvB::insertFilho(int k, Hashing *tabela)
    
 }
 
-NoArvB* NoArvB::busca_no_No(int k,Hashing tabela)
+NoArvB* NoArvB::busca_no_No(int k,Hashing *tabela)
 {
    int i=0;
     
-    while (i<n && k>chaves[i])
+    while (i<n && (compara(k,chaves,tabela,i) == 1 ||compara(k,chaves,tabela,i) == 2))
     {
        i++;
     }
 
     if(chaves[i] == k){
         //cout<<"Chave encotrada: "<<chaves[i]<<endl;
-        cout<<"Nome: "<<tabela.buscaNome(k);
+        cout<<"Nome: "<<tabela->buscaNome(k);
         return this;
     }
     
@@ -139,21 +160,40 @@ NoArvB* NoArvB::busca_no_No(int k,Hashing tabela)
     return filhos[i]->busca_no_No(k,tabela);
 }
 
-void NoArvB::imprime()
+void NoArvB::imprime(Hashing  *tabela)
 {   
     int i;
     for(i = 0; i<this->n;i++)
     {
         if(this->folha == false)
         {
-            this->filhos[i]->imprime();
+            this->filhos[i]->imprime(tabela);
         }
 
-        cout<<"Ch: "<< this->chaves[i] <<endl;
+        cout<<"Id: "<< this->chaves[i]<<"|Cidade: "<<tabela->buscaNome(chaves[i])<<"|Codigo: "<<tabela->getCodigo(chaves[i])<<"|Data: "<<tabela->data(chaves[i])<<endl;
 
     }
 
     if(this->folha == false){
-        this->filhos[i]->imprime();
+        this->filhos[i]->imprime(tabela);
+    }
+}
+
+void NoArvB::imprimeTXT(Hashing  *tabela,std::ofstream& myfile)
+{   
+    int i;
+    for(i = 0; i<this->n;i++)
+    {
+        if(this->folha == false)
+        {
+            this->filhos[i]->imprimeTXT(tabela,myfile);
+        }
+
+        myfile<<"Id: "<< this->chaves[i]<<"|Cidade: "<<tabela->buscaNome(chaves[i])<<"|Codigo: "<<tabela->getCodigo(chaves[i])<<"|Data: "<<tabela->data(chaves[i])<<endl;
+
+    }
+
+    if(this->folha == false){
+        this->filhos[i]->imprimeTXT(tabela,myfile);
     }
 }

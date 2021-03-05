@@ -21,18 +21,25 @@ public:
     Hashing(int tam);
     ~Hashing();
     int funcaoHash(int val,int i);
-    int insere(int codigo,Registro r);
+    int funcaoHash2(int val,int i);
+    int insere(int codigo,Registro *r);
     int auxInsere(Registro* v,int codigo, Registro r);
     int getChavesArmazenadas();
     double fatorCarga(int n, int d);
     void verificaRedistribuicao(int n);
     void imprimeTXT(std::ofstream& myfile);
     void imprime();
+    bool verifica(int ha);
+    int hash(int val);
+    int hash1(int val);
+    int hash2(int val);
+    bool cheio();
     void casosTotaisCidade(int codigoCidade);
     int getCodigo(int i);
     int getData(int i);
     //int getContaColisao(){return contaColisao;};
     string buscaNome(int i);
+    string data(int i);
 
 
 

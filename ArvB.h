@@ -17,8 +17,11 @@ public:
     ~ArvB();
     //NoArvB* buscaArvB(int chave, NoArvB *p);
     void insereArvB(int chave, Hashing *tabela);
-    void imprimeArv();
-    NoArvB* busca(int chave,Hashing tabela);
+    void imprimeArv(Hashing *tabela);
+    NoArvB* busca(int chave,Hashing *tabela);
+    int compara(int x,int *ch,Hashing *tabela,int i);
+    int comparaData(int x,int *ch,Hashing *tabela,int i);
+    void imprimeArvTXT(Hashing *tabela,std::ofstream& myfile);
 };
 
 

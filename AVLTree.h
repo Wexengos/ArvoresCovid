@@ -14,7 +14,8 @@ public:
     AVLTree();
     ~AVLTree();
     void imprime(Hashing *tabela);
-    int dataigual(int x,NoArv *p,Hashing *tabela);
+    int comparaData(int x,NoArv *p,Hashing *tabela);
+    int comparaCodigo(int x,NoArv *p,Hashing *tabela);
     int max(int, int);
     int getBalanceada(NoArv*);
     void insere(int x, Hashing *tabela);
@@ -43,6 +44,7 @@ public:
     NoArv* rotacaoSimplesDireita(NoArv*);
     NoArv* rotacaoDuplaEsquerda(NoArv*);
     NoArv* rotacaoDuplaDireita(NoArv*);
+    void imprimeTXT(Hashing *tabela,std::ofstream& myfile);
 
 private:
     NoArv *raiz;
@@ -67,6 +69,7 @@ private:
     NoArv* removeFolha(NoArv *p);
     NoArv* removeNo1Filho(NoArv *p);
     NoArv* menorSubArvDireita(NoArv *p);
+    void auxImprimeTXT(NoArv *p,Hashing *tabela,std::ofstream& myfile);
 };
 
 #endif //AVLTree_H

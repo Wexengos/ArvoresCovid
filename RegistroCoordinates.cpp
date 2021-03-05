@@ -66,7 +66,7 @@ void RegistroCoordinates::leArquivoCoordi(RegistroCoordinates *r,int N)
         conta++;
 
     }
-    cout<<"Inserido->"<<conta<<" na QuadTree"<<endl;
+    cout<<"Arquivo lido com->"<<conta<<"cidades!"<<endl;
     arq.close();
     
 
