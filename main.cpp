@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <climits>
 #include <stdio.h>
+#include <locale.h>
 #include "QuadTree.h"
 #include "AVLTree.h"
 #include "ArvB.h"
@@ -18,8 +19,12 @@ using namespace std::chrono;
 #define TAMANHOMAX 1431490
 #define QUANTCIDADES 5571
 
+
 //g++ -o teste -O3 *.cpp
 //.teste
+void menuPrincipal(Registro *registros,RegistroCoordinates *registrosCoord,Hashing *hashPrinci,QuadTree *quadPrinci);
+void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashing *hashPrinci,QuadTree *quadPrinci);
+
 
 void criaArquivoSaidaTxt(string nomeArquivo)
 {
@@ -41,10 +46,11 @@ void testeQuadTree(RegistroCoordinates *registroCidades, int N)
         no->setLongitude(registroCidades[i].getLongitude());
         no->setNome(registroCidades[i].getcidade_nome());
         quad->insere(no);
-        //arq<<"Nome Cidade: "<<no->getNome()<<endl;
+      
     }
     high_resolution_clock::time_point fim = high_resolution_clock::now();
     int tem = duration_cast<duration<double>>(fim - inicio).count();
+
     if (N <= 20)
     {
         cout << "Saida Console" << endl;
@@ -165,73 +171,12 @@ void testeAVB(Registro *registro, int N)
     hash->~Hashing();
 }
 
-void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades)
-{
 
-    int menuTeste, n;
-    cout << "===============Modulo de Teste===============" << endl;
-    cout << "[1] Inserção de N cidades na quad tree" << endl;
-    cout << "[2] Inserção de N registros na tabela hash " << endl;
-    cout << "[3] Inserção de N chaves na árvore AVL" << endl;
-    cout << "[4] Inserção de N chaves na árvore B" << endl;
-
-    cin >> menuTeste;
-
-    switch (menuTeste)
-    {
-    case 1:
-        cout << "Digite N cidades que sera inseridas" << endl;
-        cin >> n;
-        criaArquivoSaidaTxt("QuadTreeTXT");
-        testeQuadTree(registroCidades, n);
-        moduloTeste(registro, registroCidades);
-
-        break;
-    case 2:
-        cout << "Digite  N registro que sera inseridos" << endl;
-        cin >> n;
-        criaArquivoSaidaTxt("HashingTXT");
-        testeHash(registro, n);
-        moduloTeste(registro, registroCidades);
-
-        break;
-    case 3:
-        cout << "Digite N chaves que sera inseridas na AVL" << endl;
-        cin >> n;
-        criaArquivoSaidaTxt("AvlTXT");
-        testeAvl(registro, n);
-        moduloTeste(registro, registroCidades);
-        break;
-
-    case 4:
-        cout << "Digite N cidades que sera inseridas na ARV B" << endl;
-        cin >> n;
-        criaArquivoSaidaTxt("AvBTXT");
-        testeAVB(registro, n);
-        moduloTeste(registro, registroCidades);
-
-        break;
-
-    default:
-        break;
-    }
-}
-/*void menuPrincipal(RegistroCoordinates *registrosCoordinate, Registro *registros)
-{
-    int menu;
-    cout << "====================MENU PRINCIPAL====================" << endl;
-    cout << "Digite:" << endl;
-    cout << "[1] Carregar o arquivo de cicades " << endl;
-    cout << "[2] Carregamento do arquivo pré-processado de casos" << endl;
-    cout << "[3] Módulo de testes" << endl;
-    cout << "[4] Análise das estruturas balanceadas" << endl;
-    cout << "[5] para encerrar o programa" << endl;
-    cin >> menu;
-    switch(menu)
-    {
-    case 1:
+void etapa1(RegistroCoordinates *registrosCoordinate, QuadTree *quadPrincipal)
+{       
+        cout<<"Lendo Arquivo com as cidades e Armazenando na QuadTree"<<endl;
         registrosCoordinate->leArquivoCoordi(registrosCoordinate, QUANTCIDADES);
-        QuadTree* quadPrincipal = new QuadTree();
+    
         for (int i = 0; i < QUANTCIDADES; i++)
         {
             NoArvQuad *no = new NoArvQuad();
@@ -240,45 +185,158 @@ void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades)
             no->setNome(registrosCoordinate[i].getcidade_nome());
             quadPrincipal->insere(no);
         }
-        cout << "Etapa 1 concluida!" << endl;
-        break;
-    case 2:
-        int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000, TAMANHOMAX};
-        registros->leArquivo(registros,tamanhoN [5]);
-        registros->transformaCasosAcumuladosEmCasosDiarios(registros,tamanhoN [5]);
-        Hashing* hashPrincipal = new Hashing(tamanhoN [5]);
-        register int chave, id;
-        for (int i = 0; i < tamanhoN [5]; i++)
-        {
-            chave = registros[i].getCodigoCidade() + registros[i].getDataInt();
-            id = hashPrincipal->insere(chave, &registros[i]);
-        }
-        cout << "Etapa 2 concluida!" << endl;
-        break;
-    case 3:
-        moduloTeste(registros, registrosCoordinate);
-        cout << "Etapa 3 concluida!" << endl;
+    /*
+        cout << "Arquivo TXT criado" << endl;
+        ofstream arq; // ("a:lista.dat", ios::ate | ios::out | ios::in)
+        arq.open("QuadTreeTXT", ios::ate | ios::out | ios::in);
+        quadPrincipal->imprimeTXT(arq);
+    */
 
+}
+void etapa2(Registro *registros,Hashing *hashingPrincipal,vector<int> idhashing)
+{   
+    cout<<"Lendo Registros e Armazenando na Hashing Table"<<endl;
+    registros->leArquivo(registros,TAMANHOMAX);
+    register int chave, id;
+
+    for (int i = 0; i < TAMANHOMAX; i++)
+    {
+        chave = registros[i].getCodigoCidade() + registros[i].getDataInt();
+        id = hashingPrincipal->insere(chave, &registros[i]);
+        //idhashing[i] = id;
+    }   
+    /*
+        cout << "Arquivo TXT criado" << endl;
+        ofstream arq; // ("a:lista.dat", ios::ate | ios::out | ios::in)
+        arq.open("HashingTXT", ios::ate | ios::out | ios::in);
+        hashingPrincipal->imprimeTXT(arq);
+    */
+}
+void menuPrincipal(Registro *registros,RegistroCoordinates *registrosCoord,Hashing *hashPrinci,QuadTree *quadPrinci)
+{   
+
+    vector<int> idhashig;
+    
+    int menu;
+    cout << "====================MENU PRINCIPAL====================" << endl;
+    cout << "Digite:" << endl;
+    cout << "[1] Carregar o arquivo de cicades " << endl;
+    cout << "[2] Carregamento do arquivo pre-processado de casos" << endl;
+    cout << "[3] Modulo de testes" << endl;
+    cout << "[4] Analise das estruturas balanceadas" << endl;
+    cout << "[5] Encerrar o programa" << endl;
+    cin >> menu;
+    
+    switch(menu)
+    {
+    case 1:
+        system("cls");
+        etapa1(registrosCoord,quadPrinci);
+        cout << "Etapa 1 concluida!" << endl;
+        menuPrincipal(registros,registrosCoord,hashPrinci,quadPrinci);
         break;
-        case 4:
+        
+    case 2:
+        system("cls");
+        etapa2(registros,hashPrinci,idhashig);
+        cout << "Etapa 2 concluida!" << endl;
+        menuPrincipal(registros,registrosCoord,hashPrinci,quadPrinci);
+        break;
+        
+    case 3:
+
+        system("cls");
+        moduloTeste(registros, registrosCoord,hashPrinci,quadPrinci);
+        cout << "Etapa 3 concluida!" << endl;
+        break;
+       
+    case 4:
          break;
     case 5:
+        cout << "Fechando Exec!" << endl;
+        cout << "Muito obrigado Caniato" << endl;
+        exit(1);
         break;
+       
     default:
-        cout << "valor invalido" << endl;
+        cout << "Valor invalido" << endl;
+        menuPrincipal(registros,registrosCoord,hashPrinci,quadPrinci);
         break;
     }
-    cout << "Fim" << endl;*/
+    cout << "Fim" << endl;
 }
+void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashing *hashPrinci,QuadTree *quadPrinci)
+{
+    
+    int menuTeste, n;
+    cout << "===============Modulo de Teste===============" << endl;
+    cout << "[1] Inserção de N cidades na quad tree" << endl;
+    cout << "[2] Inserção de N registros na tabela hash " << endl;
+    cout << "[3] Inserção de N chaves na árvore AVL" << endl;
+    cout << "[4] Inserção de N chaves na árvore B" << endl;
+    cout << "[5] Voltar para o menu principal" << endl;
 
+    cin >> menuTeste;
+
+    switch (menuTeste)
+    {
+    case 1:
+        system("cls");
+        cout << "Digite N cidades que sera inseridas" << endl;
+        cin >> n;
+        criaArquivoSaidaTxt("QuadTreeTXT");
+        testeQuadTree(registroCidades, n);
+        moduloTeste(registro, registroCidades,hashPrinci,quadPrinci);
+
+        break;
+    case 2:
+         system("cls");
+        cout << "Digite  N registro que sera inseridos" << endl;
+        cin >> n;
+        criaArquivoSaidaTxt("HashingTXT");
+        testeHash(registro, n);
+        moduloTeste(registro, registroCidades,hashPrinci,quadPrinci);
+
+        break;
+    case 3:
+        system("cls");
+        cout << "Digite N chaves que sera inseridas na AVL" << endl;
+        cin >> n;
+        criaArquivoSaidaTxt("AvlTXT");
+        testeAvl(registro, n);
+        moduloTeste(registro, registroCidades,hashPrinci,quadPrinci);
+        break;
+
+    case 4:
+        system("cls");
+        cout << "Digite N cidades que sera inseridas na ARV B" << endl;
+        cin >> n;
+        criaArquivoSaidaTxt("AvBTXT");
+        testeAVB(registro, n);
+        moduloTeste(registro, registroCidades,hashPrinci,quadPrinci);
+
+        break;
+    case 5:
+        menuPrincipal(registro,registroCidades,hashPrinci,quadPrinci);
+    default:
+        break;
+    }
+}
 int main(int argc, char *argv[])
 {
-    /*setlocale(LC_ALL, "UTF-8");
-    RegistroCoordinates *registrosCoordinate = new RegistroCoordinates[QUANTCIDADES];
-    Registro *registros = new Registro[TAMANHOMAX];
-    menuPrincipal(registrosCoordinate, registros);*/
+     
+    //RegistroCoordinates *registrosCoordinate = new RegistroCoordinates[QUANTCIDADES];
+    //Registro *registros = new Registro[TAMANHOMAX];
 
-    /int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000, TAMANHOMAX};
+    QuadTree *quadPrincipal = new QuadTree();
+    RegistroCoordinates *registrosCoordinate = new RegistroCoordinates[QUANTCIDADES];
+    Registro *registro = new Registro[TAMANHOMAX];
+    Hashing *hashPrincipal = new Hashing(TAMANHOMAX);
+    
+    menuPrincipal(registro,registrosCoordinate,hashPrincipal,quadPrincipal);
+
+    /*
+    int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000, TAMANHOMAX};
     Registro *registros = new Registro[tamanhoN[5]];
     registros->leArquivo(registros,tamanhoN[5]);
     //registros->transformaCasosAcumuladosEmCasosDiarios(registros,tamanhoN[5]);
@@ -287,6 +345,6 @@ int main(int argc, char *argv[])
     RegistroCoordinates *registrosCoordinate = new RegistroCoordinates[QUANTCIDADES];
     registrosCoordinate->leArquivoCoordi(registrosCoordinate,QUANTCIDADES);
     moduloTeste(registros,registrosCoordinate);
-
+    */
     return 0;
 }

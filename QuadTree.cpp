@@ -17,7 +17,7 @@ QuadTree::QuadTree()
 
 QuadTree::~QuadTree()
 {
-  
+   
 }
 
 NoArvQuad* QuadTree::compara(NoArvQuad *r,NoArvQuad *p)
@@ -115,7 +115,7 @@ void QuadTree::auxImprime(NoArvQuad *p)
     if(p!=NULL)
     {   
         
-        cout<<"Nome: "<<p->getNome()<<"/Lat: "<<p->getLatitude()<<"/Long: "<<p->getLongitude()<<endl;
+        cout<<"Nome: "<<p->getNome()<<"|Latitude: "<<p->getLatitude()<<"|Longitude: "<<p->getLongitude()<<endl;
         auxImprime(p->getSW());
         auxImprime(p->getNW());
         auxImprime(p->getSE());
@@ -127,8 +127,7 @@ void QuadTree::imprimeTXT(std::ofstream& myfile)
 {   
    
     auxImprimeTXT(raiz,myfile);
-    
-    cout << endl;
+   
 }
 
 void QuadTree::auxImprimeTXT(NoArvQuad *p,std::ofstream& myfile)
@@ -138,10 +137,9 @@ void QuadTree::auxImprimeTXT(NoArvQuad *p,std::ofstream& myfile)
     if(p!=NULL)
     {   
         
-        
+        myfile<<"Nome: "<<p->getNome()<<"|Latitude: "<<p->getLatitude()<<"|Longitude: "<<p->getLongitude()<<endl;
         auxImprimeTXT(p->getSW(),myfile);//
         auxImprimeTXT(p->getNW(),myfile);
-        myfile<<"Nome: "<<p->getNome()<<"/Lat: "<<p->getLatitude()<<"/Long: "<<p->getLongitude()<<endl;
         auxImprimeTXT(p->getSE(),myfile);
         auxImprimeTXT(p->getNE(),myfile);   
        

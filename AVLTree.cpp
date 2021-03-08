@@ -196,7 +196,7 @@ void AVLTree::imprime(Hashing *tabela)
 void AVLTree::imprimeTXT(Hashing *tabela,std::ofstream& myfile)
 {
     auxImprimeTXT(raiz,tabela,myfile);
-    cout << endl;
+   
 }
 
 void AVLTree::auxImprimeTXT(NoArv *p,Hashing *tabela,std::ofstream& myfile)
