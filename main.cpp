@@ -66,6 +66,13 @@ void testeQuadTree(RegistroCoordinates *registroCidades, int N)
         arq.close();
     }
 
+    criaArquivoSaidaTxt("QuadIntervaloTXT");
+    ofstream arq1;
+    arq1.open("QuadIntervaloTXT", ios::ate | ios::out | ios::in);
+    quad->cidadesNoIntervalo(arq1, -35, -1, -35, -1);
+    arq1<<"Contador: "<<quad->getCont() << endl;
+    arq1.close();
+
     cout << "Final" << endl;
 }
 
@@ -220,7 +227,7 @@ void menuPrincipal(Registro *registros,RegistroCoordinates *registrosCoord,Hashi
     int menu;
     cout << "====================MENU PRINCIPAL====================" << endl;
     cout << "Digite:" << endl;
-    cout << "[1] Carregar o arquivo de cicades " << endl;
+    cout << "[1] Carregar o arquivo de cidades " << endl;
     cout << "[2] Carregamento do arquivo pre-processado de casos" << endl;
     cout << "[3] Modulo de testes" << endl;
     cout << "[4] Analise das estruturas balanceadas" << endl;

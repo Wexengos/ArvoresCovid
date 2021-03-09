@@ -18,6 +18,7 @@ public:
     int comparaCodigo(int x,NoArv *p,Hashing *tabela);
     int max(int, int);
     int getBalanceada(NoArv*);
+    NoArv* veOBalanceio(NoArv* p);
     void insere(int x, Hashing *tabela);
     int impares();
     int soma();

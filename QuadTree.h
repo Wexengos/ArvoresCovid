@@ -11,8 +11,9 @@ class QuadTree
         NoArvQuad *raiz;
         NoArvQuad* auxInsere(NoArvQuad *r,NoArvQuad *p);
         void auxImprime(NoArvQuad *p);
-        void auxCidadesNoIntervalo(NoArvQuad *p, float x0, float x, float y0, float y);
+        void auxCidadesNoIntervalo(std::ofstream& myfile, NoArvQuad *p, float x0, float x, float y0, float y);
         void auxImprimeTXT(NoArvQuad *p,std::ofstream& myfile);
+        int cont;
       
 
     public:
@@ -26,7 +27,8 @@ class QuadTree
         void imprimeTXT(std::ofstream& myfile);
         void imprimeCapital();
         void auxImprimeCapital(NoArvQuad *p);
-        void cidadesNoIntervalo(float x0, float x, float y0, float y);
+        void cidadesNoIntervalo(std::ofstream& myfile, float x0, float x, float y0, float y);
+        int getCont(){ return cont; };
         
         
 

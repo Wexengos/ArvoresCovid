@@ -10,7 +10,7 @@ using namespace std;
 
 NoArvB::NoArvB(int tamanho,bool f)
 {
-    tam = tamanho;
+    tam = tamanho/2;
     folha = f;
     chaves = new int [2*tam-1];
     filhos = new NoArvB * [2*tam];

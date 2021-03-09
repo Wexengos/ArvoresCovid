@@ -61,7 +61,7 @@ static int encontraPrimo(int n, bool x)
 
 Hashing::Hashing(int n)
 {   
-    tam = encontraPrimo(n+(n/5), true);
+    tam = encontraPrimo(n+((n/7)*2), true);
     //cout<<"Tam: "<<tam<<endl;
     tabelaHash = new Registro[tam];
     chavesArmazenadas = 0;

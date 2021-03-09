@@ -12,6 +12,11 @@ AVLTree::~AVLTree()
     // destrutor vazio (só para avaliação)
 }
 
+int AVLTree::max(int a, int b) 
+{ 
+    return (a > b)? a : b; 
+}
+
 int AVLTree::altura()
 {
     if(raiz == NULL)
@@ -50,30 +55,50 @@ int AVLTree::getBalanceada(NoArv *N)
     if (N == NULL) 
         return 0;
     else 
-        return alturaNo(N->getDir()) - alturaNo(N->getEsq()); 
+        return N->getAltura(N->getDir()) - N->getAltura(N->getEsq()); 
 } 
 
-NoArv* AVLTree::rotacaoSimplesEsquerda(NoArv *no)
+NoArv* AVLTree::rotacaoSimplesEsquerda(NoArv *p)
 {
-    NoArv* q = no->getDir();
-    no->setDir(q->getEsq());
-    q->setEsq(no);
+    /*rotSimplesEsq(p)
+        r = p->dir
+        p->dir = r->esq
+        r->esq = p */
+
+    NoArv* r = p->getDir();
+    p->setDir(r->getEsq());
+
+    r->setEsq(p);
+
+    //atualiza alturas
+    p->setAltura(max(p->getAltura(p->getEsq()), p->getAltura(p->getDir())) + 1);
+    r->setAltura(max(r->getAltura(r->getEsq()), r->getAltura(r->getDir())) + 1);
 
     //raiz = q;
-    return q;
+    return r;
 }
 
-NoArv* AVLTree::rotacaoSimplesDireita(NoArv *no)
+NoArv* AVLTree::rotacaoSimplesDireita(NoArv *p)
 {
-    NoArv* q = no->getEsq();
-    no->setEsq(q->getDir());
-    q->setDir(no);
+    /*rotSimplesDir(p)
+        r = p->esq
+        p->esq = r->dir
+        r->dir = p */
+
+    NoArv* r = p->getEsq();
+    p->setEsq(r->getDir());
+
+    r->setDir(p);
+
+    //atualiza alturas
+    p->setAltura(max(p->getAltura(p->getEsq()), p->getAltura(p->getDir())) + 1);
+    r->setAltura(max(r->getAltura(r->getEsq()), r->getAltura(r->getDir())) + 1);
 
     //raiz = q;
-    return q;
+    return r;
 }
 
-NoArv* AVLTree::rotacaoDuplaEsquerda(NoArv *p)
+/*NoArv* AVLTree::rotacaoDuplaEsquerda(NoArv *p)
 {
     NoArv* q = p->getDir(); 
     NoArv* r = q->getEsq();
@@ -101,7 +126,7 @@ NoArv* AVLTree::rotacaoDuplaDireita(NoArv *p)
 
     //raiz = r;
     return r;
-} 
+} */
 int AVLTree::comparaData(int x,NoArv *p,Hashing *tabela)
 {
   
@@ -115,45 +140,14 @@ int AVLTree::comparaCodigo(int x,NoArv *p,Hashing *tabela)
   
     if(tabela->getCodigo(x) < tabela->getCodigo(p->getInfo()))
         return 1;
-    else 
+    else if(tabela->getCodigo(x) > tabela->getCodigo(p->getInfo()))
         return -1;
-}
-void AVLTree::insere(int x,Hashing *tabela)
-{
-    raiz = auxInsere(raiz, x,tabela);
+    else 
+        return 0;
 }
 
-NoArv* AVLTree::auxInsere(NoArv *p, int x,Hashing *tabela)
-{   
-    
-    
-   
-    if(p == NULL)
-    {
-        p = new NoArv();
-        p->setInfo(x);
-        p->setEsq(NULL);
-        p->setDir(NULL);
-       // p->setAltura(1);
-    } 
-    else if(comparaCodigo(x,p,tabela) == 1)
-        p->setEsq(auxInsere(p->getEsq(), x,tabela));
-    else if(comparaCodigo(x,p,tabela) == -1)
-        p->setDir(auxInsere(p->getDir(),x,tabela));
-    else if(comparaData(x,p,tabela))
-         p->setEsq(auxInsere(p->getEsq(), x,tabela));
-    else 
-        p->setDir(auxInsere(p->getDir(),x,tabela));
-    
-    return p;
-    // checa se o No esta balanceado
-    
-    int equilibrio = getBalanceada(p); 
-    //cout << "o no com chave " << p->getInfo() << " tem balanceamento "     << equilibrio  << endl; 
-    p->setAltura(alturaNo(p));
-    //cout << "o no com chave " << p->getInfo() << " possui altura igual a " << p->getAltura() << endl; 
-    // Se está desbalanceada, vai ser um dos 4 casos:
-    // Rotacao simples a esquerda:
+NoArv* AVLTree::veOBalanceio(NoArv* p)
+{
     
     if((getBalanceada(p) == 2) && (  getBalanceada(p->getDir()) == 1  || 
                                     getBalanceada(p->getDir()) == 0  ))
@@ -170,21 +164,69 @@ NoArv* AVLTree::auxInsere(NoArv *p, int x,Hashing *tabela)
     // Rotacao dupla a esquerda:
     
     if((getBalanceada(p) == 2) && (  getBalanceada(p->getDir()) ==-1  ))
-
-        return rotacaoDuplaEsquerda(p);
+    {
+        //cout << "tem essa bobera" << endl;
+        p->setDir(rotacaoSimplesDireita(p->getDir()));
+        return rotacaoSimplesEsquerda(p);
+    }
         //p->setDir(rotacaoSimplesDireita(p->getDir()));
         //return rotacaoSimplesEsquerda(p);
 
     // Rotacao dupla a direita:
 
     if((getBalanceada(p) ==-2) && (  getBalanceada(p->getEsq()) == 1  ))
-
-        return rotacaoDuplaDireita(p); 
+    {
+        //cout << "tem essa ota bobera" << endl;
+        p->setEsq(rotacaoSimplesEsquerda(p->getEsq()));
+        return rotacaoSimplesDireita(p);
+    }
         //p->setEsq(rotacaoSimplesEsquerda(p->getEsq()));
         //return rotacaoSimplesDireita(p);
  
-   
-    return p; 
+    return p;
+}
+
+void AVLTree::insere(int x,Hashing *tabela)
+{
+    raiz = auxInsere(raiz, x,tabela);
+}
+
+NoArv* AVLTree::auxInsere(NoArv *p, int x,Hashing *tabela)
+{   
+    if(p == NULL)
+    {
+        p = new NoArv();
+        p->setInfo(x);
+        p->setEsq(NULL);
+        p->setDir(NULL);
+        p->setAltura(1);
+    } 
+
+    else if(comparaCodigo(x,p,tabela) == 1)
+        p->setEsq(auxInsere(p->getEsq(), x,tabela));
+    else if(comparaCodigo(x,p,tabela) == -1)
+        p->setDir(auxInsere(p->getDir(),x,tabela));
+    else if(comparaData(x,p,tabela))
+         p->setEsq(auxInsere(p->getEsq(), x,tabela));
+    else if(!comparaData(x,p,tabela))
+        p->setDir(auxInsere(p->getDir(),x,tabela));
+    else //valor igual, retorna pois n pode na AVL
+        return p;
+    
+    // atualiza altura desse no ancestral
+
+    p->setAltura(1 + max(p->getAltura(p->getEsq()), p->getAltura(p->getDir())));
+    
+    // checa se o No esta balanceado
+    
+    int equilibrio = getBalanceada(p); 
+    //cout << "o no com chave " << p->getInfo() << " tem balanceamento "     << equilibrio  << endl; 
+    //p->setAltura(alturaNo(p));
+    //cout << "o no com chave " << p->getInfo() << " possui altura igual a " << p->getAltura() << endl; 
+    // Se está desbalanceada, vai ser um dos 4 casos:
+    // Rotacao simples a esquerda:
+    
+    return veOBalanceio(p);
 }
 
 void AVLTree::imprime(Hashing *tabela)
@@ -196,7 +238,7 @@ void AVLTree::imprime(Hashing *tabela)
 void AVLTree::imprimeTXT(Hashing *tabela,std::ofstream& myfile)
 {
     auxImprimeTXT(raiz,tabela,myfile);
-   
+    cout << endl;
 }
 
 void AVLTree::auxImprimeTXT(NoArv *p,Hashing *tabela,std::ofstream& myfile)
@@ -204,6 +246,7 @@ void AVLTree::auxImprimeTXT(NoArv *p,Hashing *tabela,std::ofstream& myfile)
     if(p != NULL)
     {
         myfile<<"id: "<<p->getInfo()<<"|Nome da cidade: "<<tabela->buscaNome(p->getInfo())<<"|Codigo: "<<tabela->getCodigo(p->getInfo())<<"|Data: "<<tabela->data(p->getInfo())<<endl;
+        myfile<< "altura: " << p->getAltura(p) << ", balanceamento: " << getBalanceada(p) << "   BALA PORRA" << endl;
         auxImprimeTXT(p->getEsq(),tabela,myfile);
         auxImprimeTXT(p->getDir(),tabela,myfile);
     }
