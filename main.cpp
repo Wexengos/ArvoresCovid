@@ -68,12 +68,20 @@ void testeQuadTree(RegistroCoordinates *registroCidades, int N)
         arq.close();
     }
 
+    vector<NoArvQuad*> vet;
     criaArquivoSaidaTxt("QuadIntervaloTXT");
     ofstream arq1;
     arq1.open("QuadIntervaloTXT", ios::ate | ios::out | ios::in);
-    quad->cidadesNoIntervalo(arq1, -35, -1, -35, -1);
+    //referencias: x -> -21.0276    y -> -44.3204 ; 
+    //                                   x0,   x,  y0,   y
+    quad->cidadesNoIntervalo(vet, arq1, -18, -16, -22, -20);
+
     arq1<<"Contador: "<<quad->getCont() << endl;
-    arq1<<"Cidade na coordenada => "<<quad->buscaValor(-21.0276,-44.3204);
+    for(int i=0; i<vet.size(); i++)
+    {
+        arq1<<"Nome: " << vet.at(i)->getNome() << endl;
+        cout << vet.at(i)->getNome() << endl;
+    }
     arq1.close();
 
     cout << "Final" << endl;

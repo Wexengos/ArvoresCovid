@@ -175,7 +175,7 @@ void QuadTree::auxImprimeCapital(NoArvQuad *p)
     }
 }
 
-NoArvQuad* QuadTree::buscaValor(float lagitude, float longitude )
+NoArvQuad* QuadTree::buscaValor(NoArvQuad *p)
 {
     
     NoArvQuad *q = raiz;
@@ -190,20 +190,20 @@ NoArvQuad* QuadTree::buscaValor(float lagitude, float longitude )
         {
 
             
-            if((lagitude == q->getLatitude() )&& (longitude==q->getLongitude()))
+            if((p->getLatitude() == q->getLatitude() )&& (p->getLongitude()==q->getLongitude()))
             {
                 cout<<"Achado"<<endl;
                 cout<<"Nome Cidade: "<<q->getNome()<<"/Lat: "<<q->getLatitude()<<"/Longe: "<<q->getLongitude()<<endl;
                 return q;
-            }else if(q->getLatitude()<lagitude){
+            }else if(q->getLatitude()<p->getLatitude()){
 
-                    if(q->getLongitude()<longitude)
+                    if(q->getLongitude()<p->getLongitude())
                         q=q->getSW();
                     else
                         q=q->getNW();
             }else{
 
-                if(q->getLongitude()<longitude)
+                if(q->getLongitude()<p->getLongitude())
                     q=q->getSE();
                 else
                     q=q->getNE();
@@ -216,8 +216,9 @@ NoArvQuad* QuadTree::buscaValor(float lagitude, float longitude )
     }
 }
 
-void QuadTree::cidadesNoIntervalo(std::ofstream& myfile, float x0, float x, float y0, float y)
+void QuadTree::cidadesNoIntervalo(vector<NoArvQuad*> &vet, std::ofstream& myfile, float x0, float x, float y0, float y)
 {
+    NoArvQuad* q = raiz;
     if(raiz == NULL)
     {
         myfile << "Arvore vazia! " << endl;
@@ -228,71 +229,30 @@ void QuadTree::cidadesNoIntervalo(std::ofstream& myfile, float x0, float x, floa
         myfile << "Casos no intervalo de latitude " << x0 << " a " << x << 
                                   " e longitude " << y0 << " a " << y << endl;
 
-        auxCidadesNoIntervalo(myfile, raiz, x0, x, y0, y);
+        auxCidadesNoIntervalo(vet, myfile, q, x0, x, y0, y);
     }
 }
 
-void QuadTree::auxCidadesNoIntervalo(std::ofstream& myfile, NoArvQuad *p, float x0, float x, float y0, float y)
+void QuadTree::auxCidadesNoIntervalo(vector<NoArvQuad*> &vet, std::ofstream& myfile, NoArvQuad *p, float x0, float x, float y0, float y)
 {
     if(p != NULL)
     {
-        //caso esteja dentro da regiao
-        if(p->getLatitude() >= x0 && p->getLatitude() <= x)
+        //caso esteja dentro da regiao...
+        if(p->getLatitude() >= x0 && p->getLatitude() <= x && p->getLongitude() >= y0 && p->getLongitude() <= y)
         {
-            if(p->getLongitude() >= y0 && p->getLongitude() <= y)
-            {
-                //cout << "tem! " << endl;
-                cont++;
-                myfile << "Cidade: " << p->getNome() << ", " << endl;
-                auxCidadesNoIntervalo(myfile, p->getSW(), x0, x, y0, y);
-                auxCidadesNoIntervalo(myfile, p->getNW(), x0, x, y0, y);
-                auxCidadesNoIntervalo(myfile, p->getSE(), x0, x, y0, y);
-                auxCidadesNoIntervalo(myfile, p->getNE(), x0, x, y0, y);
-            }
+                //...adiciona o nó no vetor de nós
+                vet.push_back(p);
         }
+                //caso contrário continua percorrendo a quadtree
+                auxCidadesNoIntervalo(vet, myfile, p->getNW(), x0, x, y0, y);
+                auxCidadesNoIntervalo(vet, myfile, p->getNE(), x0, x, y0, y);
+                auxCidadesNoIntervalo(vet, myfile, p->getSW(), x0, x, y0, y);
+                auxCidadesNoIntervalo(vet, myfile, p->getSE(), x0, x, y0, y);
+                
         
         // ja era fi, faz igual tatu e vira bola!
-        
-        
-        //cidade fora do intervalo
-        else if( (p->getLatitude() < x0) ||
-                 (p->getLatitude() > x ) ||
-                 (p->getLongitude()< y0) ||
-                 (p->getLongitude()> y )  )
-        {
-            //cout << "ta fora do x0..." << endl;
-            auxCidadesNoIntervalo(myfile, p->getSW(), x0, x, y0, y);
-            auxCidadesNoIntervalo(myfile, p->getNW(), x0, x, y0, y);
-            auxCidadesNoIntervalo(myfile, p->getSE(), x0, x, y0, y);
-            auxCidadesNoIntervalo(myfile, p->getNE(), x0, x, y0, y);
-        }
-        /*
-        else if( p->getLatitude() > x )
-        {
-            //cout << "ta fora do x..."  << endl;
-            auxCidadesNoIntervalo(p->getNE(), x0, x, y0, y);
-            auxCidadesNoIntervalo(p->getNW(), x0, x, y0, y);
-            auxCidadesNoIntervalo(p->getSE(), x0, x, y0, y);
-            auxCidadesNoIntervalo(p->getSW(), x0, x, y0, y);
-        }
-        else if( p->getLongitude() < y0 )
-        {
-            //cout << "ta fora do y0..." << endl;
-            auxCidadesNoIntervalo(p->getNE(), x0, x, y0, y);
-            auxCidadesNoIntervalo(p->getNW(), x0, x, y0, y);
-            auxCidadesNoIntervalo(p->getSE(), x0, x, y0, y);
-            auxCidadesNoIntervalo(p->getSW(), x0, x, y0, y);
-        }
-        else if( p->getLongitude() > y )
-        {
-            //cout << "ta fora do y..."  << endl;
-            auxCidadesNoIntervalo(p->getNE(), x0, x, y0, y);
-            auxCidadesNoIntervalo(p->getNW(), x0, x, y0, y);
-            auxCidadesNoIntervalo(p->getSE(), x0, x, y0, y);
-            auxCidadesNoIntervalo(p->getSW(), x0, x, y0, y);
-        } */
+    }
         else
             return;
-    }
 }
 

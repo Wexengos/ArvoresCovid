@@ -1,5 +1,6 @@
 #include <iostream> 
 #include <cmath> 
+#include <vector>
 #include "NoArvQuad.h"
 using namespace std; 
 
@@ -11,7 +12,7 @@ class QuadTree
         NoArvQuad *raiz;
         NoArvQuad* auxInsere(NoArvQuad *r,NoArvQuad *p);
         void auxImprime(NoArvQuad *p);
-        void auxCidadesNoIntervalo(std::ofstream& myfile, NoArvQuad *p, float x0, float x, float y0, float y);
+        void auxCidadesNoIntervalo(vector<NoArvQuad*> &vet, std::ofstream& myfile, NoArvQuad *p, float x0, float x, float y0, float y);
         void auxImprimeTXT(NoArvQuad *p,std::ofstream& myfile);
         int cont;
       
@@ -22,12 +23,12 @@ class QuadTree
         void insere(NoArvQuad *r);
         NoArvQuad* compara(NoArvQuad *r,NoArvQuad *p);
         NoArvQuad* quadrante(NoArvQuad *r,NoArvQuad *p);
-        NoArvQuad* buscaValor(float lagitude, float longitude );
+        NoArvQuad* buscaValor(NoArvQuad *r);
         void imprime();
         void imprimeTXT(std::ofstream& myfile);
         void imprimeCapital();
         void auxImprimeCapital(NoArvQuad *p);
-        void cidadesNoIntervalo(std::ofstream& myfile, float x0, float x, float y0, float y);
+        void cidadesNoIntervalo(vector<NoArvQuad*> &vet, std::ofstream& myfile, float x0, float x, float y0, float y);
         int getCont(){ return cont; };
         
         
