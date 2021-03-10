@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <stdio.h>
+#include <string.h>
 #include <algorithm>
 #include <vector>
 #include "NoArvB.h"
@@ -10,7 +11,7 @@ using namespace std;
 
 NoArvB::NoArvB(int tamanho,bool f)
 {
-    tam = tamanho/2;
+    tam = tamanho;
     folha = f;
     chaves = new int [2*tam-1];
     filhos = new NoArvB * [2*tam];

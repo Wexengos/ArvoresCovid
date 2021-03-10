@@ -246,7 +246,6 @@ void AVLTree::auxImprimeTXT(NoArv *p,Hashing *tabela,std::ofstream& myfile)
     if(p != NULL)
     {
         myfile<<"id: "<<p->getInfo()<<"|Nome da cidade: "<<tabela->buscaNome(p->getInfo())<<"|Codigo: "<<tabela->getCodigo(p->getInfo())<<"|Data: "<<tabela->data(p->getInfo())<<endl;
-        myfile<< "altura: " << p->getAltura(p) << ", balanceamento: " << getBalanceada(p) << "   BALA PORRA" << endl;
         auxImprimeTXT(p->getEsq(),tabela,myfile);
         auxImprimeTXT(p->getDir(),tabela,myfile);
     }

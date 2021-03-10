@@ -175,7 +175,7 @@ void QuadTree::auxImprimeCapital(NoArvQuad *p)
     }
 }
 
-NoArvQuad* QuadTree::buscaValor(NoArvQuad *p)
+NoArvQuad* QuadTree::buscaValor(float lagitude, float longitude )
 {
     
     NoArvQuad *q = raiz;
@@ -190,20 +190,20 @@ NoArvQuad* QuadTree::buscaValor(NoArvQuad *p)
         {
 
             
-            if((p->getLatitude() == q->getLatitude() )&& (p->getLongitude()==q->getLongitude()))
+            if((lagitude == q->getLatitude() )&& (longitude==q->getLongitude()))
             {
                 cout<<"Achado"<<endl;
                 cout<<"Nome Cidade: "<<q->getNome()<<"/Lat: "<<q->getLatitude()<<"/Longe: "<<q->getLongitude()<<endl;
                 return q;
-            }else if(q->getLatitude()<p->getLatitude()){
+            }else if(q->getLatitude()<lagitude){
 
-                    if(q->getLongitude()<p->getLongitude())
+                    if(q->getLongitude()<longitude)
                         q=q->getSW();
                     else
                         q=q->getNW();
             }else{
 
-                if(q->getLongitude()<p->getLongitude())
+                if(q->getLongitude()<longitude)
                     q=q->getSE();
                 else
                     q=q->getNE();

@@ -14,7 +14,8 @@ using namespace std;
 ArvB::ArvB(int tam)
 {
     raiz = NULL;
-    tamanhodoNo = tam;
+    tamanhodoNo = tam/2;
+    
 }
 ArvB::~ArvB(){}
 

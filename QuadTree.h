@@ -22,7 +22,7 @@ class QuadTree
         void insere(NoArvQuad *r);
         NoArvQuad* compara(NoArvQuad *r,NoArvQuad *p);
         NoArvQuad* quadrante(NoArvQuad *r,NoArvQuad *p);
-        NoArvQuad* buscaValor(NoArvQuad *r);
+        NoArvQuad* buscaValor(float lagitude, float longitude );
         void imprime();
         void imprimeTXT(std::ofstream& myfile);
         void imprimeCapital();
