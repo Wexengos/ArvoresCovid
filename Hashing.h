@@ -38,6 +38,7 @@ public:
     int getCodigo(int i);
     int getData(int i);
     int getTam(){return tam;};
+    void casosTotaisCidadePorNome(string nome);
     //int getContaColisao(){return contaColisao;};
     string buscaNome(int i);
     string data(int i);

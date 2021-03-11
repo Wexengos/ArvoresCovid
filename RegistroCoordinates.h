@@ -12,21 +12,21 @@ class RegistroCoordinates
 {
         private:
             string dataCompleta,cidade_nome;
-            float cidadeCodigo,latitude,longitude;
-            int codigoEstado;
+            float latitude,longitude;
+            int codigoEstado,cidadeCodigo;
 
         public:
             RegistroCoordinates();
             ~RegistroCoordinates();
             void setdataCompleta(string dataCompleta);
             void setcidade_nome(string cidadeNome);
-            void setcidadeCodigo(float cidadeCodigo);
+            void setcidadeCodigo(int cidadeCodigo);
             void setLatitude(float latitude);
             void setLongitude(float longitude);
             void setCodigoEstado(int codigoEstado);
             string getdataCompleta();
             string getcidade_nome();
-            float getcidadeCodigo();
+            int getcidadeCodigo();
             float getLatitude();
             float getLongitude();
             int getcodigoEstado();

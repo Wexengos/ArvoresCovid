@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <vector>
 #include <math.h>
-
+#include <string>
 #include "Registro.h"
 #include "Hashing.h"
 
@@ -222,7 +222,7 @@ void Hashing::casosTotaisCidade(int codigoCidade)
     int casosCidade = 0;
     string cidade;
     for(int i =0; i <tam; i++)
-    {
+    {   
         if(tabelaHash[i].getCodigoCidade() == codigoCidade)
         {
            casosCidade = casosCidade + tabelaHash[i].getCasos();
@@ -231,7 +231,28 @@ void Hashing::casosTotaisCidade(int codigoCidade)
 
     }
 
-    cout<<"A cidade "<<cidade<<"teve "<< casosCidade <<"casos"<<endl;
+    cout<<"A cidade "<<cidade<<" teve "<< casosCidade <<" casos"<<endl;
+}
+
+void Hashing::casosTotaisCidadePorNome(string n)
+{   
+    int casosCidade = 0;
+    string cidade;
+    for(int i =0; i <tam; i++)
+    {   
+        std::string st1 = tabelaHash[i].getCidade();
+        std::string st2 = n;
+        int comp = st1.compare(st2);
+
+        if(comp == 0)
+        {
+           casosCidade = casosCidade + tabelaHash[i].getCasos();
+           cidade = tabelaHash[i].getCidade();
+        }
+
+    }
+
+    cout<<"A cidade "<<cidade<<" teve "<< casosCidade <<" casos"<<endl;
 }
 int Hashing::getCodigo(int i)
 {   

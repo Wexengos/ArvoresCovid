@@ -8,6 +8,7 @@ class NoArvQuad
     
     private:
         string nome;
+        int codigoCidade;
         float latitude;
         float longitude;
         bool capital=false;
@@ -22,6 +23,7 @@ class NoArvQuad
         void setLatitude(float lat){latitude = lat;};
         void setLongitude(float longe){longitude=longe;};
         void setNome(string nom){nome=nom;};
+        void setCodigo(int cod){codigoCidade=cod;};
 
         void setNE(NoArvQuad *s){ne=s;};
         void setNW(NoArvQuad *s){nw=s;};
@@ -32,6 +34,7 @@ class NoArvQuad
         float getLatitude(){return latitude;};
         float getLongitude(){return longitude;};
         bool getCapital(){return capital;};
+        int getCodigo(){return codigoCidade;};
         string getNome(){return nome;};
 
         NoArvQuad* getNE(){return ne;};

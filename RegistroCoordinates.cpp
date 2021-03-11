@@ -9,6 +9,67 @@
 #include <string.h>
 #include "RegistroCoordinates.h"
 
+static char vogal(char c)
+{
+    switch (c)
+    {
+    case -93: case -94: case -95: case -96:
+        return 'a';
+        break;
+    case -87: case -86:
+        return 'e';
+        break;
+    case -83:
+        return 'i';
+        break;
+    case -77: case-76:
+        return 'o';
+        break;
+    case -70:
+        return 'u';
+        break;
+    case -89:
+        return 'c';
+        break;
+    case -125: case -126: case -127: case -128:
+        return 'A';
+        break;
+    case -119: case -118: 
+        return 'E';
+        break;
+    case -111:
+        return 'I';
+        break;
+    case -109: case -108:
+        return 'O';
+        break;
+    case -102:
+        return 'U';
+        break;
+    default:
+        return c;
+        break;
+    }
+
+}
+static string tiraAcento(string s)
+{
+    int cont = 0;
+    for(int i = 0; i < s.size(); i++)
+    {
+        if(s[i] < 0)
+        {
+            s[i] = vogal(s[i+1]);
+            cont ++;
+            for(int j = i+1; j < s.size(); j++)
+            {
+                s[j] = s[j+1];
+            }
+        }
+    }
+    s.resize(s.size()-cont);
+    return s;
+}
 RegistroCoordinates::RegistroCoordinates()
 {
     dataCompleta = "";
@@ -44,10 +105,11 @@ void RegistroCoordinates::leArquivoCoordi(RegistroCoordinates *r,int N)
         istringstream(stringT)>>estadoCodigo;
         r[conta].setCodigoEstado(estadoCodigo);
         getline(ss,stringCodigoCidade,',');
+        stringCodigoCidade.erase(stringCodigoCidade.size()-1);
         istringstream(stringCodigoCidade)>>cidadeCodigo;
         r[conta].setcidadeCodigo(cidadeCodigo);
         getline(ss,nom,',');
-        r[conta].setcidade_nome(nom);
+        r[conta].setcidade_nome(tiraAcento(nom));
         getline(ss,stringT2,',');
         istringstream(stringT2)>>lat;
         r[conta].setLatitude(lat);
@@ -93,12 +155,12 @@ string RegistroCoordinates::getdataCompleta()
     return dataCompleta;
 }
 
-void RegistroCoordinates::setcidadeCodigo(float cidadeCodigo)
+void RegistroCoordinates::setcidadeCodigo(int cidadeCodigo)
 {            
     this->cidadeCodigo = cidadeCodigo;
 }
 
-float RegistroCoordinates::getcidadeCodigo()
+int RegistroCoordinates::getcidadeCodigo()
 {
     return cidadeCodigo;
 }

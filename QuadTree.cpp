@@ -79,6 +79,7 @@ NoArvQuad* QuadTree::auxInsere(NoArvQuad *p,NoArvQuad *r)
         p->setLatitude(r->getLatitude());
         p->setLongitude(r->getLongitude());
         p->setNome(r->getNome());
+        p->setCodigo(r->getCodigo());
         p->setNE(NULL);
         p->setNW(NULL);
         p->setSE(NULL);

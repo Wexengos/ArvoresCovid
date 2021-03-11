@@ -11,6 +11,67 @@
 #include "Registro.h"
 
 using namespace std::chrono;
+static char vogal(char c)
+{
+    switch (c)
+    {
+    case -93: case -94: case -95: case -96:
+        return 'a';
+        break;
+    case -87: case -86:
+        return 'e';
+        break;
+    case -83:
+        return 'i';
+        break;
+    case -77: case-76:
+        return 'o';
+        break;
+    case -70:
+        return 'u';
+        break;
+    case -89:
+        return 'c';
+        break;
+    case -125: case -126: case -127: case -128:
+        return 'A';
+        break;
+    case -119: case -118: 
+        return 'E';
+        break;
+    case -111:
+        return 'I';
+        break;
+    case -109: case -108:
+        return 'O';
+        break;
+    case -102:
+        return 'U';
+        break;
+    default:
+        return c;
+        break;
+    }
+
+}
+static string tiraAcento(string s)
+{
+    int cont = 0;
+    for(int i = 0; i < s.size(); i++)
+    {
+        if(s[i] < 0)
+        {
+            s[i] = vogal(s[i+1]);
+            cont ++;
+            for(int j = i+1; j < s.size(); j++)
+            {
+                s[j] = s[j+1];
+            }
+        }
+    }
+    s.resize(s.size()-cont);
+    return s;
+}
 
 Registro::Registro()
 {
@@ -92,7 +153,7 @@ void Registro::leArquivo(Registro *r, int N)
         getline(ss, estado, ',');
         r[cont].setEstado(estado);
         getline(ss, cidade, ',');
-        r[cont].setCidade(cidade);
+        r[cont].setCidade(tiraAcento(cidade));
         getline(ss, stringTemporaria1, ',');
         istringstream(stringTemporaria1) >> codigoCidade;
         r[cont].setCodigoCidade(codigoCidade);
