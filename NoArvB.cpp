@@ -139,6 +139,46 @@ void NoArvB::insertFilho(int k, Hashing *tabela)
     }
    
 }
+void NoArvB::buscaCodigo(int codigo, Hashing *tabela,int &cont)
+{
+    int i;
+    for(i = 0; i<this->n;i++)
+    {
+        if(this->folha == false)
+        {
+            this->filhos[i]->buscaCodigo(codigo,tabela,cont);
+        }
+        
+        if(tabela->getCodigo(this->chaves[i]) == codigo)
+            cont = tabela->getCasos(chaves[i]);
+        
+    }
+
+    if(this->folha == false){
+        this->filhos[i]->buscaCodigo(codigo,tabela,cont);
+    }
+}
+void NoArvB::imprimeTXTBusca(Hashing  *tabela,std::ofstream& myfile, int k,int &cont)
+{   
+    int i;
+    for(i = 0; i<this->n;i++)
+    {
+        if(this->folha == false)
+        {
+            this->filhos[i]->imprimeTXTBusca(tabela,myfile,k,cont);
+        }
+        
+        if(tabela->getCodigo(this->chaves[i]) == tabela->getCodigo(k))
+            myfile<<"Id: "<< this->chaves[i]<<"|Cidade: "<<tabela->buscaNome(chaves[i])<<"|Codigo: "<<tabela->getCodigo(chaves[i])
+            <<"|Data: "<<tabela->data(chaves[i])<<"|Casos: "<<tabela->getCasos(chaves[i])<<endl;
+            cont = tabela->getCasos(chaves[i]);
+
+    }
+
+    if(this->folha == false){
+        this->filhos[i]->imprimeTXTBusca(tabela,myfile,k,cont);
+    }
+}
 
 NoArvB* NoArvB::busca_no_No(int k,Hashing *tabela)
 {
@@ -149,11 +189,13 @@ NoArvB* NoArvB::busca_no_No(int k,Hashing *tabela)
        i++;
     }
 
-    if(chaves[i] == k){
+    if(tabela->getCodigo(chaves[i]) == tabela->getCodigo(k)){
         //cout<<"Chave encotrada: "<<chaves[i]<<endl;
-        cout<<"Nome: "<<tabela->buscaNome(k);
-        return this;
+        cout<<"Nome: "<<tabela->buscaNome(k)<<endl;
+        //return this;
+        return filhos[i]->busca_no_No(k,tabela);
     }
+    
     
     if(folha == true)
         return NULL;

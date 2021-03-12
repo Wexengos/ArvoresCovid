@@ -164,7 +164,7 @@ void testeAVB(Registro *registro, int N)
     Hashing *hash = new Hashing(N);
     int cont = 0;
     register int chave, id;
-    ArvB *arvB = new ArvB(5);
+    ArvB *arvB = new ArvB(20);
 
     for (int i = 0; i < N; i++)
     {
@@ -183,10 +183,11 @@ void testeAVB(Registro *registro, int N)
         cout << "Arquivo TXT criado" << endl;
         ofstream arq; // ("a:lista.dat", ios::ate | ios::out | ios::in)
         arq.open("AvBTXT", ios::ate | ios::out | ios::in);
-        arvB->imprimeArvTXT(hash, arq);
+        //arvB->imprimeArvTXT(hash, arq);
+        //arvB->imprimeArvTXTBusca(hash,arq,23);
         
     }
-    arvB->busca(1123,hash);
+    //arvB->busca(697189,hash);
     cout << endl;
     cout << "Teste finalizado" << endl;
     hash->~Hashing();
@@ -296,14 +297,37 @@ void funcaoS2(Hashing *hashPrinci,int *idHash,int tam,QuadTree *quadPrinci)
     ArvB *arvB = new ArvB(20);
     AVLTree *arvl = new AVLTree();
 
-    cout<<"Quant Aleatorios=> "<<N<<endl;
-    for(int i=0;i<tamanhoN[4];i++)
+    cout<<"Quant Aleatorios=> "<<tamanhoN[N]<<endl;
+    for(int i=0;i<tamanhoN[N];i++)
     {
         arvB->insereArvB(idHash[i],hashPrinci);
     }
+    
+    cout<<"Escolha o intervalo que deseja busca"<<endl;
+    cout<<"x0: "<<endl; cin>> x0;
+    cout<<"y0: "<<endl; cin>> y0;
+    cout<<"x: "<<endl; cin>> x;
+    cout<<"y: "<<endl; cin>> y;
 
-    cout<<"Busca cidade: "<<endl;
-    arvB->busca(idHash[178],hashPrinci);
+    vector<NoArvQuad*> vet;
+    criaArquivoSaidaTxt("QuadIntervaloTXT");
+    ofstream arq1;
+    arq1.open("QuadIntervaloTXT", ios::ate | ios::out | ios::in);
+    
+    //referencias: x -> -21.0276    y -> -44.3204 ; 
+    //                                   x0,   x,  y0,   y
+    //-22.4694,-48.9863,
+    //-7.0918,-38.1681,
+    quadPrinci->cidadesNoIntervalo(vet, arq1, x0, x, y0, y);
+    
+    for(int i=0;i<vet.size();i++){
+        int c=0;
+        int &val=c;
+        arvB->buscaCodigo(vet.at(i)->getCodigo(),hashPrinci,val);
+        cout<<"A cidade: "<<hashPrinci->getNome(vet.at(i)->getCodigo())<<"Casos: "<<val<<endl;
+    } 
+    
+   //arvB->busca(idHash[178],hashPrinci);
 
     /*
     cout<<"Escolha o intervalo que deseja busca"<<endl;

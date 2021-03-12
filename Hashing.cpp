@@ -233,6 +233,16 @@ void Hashing::casosTotaisCidade(int codigoCidade)
 
     cout<<"A cidade "<<cidade<<" teve "<< casosCidade <<" casos"<<endl;
 }
+string Hashing::getNome(int n)
+{
+     for(int i =0; i <tam; i++)
+    {   
+        if(tabelaHash[i].getCodigoCidade()==n)
+            return tabelaHash[i].getCidade();
+
+    }
+    return nullptr;
+}
 
 void Hashing::casosTotaisCidadePorNome(string n)
 {   
@@ -271,4 +281,8 @@ int Hashing::getData(int i)
 }
 string Hashing::data(int i){
     return tabelaHash[i].getDataCompleta();
+}
+int Hashing::getCasos(int i)
+{
+    return tabelaHash[i].getCasos();
 }

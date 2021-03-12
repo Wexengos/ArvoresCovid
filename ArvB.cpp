@@ -105,8 +105,22 @@ void ArvB::imprimeArvTXT(Hashing *tabela,std::ofstream& myfile)
         raiz->imprimeTXT(tabela,myfile);
     }
 }
+void ArvB::imprimeArvTXTBusca(Hashing *tabela,std::ofstream& myfile,int k,int &cont)
+{
+    if(raiz!=NULL)
+    {
+        raiz->imprimeTXTBusca(tabela,myfile,k,cont);
+    }
+}
 NoArvB* ArvB::busca(int chave,Hashing *tabela)
 {
     return (raiz == NULL) ? NULL : raiz->busca_no_No(chave,tabela);
 }
 
+void ArvB::buscaCodigo(int codigo,Hashing *tabela,int &cont)
+{
+    if(raiz!=NULL)
+    {   
+        raiz->buscaCodigo(codigo,tabela,cont);
+    }
+}

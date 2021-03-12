@@ -36,6 +36,8 @@ public:
     int compara(int x,int *ch,Hashing *tabela,int i);
     void imprimeTXT(Hashing  *tabela,std::ofstream& myfile);
     NoArvB* busca_no_No(int k,Hashing *tabela); 
+    void imprimeTXTBusca(Hashing  *tabela,std::ofstream& myfile, int k,int &cont);
+    void buscaCodigo(int codigo,Hashing *tabela,int &cont);
     ~NoArvB();
 
     friend class ArvB;
