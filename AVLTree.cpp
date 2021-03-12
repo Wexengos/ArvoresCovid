@@ -671,13 +671,13 @@ void AVLTree::auxImprimeDecrescente(NoArv *p)
     return;
 }*/
 
-NoArv* AVLTree::buscaValor(int val, Hashing *tabela)
+void AVLTree::buscaCodigo(int codigo, int &cont, Hashing *tabela)
 {
     NoArv* p = raiz;
     if(raiz == NULL)
     {
         cout << "Arvore vazia!";
-        return NULL;
+        return;
     }
 
     //teste com AVL padrão
@@ -702,24 +702,25 @@ NoArv* AVLTree::buscaValor(int val, Hashing *tabela)
     {
         while(p != NULL)
         {
-            if( tabela->getCodigo(p->getInfo()) == tabela->getCodigo(val) )
-            {
-                if( tabela->getData(p->getInfo()) == tabela->getData(val) )
-                    return p;
-                else if( tabela->getData(p->getInfo()) < tabela->getData(val) )
-                    p = p->getDir();
-                else if( tabela->getData(p->getInfo()) > tabela->getData(val) )
-                    p = p->getEsq();
-            }
-        
-            else if( tabela->getCodigo(p->getInfo()) < tabela->getCodigo(val) )
+            if( tabela->getCodigo(p->getInfo()) < codigo )
                 p = p->getEsq();
-            else if( tabela->getCodigo(p->getInfo()) > tabela->getCodigo(val) )
+            else if( tabela->getCodigo(p->getInfo()) > codigo )
                 p = p->getDir();
-        }
+
+            else if( tabela->getCodigo(p->getInfo()) == codigo )
+            {
+                cont = cont + tabela->getCasos(p->getInfo());
+                //p = p->getDir();
+                cout << "piru doido" << " na cidade " << tabela->buscaNome(p->getInfo()) << endl;
+                p = p->getEsq();
+                p = p->getDir();
+            }
+            
+            
+        } 
         
         //valor nao encontrado
-        return NULL;
+        return;
     }
     
 

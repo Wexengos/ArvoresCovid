@@ -38,7 +38,7 @@ public:
     void imprimeDecrescente();
     void insereDoVetor1(int n, int *vet);
     void insereDoVetor2(int n, int *vet);
-    NoArv* buscaValor(int val, Hashing *tabela);
+    void buscaCodigo(int codigo, int &cont, Hashing *tabela);
     int classificaNo(int val);
     void remove(int x);
     NoArv* rotacaoSimplesEsquerda(NoArv*);

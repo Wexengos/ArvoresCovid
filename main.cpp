@@ -302,6 +302,12 @@ void funcaoS2(Hashing *hashPrinci,int *idHash,int tam,QuadTree *quadPrinci)
     {
         arvB->insereArvB(idHash[i],hashPrinci);
     }
+
+    for(int i=0; i<tamanhoN[N]; i++)
+    {
+        //cout<<"Inseriu "<<i<<endl;
+        arvl->insere(idHash[i], hashPrinci);
+    }
     
     cout<<"Escolha o intervalo que deseja busca"<<endl;
     cout<<"x0: "<<endl; cin>> x0;
@@ -326,6 +332,14 @@ void funcaoS2(Hashing *hashPrinci,int *idHash,int tam,QuadTree *quadPrinci)
         arvB->buscaCodigo(vet.at(i)->getCodigo(),hashPrinci,val);
         cout<<"A cidade: "<<hashPrinci->getNome(vet.at(i)->getCodigo())<<"Casos: "<<val<<endl;
     } 
+
+    for(int j=0;j<vet.size();j++)
+    {
+        int cont=0;
+        int &valor=cont;
+        arvl->buscaCodigo(vet.at(j)->getCodigo(), valor, hashPrinci);
+        cout<<"(AVL) A cidade: "<<hashPrinci->getNome(vet.at(j)->getCodigo())<<"Casos: "<<valor<<endl;
+    }
     
    //arvB->busca(idHash[178],hashPrinci);
 

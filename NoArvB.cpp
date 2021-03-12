@@ -150,7 +150,9 @@ void NoArvB::buscaCodigo(int codigo, Hashing *tabela,int &cont)
         }
         
         if(tabela->getCodigo(this->chaves[i]) == codigo)
+        {
             cont = tabela->getCasos(chaves[i]);
+        }
         
     }
 
@@ -169,9 +171,11 @@ void NoArvB::imprimeTXTBusca(Hashing  *tabela,std::ofstream& myfile, int k,int &
         }
         
         if(tabela->getCodigo(this->chaves[i]) == tabela->getCodigo(k))
+        {
             myfile<<"Id: "<< this->chaves[i]<<"|Cidade: "<<tabela->buscaNome(chaves[i])<<"|Codigo: "<<tabela->getCodigo(chaves[i])
             <<"|Data: "<<tabela->data(chaves[i])<<"|Casos: "<<tabela->getCasos(chaves[i])<<endl;
-            cont = tabela->getCasos(chaves[i]);
+            cont = cont + tabela->getCasos(chaves[i]);
+        }
 
     }
 
