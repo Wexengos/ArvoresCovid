@@ -537,7 +537,9 @@ void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashin
 }
 int main(int argc, char *argv[])
 {
-     
+     string filename(argv[1]);
+     filename += "/brazil_covid19_cities_processado.csv";
+     cout<<filename<<endl;
     //RegistroCoordinates *registrosCoordinate = new RegistroCoordinates[QUANTCIDADES];
     //Registro *registros = new Registro[TAMANHOMAX];
 
