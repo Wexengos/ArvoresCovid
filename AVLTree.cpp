@@ -675,49 +675,29 @@ void AVLTree::auxImprimeDecrescente(NoArv *p)
 
 void AVLTree::buscaCodigo(int codigo, int &cont, Hashing *tabela)
 {
+    cont = 0;
+    auxBuscaCodigo(codigo, raiz, cont, tabela);
+    cout << endl;
+}
+
+void AVLTree::auxBuscaCodigo(int codigo, NoArv *raiz, int &cont, Hashing *tabela)
+{
     NoArv* p = raiz;
-    if(raiz == NULL)
+
+    if(p != NULL)
     {
-        cout << "Arvore vazia!";
-        return;
+        if(tabela->getCodigo(p->getInfo()) == codigo)
+        {
+            cont = cont + tabela->getCasos(p->getInfo());
+            auxBuscaCodigo(codigo, p->getEsq(),cont, tabela);
+            auxBuscaCodigo(codigo, p->getDir(),cont, tabela);
+        }
+        else if(tabela->getCodigo(p->getInfo()) > codigo)
+            auxBuscaCodigo(codigo, p->getEsq(),cont, tabela);
+        else
+            auxBuscaCodigo(codigo, p->getDir(),cont, tabela);
     }
-
-    //teste com a AVL do trab memo
-    else
-    {
-        while(p != NULL)
-        {   
-           
-
-            if( tabela->getCodigo(p->getInfo()) > codigo )
-            {   
-                
-                p = p->getEsq();
-            }
-            else if( tabela->getCodigo(p->getInfo()) < codigo )
-            {
-                
-                p = p->getDir();
-            }   
-
-            else if( tabela->getCodigo(p->getInfo()) == codigo )
-            {   
-                cout<<"id: "<<p->getInfo()<<"|Nome da cidade: "<<tabela->buscaNome(p->getInfo())<<"|Codigo: "<<tabela->getCodigo(p->getInfo())<<"|Data: "<<tabela->data(p->getInfo())<<endl;
-                cont = cont + tabela->getCasos(p->getInfo());
-                
-                p = p->getEsq();
-                p = p->getDir();
-                
-            }
-            
-            
-        } 
-        
-        //valor nao encontrado
-        return;
-    }
-    
-
+    return;
 }
 
 /*int AVLTree::classificaNo(int val)

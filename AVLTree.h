@@ -63,6 +63,7 @@ private:
     void auxMaiores(NoArv *p, int val, int *maior);
     void auxImprimeNivel(NoArv *p, int cont, int k);
     float auxMediaNivel(NoArv *p, int atual, int *cont, float *soma, int k);
+    void auxBuscaCodigo(int codigo, NoArv *raiz, int &cont, Hashing *tabela);
     void auxImprimeIntervalo(NoArv *p, int x, int y);
     void auxImprimeCrescente(NoArv *p);
     void auxImprimeDecrescente(NoArv *p);

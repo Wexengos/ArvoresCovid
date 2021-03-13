@@ -154,9 +154,8 @@ void testeAvl(Registro *registro, int N)
     }
   
     int cont=0;
-    int &valor=cont;
-    avl->buscaCodigo(520015, valor, hash);
-    cout<<"(AVL) A cidade: "<<hash->getNome(520015)<<" Casos: "<<valor<<endl;
+    avl->buscaCodigo(315610, cont, hash);
+    cout<<"(AVL) A cidade: "<<hash->getNome(315610)<<" Casos: "<<cont<<endl;
     cout << "Teste finalizado" << endl;
   
     hash->~Hashing();
@@ -188,9 +187,11 @@ void testeAVB(Registro *registro, int N)
         arvB->imprimeArvTXT(hash, arq);
         
     }
-    //arvB->busca(697189,hash);
-    cout << endl;
+    int homer=0;
+    arvB->buscaCodigo(315610,hash, homer);
+    cout<<"(AVBuceta) A cidade: "<<hash->getNome(315610)<<" Casos: "<<homer<<endl;
     cout << "Teste finalizado" << endl;
+    cout << endl;
     
     hash->~Hashing();
 }
@@ -255,6 +256,13 @@ void insere(int tamanho,Hashing *hashing,int *idhash,ArvB *ar)
     }
 }
 
+void insere2(int tamanho,Hashing *hashing,int *idhash,AVLTree *ar)
+{
+    for(int j=0;j<tamanho;j++){
+        ar->insere(idhash[j],hashing);  
+    }
+}
+
 void execArvB(ArvB *arv,int N,std::ofstream& myfile,int *idhash,Hashing *hash,int tam,int codigo)
 {
    
@@ -262,14 +270,14 @@ void execArvB(ArvB *arv,int N,std::ofstream& myfile,int *idhash,Hashing *hash,in
     int mediaComparacao = 0;
     double mediaTempoInsere = 0;
     double mediaBusca=0;
-    int c=0;
-    int &val=c;
+    int c;
 
     //Faz o teste para as quantidades de registros
 
     for (int exec = 0;exec < 5 ; exec++)
     {
-        
+        c = 0;
+
         high_resolution_clock::time_point inicio = high_resolution_clock::now();
         insere(N,hash,idhash,arv);   
         high_resolution_clock::time_point fim = high_resolution_clock::now();
@@ -277,15 +285,48 @@ void execArvB(ArvB *arv,int N,std::ofstream& myfile,int *idhash,Hashing *hash,in
 
         //Busca
         high_resolution_clock::time_point inicio2 = high_resolution_clock::now();
-        arv->buscaCodigo(codigo,hash,val); 
+        arv->buscaCodigo(codigo,hash,c); 
+        high_resolution_clock::time_point fim2 = high_resolution_clock::now();
+        mediaBusca = mediaBusca + (duration_cast<duration<double>>(fim2 - inicio2).count());
+
+    }
+    
+    myfile<<"A cidade: "<<hash->getNome(codigo)<<" teve casos: "<< c/5 <<endl;
+    myfile << "Media de Tempo em 5 execs de inserção: " << mediaTempoInsere / 5 << endl;
+    myfile << "Media de Busca em 5 execs: " << mediaBusca / 5 << endl;
+    c = 0;
+   
+}
+
+void execAVL(AVLTree *arv,int N,std::ofstream& myfile,int *idhash,Hashing *hash,int tam,int codigo)
+{
+    int mediaComparacao = 0;
+    double mediaTempoInsere = 0;
+    double mediaBusca=0;
+    int c;
+
+    //Faz o teste para as quantidades de registros
+
+    for (int exec = 0;exec < 5 ; exec++)
+    {
+        c = 0;
+
+        high_resolution_clock::time_point inicio = high_resolution_clock::now();
+        insere2(N,hash,idhash,arv);   
+        high_resolution_clock::time_point fim = high_resolution_clock::now();
+        mediaTempoInsere = mediaTempoInsere + (duration_cast<duration<double>>(fim - inicio).count());
+
+        //Busca
+        high_resolution_clock::time_point inicio2 = high_resolution_clock::now();
+        arv->buscaCodigo(codigo,c,hash); 
         high_resolution_clock::time_point fim2 = high_resolution_clock::now();
         mediaBusca = mediaBusca + (duration_cast<duration<double>>(fim2 - inicio2).count());
     }
+    
 
+    myfile<<"A cidade: "<<hash->getNome(codigo)<<" teve casos: "<<c/5<<endl;
     myfile << "Media de Tempo em 5 execs de inserção: " << mediaTempoInsere / 5 << endl;
     myfile << "Media de Busca em 5 execs: " << mediaBusca / 5 << endl;
-    myfile<<"A cidade: "<<hash->getNome(codigo)<<" teve casos: "<<val<<endl;
-   
 }
 
 void buscaCasosS1(Hashing *hashPrinci,int *idHash,int tam)
@@ -311,6 +352,7 @@ void buscaCasosS1(Hashing *hashPrinci,int *idHash,int tam)
 
     ArvB *arvB = new ArvB(20);
     ArvB *arvB1 = new ArvB(200);
+    AVLTree *arvl = new AVLTree();
 
     arq1<<"Arvore B com norma(20)"<<endl;
     for(int i=0;i<5;i++){
@@ -323,6 +365,12 @@ void buscaCasosS1(Hashing *hashPrinci,int *idHash,int tam)
     for(int i=0;i<5;i++){
         arq1<<"Arvore com "<<tamanhoN[i]<<endl;
         execArvB(arvB,tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
+    }
+
+    arq1<<"Arvore AVL"<<endl;
+    for(int i=0;i<5;i++){
+        arq1<<"Arvore com "<<tamanhoN[i]<<endl;
+        execAVL(arvl,tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
     }
 
 }

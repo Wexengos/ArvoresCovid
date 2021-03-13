@@ -121,6 +121,7 @@ void ArvB::buscaCodigo(int codigo,Hashing *tabela,int &cont)
 {
     if(raiz!=NULL)
     {   
+        cont = 0;
         raiz->buscaCodigo(codigo,tabela,cont);
     }
 }

@@ -142,6 +142,7 @@ void NoArvB::insertFilho(int k, Hashing *tabela)
 void NoArvB::buscaCodigo(int codigo, Hashing *tabela,int &cont)
 {
     int i;
+
     for(i = 0; i<this->n;i++)
     {
         if(this->folha == false)
@@ -151,7 +152,7 @@ void NoArvB::buscaCodigo(int codigo, Hashing *tabela,int &cont)
         
         if(tabela->getCodigo(this->chaves[i]) == codigo)
         {
-            cont = tabela->getCasos(chaves[i]);
+            cont = cont + tabela->getCasos(chaves[i]);
         }
         
     }
