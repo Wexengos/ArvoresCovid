@@ -248,58 +248,49 @@ void embaralhar(int *vet, int vetSize)
    
 
 }
-void execArvB(ArvB *arv,int M,std::ofstream& myfile,int *idhash,Hashing *hash,int tam,int codigo)
+void insere(int tamanho,Hashing *hashing,int *idhash,ArvB *ar)
+{
+    for(int j=0;j<tamanho;j++){
+        ar->insereArvB(idhash[j],hashing);  
+    }
+}
+
+void execArvB(ArvB *arv,int N,std::ofstream& myfile,int *idhash,Hashing *hash,int tam,int codigo)
 {
    
-    int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000};
+    
+    int mediaComparacao = 0;
+    double mediaTempoInsere = 0;
+    double mediaBusca=0;
+    int c=0;
+    int &val=c;
 
     //Faz o teste para as quantidades de registros
 
     for (int exec = 0;exec < 5 ; exec++)
     {
-        myfile<<endl;
-        int mediaComparacao = 0;
-        double mediaTempoInsere = 0;
-        double mediaBusca=0;
-        int c=0;
-        int &val=c;
-        myfile<<" "<<tamanhoN[exec]<<" Registros"<<endl;
+        
+        high_resolution_clock::time_point inicio = high_resolution_clock::now();
+        insere(N,hash,idhash,arv);   
+        high_resolution_clock::time_point fim = high_resolution_clock::now();
+        mediaTempoInsere = mediaTempoInsere + (duration_cast<duration<double>>(fim - inicio).count());
 
-        for(int i=0;i<M;i++)
-        {   
-    
-           
-            high_resolution_clock::time_point inicio = high_resolution_clock::now();
-            for(int j=0;j<tamanhoN[exec];j++){
-                arv->insereArvB(idhash[j],hash);  
-            }
-            high_resolution_clock::time_point fim = high_resolution_clock::now();
-            mediaTempoInsere = mediaTempoInsere + (duration_cast<duration<double>>(fim - inicio).count());
-
-            //Busca
-            high_resolution_clock::time_point inicio2 = high_resolution_clock::now();
-            arv->buscaCodigo(codigo,hash,val); 
-            high_resolution_clock::time_point fim2 = high_resolution_clock::now();
-            mediaBusca = mediaBusca + (duration_cast<duration<double>>(fim2 - inicio2).count());
-            
-           
-
-        }
-
-        myfile << "Media de Tempo em 5 execs de inserção: " << mediaTempoInsere / M << endl;
-        myfile << "Media de Busca em 5 execs: " << mediaBusca / M << endl;
-        myfile<<"A cidade: "<<hash->getNome(codigo)<<" teve casos: "<<val<<endl;
-       
-       
-
+        //Busca
+        high_resolution_clock::time_point inicio2 = high_resolution_clock::now();
+        arv->buscaCodigo(codigo,hash,val); 
+        high_resolution_clock::time_point fim2 = high_resolution_clock::now();
+        mediaBusca = mediaBusca + (duration_cast<duration<double>>(fim2 - inicio2).count());
     }
 
-    myfile.close();
+    myfile << "Media de Tempo em 5 execs de inserção: " << mediaTempoInsere / 5 << endl;
+    myfile << "Media de Busca em 5 execs: " << mediaBusca / 5 << endl;
+    myfile<<"A cidade: "<<hash->getNome(codigo)<<" teve casos: "<<val<<endl;
    
 }
 
 void buscaCasosS1(Hashing *hashPrinci,int *idHash,int tam)
 {   
+    int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000};
     int opt;
     int codigo;
     int M=5;
@@ -321,11 +312,18 @@ void buscaCasosS1(Hashing *hashPrinci,int *idHash,int tam)
     ArvB *arvB = new ArvB(20);
     ArvB *arvB1 = new ArvB(200);
 
-    //arq1<<"Arvore B com norma(20)"<<endl;
-    //execArvB(arvB,M,arq1,idHash,hashPrinci,tam,codigo);
+    arq1<<"Arvore B com norma(20)"<<endl;
+    for(int i=0;i<5;i++){
+        arq1<<"Arvore com "<<tamanhoN[i]<<endl;
+        execArvB(arvB,tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
+    }
+    
+    
     arq1<<"Arvore B com norma(200)"<<endl;
-    execArvB(arvB1,M,arq1,idHash,hashPrinci,tam,codigo);
-
+    for(int i=0;i<5;i++){
+        arq1<<"Arvore com "<<tamanhoN[i]<<endl;
+        execArvB(arvB,tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
+    }
 
 }
 void funcaoS2(Hashing *hashPrinci,int *idHash,int tam,QuadTree *quadPrinci)
@@ -385,9 +383,6 @@ void funcaoS2(Hashing *hashPrinci,int *idHash,int tam,QuadTree *quadPrinci)
         cout<<"(AVL) A cidade: "<<hashPrinci->getNome(vet.at(j)->getCodigo())<<"Casos: "<<valor<<endl;
     }
   
-
-
-
 }
 
 void etapa5(Hashing *hashPrinci,QuadTree *quadPrinci,int *idHash,int tam)
