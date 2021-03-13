@@ -1,0 +1,18 @@
+Arvore B com norma(200)
+
+ 10000 Registros
+Media de Tempo em 5 execs de inserção: 0.257612
+Media de Busca em 5 execs: 0.0005871
+A cidade: Sao Paulo teve casos: 0
+
+ 50000 Registros
+Media de Tempo em 5 execs de inserção: 2.29181
+Media de Busca em 5 execs: 0.00638984
+A cidade: Sao Paulo teve casos: 643
+
+ 100000 Registros
+Media de Tempo em 5 execs de inserção: 5.4904
+Media de Busca em 5 execs: 0.0080035
+A cidade: Sao Paulo teve casos: 643
+
+ 500000 Registros

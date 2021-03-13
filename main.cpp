@@ -63,7 +63,7 @@ void testeQuadTree(RegistroCoordinates *registroCidades, int N)
     {
         cout << "Arquivo TXT criado" << endl;
         ofstream arq; // ("a:lista.dat", ios::ate | ios::out | ios::in)
-        arq.open("QuadTreeTXT", ios::ate | ios::out | ios::in);
+        arq.open("QuadTree.txt", ios::ate | ios::out | ios::in);
         quad->imprimeTXT(arq);
         arq << "Tempo: " << tem << endl;
         arq.close();
@@ -94,17 +94,15 @@ void testeHash(Registro *registro, int N)
     Hashing *hash = new Hashing(N);
     int cont = 0;
     register int chave, id;
-    //arq."Cidades Inseridades na QuadTree"<<endl;
+
     high_resolution_clock::time_point inicio = high_resolution_clock::now();
     for (int i = 0; i < N; i++)
     {
-        //cout<<"Cidade "<<registro[i].getCidade()<<"foi visitada? "<<registro[i].getVisitado()<<endl;
+        
         chave = registro[i].getCodigoCidade() + registro[i].getDataInt();
         id = hash->insere(chave, &registro[i]);
         cont++;
-        //cout<<"id=> "<<id<<endl;
-        //cout<<"chave: "<<chave<<endl;
-        //cout<<"id: "<<id<<endl;
+       
     }
     high_resolution_clock::time_point fim = high_resolution_clock::now();
     double tem = duration_cast<duration<double>>(fim - inicio).count();
@@ -117,7 +115,7 @@ void testeHash(Registro *registro, int N)
     {
         cout << "Arquivo TXT criado" << endl;
         ofstream arq; // ("a:lista.dat", ios::ate | ios::out | ios::in)
-        arq.open("HashingTXT", ios::ate | ios::out | ios::in);
+        arq.open("Hashing.txt", ios::ate | ios::out | ios::in);
         hash->imprimeTXT(arq);
         hash->casosTotaisCidade(330010);
         arq << "Tempo: " << tem << endl;
@@ -131,7 +129,6 @@ void testeHash(Registro *registro, int N)
 void testeAvl(Registro *registro, int N)
 {
     Hashing *hash = new Hashing(N);
-    int cont = 0;
     register int chave, id;
     AVLTree *avl = new AVLTree();
 
@@ -151,12 +148,17 @@ void testeAvl(Registro *registro, int N)
     {
         cout << "Arquivo TXT criado" << endl;
         ofstream arq; // ("a:lista.dat", ios::ate | ios::out | ios::in)
-        arq.open("AvlTXT", ios::ate | ios::out | ios::in);
+        arq.open("Avl.txt", ios::ate | ios::out | ios::in);
         avl->imprimeTXT(hash, arq);
         arq.close();
     }
-    cout << endl;
+  
+    int cont=0;
+    int &valor=cont;
+    avl->buscaCodigo(520015, valor, hash);
+    cout<<"(AVL) A cidade: "<<hash->getNome(520015)<<" Casos: "<<valor<<endl;
     cout << "Teste finalizado" << endl;
+  
     hash->~Hashing();
 }
 void testeAVB(Registro *registro, int N)
@@ -182,14 +184,14 @@ void testeAVB(Registro *registro, int N)
     {
         cout << "Arquivo TXT criado" << endl;
         ofstream arq; // ("a:lista.dat", ios::ate | ios::out | ios::in)
-        arq.open("AvBTXT", ios::ate | ios::out | ios::in);
-        //arvB->imprimeArvTXT(hash, arq);
-        //arvB->imprimeArvTXTBusca(hash,arq,23);
+        arq.open("AvB.txt", ios::ate | ios::out | ios::in);
+        arvB->imprimeArvTXT(hash, arq);
         
     }
     //arvB->busca(697189,hash);
     cout << endl;
     cout << "Teste finalizado" << endl;
+    
     hash->~Hashing();
 }
 
@@ -205,18 +207,11 @@ void etapa1(RegistroCoordinates *registrosCoordinate, QuadTree *quadPrincipal)
             no->setLatitude(registrosCoordinate[i].getLatitude());
             no->setLongitude(registrosCoordinate[i].getLongitude());
             no->setNome(registrosCoordinate[i].getcidade_nome());
-           
             no->setCodigo(registrosCoordinate[i].getcidadeCodigo());
            
             quadPrincipal->insere(no);
         }
-    /*
-        cout << "Arquivo TXT criado" << endl;
-        ofstream arq; // ("a:lista.dat", ios::ate | ios::out | ios::in)
-        arq.open("QuadTreeTXT", ios::ate | ios::out | ios::in);
-        quadPrincipal->imprimeTXT(arq);
-    */
-
+  
 }
 void etapa2(Registro *registros,Hashing *hashingPrincipal,int *idhash)
 {   
@@ -228,14 +223,9 @@ void etapa2(Registro *registros,Hashing *hashingPrincipal,int *idhash)
     {
         chave = registros[i].getCodigoCidade() + registros[i].getDataInt();
         id = hashingPrincipal->insere(chave, &registros[i]);
-        //cout<<"id: "<<id<<endl;
         idhash[i]=id;
     }   
     
-        cout << "Arquivo TXT criado" << endl;
-        ofstream arq; // ("a:lista.dat", ios::ate | ios::out | ios::in)
-        arq.open("HashingTXT", ios::ate | ios::out | ios::in);
-        hashingPrincipal->imprimeTXT(arq);
     
 }
 void embaralhar(int *vet, int vetSize)
@@ -258,30 +248,83 @@ void embaralhar(int *vet, int vetSize)
    
 
 }
-void buscaCasosS1(Hashing *hashPrinci)
+void execArvB(ArvB *arv,int M,std::ofstream& myfile,int *idhash,Hashing *hash,int tam,int codigo)
+{
+   
+    int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000};
+
+    //Faz o teste para as quantidades de registros
+
+    for (int exec = 0;exec < 5 ; exec++)
+    {
+        myfile<<endl;
+        int mediaComparacao = 0;
+        double mediaTempoInsere = 0;
+        double mediaBusca=0;
+        int c=0;
+        int &val=c;
+        myfile<<" "<<tamanhoN[exec]<<" Registros"<<endl;
+
+        for(int i=0;i<M;i++)
+        {   
+    
+           
+            high_resolution_clock::time_point inicio = high_resolution_clock::now();
+            for(int j=0;j<tamanhoN[exec];j++){
+                arv->insereArvB(idhash[j],hash);  
+            }
+            high_resolution_clock::time_point fim = high_resolution_clock::now();
+            mediaTempoInsere = mediaTempoInsere + (duration_cast<duration<double>>(fim - inicio).count());
+
+            //Busca
+            high_resolution_clock::time_point inicio2 = high_resolution_clock::now();
+            arv->buscaCodigo(codigo,hash,val); 
+            high_resolution_clock::time_point fim2 = high_resolution_clock::now();
+            mediaBusca = mediaBusca + (duration_cast<duration<double>>(fim2 - inicio2).count());
+            
+           
+
+        }
+
+        myfile << "Media de Tempo em 5 execs de inserção: " << mediaTempoInsere / M << endl;
+        myfile << "Media de Busca em 5 execs: " << mediaBusca / M << endl;
+        myfile<<"A cidade: "<<hash->getNome(codigo)<<" teve casos: "<<val<<endl;
+       
+       
+
+    }
+
+    myfile.close();
+   
+}
+
+void buscaCasosS1(Hashing *hashPrinci,int *idHash,int tam)
 {   
     int opt;
+    int codigo;
+    int M=5;
     cout<<"Escolha como quer buscar a cidade" << endl;
-    cout<<"[1] Busca pelo codigo "<<endl;
-    cout<<"[2] Busca por nome "<<endl;
-    cin>>opt;  
+    cout<<"Digite o Codigo da cidade"<<endl;
+    cin >> codigo;
+    //hashPrinci->casosTotaisCidade(codigo);
 
-    if(opt == 1)
-    {   
-        int codigo;
-        cout<<"Digite o Codigo da cidade"<<endl;
-        cin >> codigo;
-        hashPrinci->casosTotaisCidade(codigo);
+    //Randomização
+    embaralhar(idHash,tam);//VETOR COM TODOS OS IDS GERADOS PELO HASHING SERA EMBARALHADO PARA GERAR IDS ALEATORIOS
+    srand(time(NULL));
+    
+   
 
-    }
-    if(opt == 2)
-    {
-        string nome;
-        cout<<"Digite o Nome da cidade"<<endl;
-        cin >> nome;
-        hashPrinci->casosTotaisCidadePorNome(nome);
-        
-    }
+    criaArquivoSaidaTxt("saidaS1.txt");
+    ofstream arq1;
+    arq1.open("saidaS1.txt", ios::ate | ios::out | ios::in);
+
+    ArvB *arvB = new ArvB(20);
+    ArvB *arvB1 = new ArvB(200);
+
+    //arq1<<"Arvore B com norma(20)"<<endl;
+    //execArvB(arvB,M,arq1,idHash,hashPrinci,tam,codigo);
+    arq1<<"Arvore B com norma(200)"<<endl;
+    execArvB(arvB1,M,arq1,idHash,hashPrinci,tam,codigo);
 
 
 }
@@ -324,6 +367,7 @@ void funcaoS2(Hashing *hashPrinci,int *idHash,int tam,QuadTree *quadPrinci)
     //                                   x0,   x,  y0,   y
     //-22.4694,-48.9863,
     //-7.0918,-38.1681,
+
     quadPrinci->cidadesNoIntervalo(vet, arq1, x0, x, y0, y);
     
     for(int i=0;i<vet.size();i++){
@@ -337,36 +381,10 @@ void funcaoS2(Hashing *hashPrinci,int *idHash,int tam,QuadTree *quadPrinci)
     {
         int cont=0;
         int &valor=cont;
-        arvl->buscaCodigo(vet.at(j)->getCodigo(), valor, hashPrinci);
+        //arvl->buscaCodigo(vet.at(j)->getCodigo(), valor, hashPrinci);
         cout<<"(AVL) A cidade: "<<hashPrinci->getNome(vet.at(j)->getCodigo())<<"Casos: "<<valor<<endl;
     }
-    
-   //arvB->busca(idHash[178],hashPrinci);
-
-    /*
-    cout<<"Escolha o intervalo que deseja busca"<<endl;
-    cout<<"x0: "<<endl; cin>> x0;
-    cout<<"y0: "<<endl; cin>> y0;
-    cout<<"x: "<<endl; cin>> x;
-    cout<<"y: "<<endl; cin>> y;
-
-    vector<NoArvQuad*> vet;
-    criaArquivoSaidaTxt("QuadIntervaloTXT");
-    ofstream arq1;
-    arq1.open("QuadIntervaloTXT", ios::ate | ios::out | ios::in);
-    */
-    //referencias: x -> -21.0276    y -> -44.3204 ; 
-    //                                   x0,   x,  y0,   y
-    //quadPrinci->cidadesNoIntervalo(vet, arq1, x0, x, y0, y);
-    /*
-    arq1<<"Contador: "<<quadPrinci->getCont() << endl;
-    for(int i=0; i<vet.size(); i++)
-    {
-        arq1<<"Nome: " << vet.at(i)->getNome() <<"|Codigo: "<<vet.at(i)->getCodigo()<< endl;
-        //cout << vet.at(i)->getCodigo() << endl;
-    }
-    arq1.close();
-    */
+  
 
 
 
@@ -377,46 +395,20 @@ void etapa5(Hashing *hashPrinci,QuadTree *quadPrinci,int *idHash,int tam)
     int opt;
     cout<<"Escolha uma opcao"<<endl;
     cout<<"[1] S1 "<<endl;
-    cout<<"[2] S2 CANIATO "<<endl;
+    cout<<"[2] S2 "<<endl;
     cin>>opt;
 
 
     if(opt == 1){
-        buscaCasosS1(hashPrinci);
+        buscaCasosS1(hashPrinci,idHash,tam);
     }
     if(opt == 2)
     {
         funcaoS2(hashPrinci,idHash,tam,quadPrinci);
     }
 
-    /*
-    ArvB *arvB = new ArvB(20);
-    AVLTree *arvl = new AVLTree();
-    int codigo;
-    int i;
     
-    
-    for(int i=0;i<tamanhoN[N];i++)
-    {
-        if(idHash[i]!=0){
-            arvl->insere(idHash[i],hashPrinci);
-            arvB->insereArvB(idHash[i],hashPrinci);
-        }
-    }
-    
-    criaArquivoSaidaTxt("AVL");
-    ofstream arq1;
-    arq1.open("AVL", ios::ate | ios::out | ios::in);
-    arvl->imprimeTXT(hashPrinci,arq1);
-
-    
-    criaArquivoSaidaTxt("ARVB");
-    ofstream arq2;
-    arq2.open("ARVB", ios::ate | ios::out | ios::in);
-    arvB->imprimeArvTXT(hashPrinci,arq2);
-    */
-
-
+  
     
 
 
@@ -497,7 +489,7 @@ void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashin
         system("cls");
         cout << "Digite N cidades que sera inseridas" << endl;
         cin >> n;
-        criaArquivoSaidaTxt("QuadTreeTXT");
+        criaArquivoSaidaTxt("QuadTree.txt");
         testeQuadTree(registroCidades, n);
         moduloTeste(registro, registroCidades,hashPrinci,quadPrinci,idhash,t);
 
@@ -506,7 +498,7 @@ void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashin
          system("cls");
         cout << "Digite  N registro que sera inseridos" << endl;
         cin >> n;
-        criaArquivoSaidaTxt("HashingTXT");
+        criaArquivoSaidaTxt("Hashing.txt");
         testeHash(registro, n);
         moduloTeste(registro, registroCidades,hashPrinci,quadPrinci,idhash,t);
 
@@ -515,7 +507,7 @@ void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashin
         system("cls");
         cout << "Digite N chaves que sera inseridas na AVL" << endl;
         cin >> n;
-        criaArquivoSaidaTxt("AvlTXT");
+        criaArquivoSaidaTxt("Avl.txt");
         testeAvl(registro, n);
         moduloTeste(registro, registroCidades,hashPrinci,quadPrinci,idhash,t);
         break;
@@ -524,7 +516,7 @@ void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashin
         system("cls");
         cout << "Digite N cidades que sera inseridas na ARV B" << endl;
         cin >> n;
-        criaArquivoSaidaTxt("AvBTXT");
+        criaArquivoSaidaTxt("AvB.txt");
         testeAVB(registro, n);
         moduloTeste(registro, registroCidades,hashPrinci,quadPrinci,idhash,t);
 
@@ -536,10 +528,11 @@ void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashin
     }
 }
 int main(int argc, char *argv[])
-{
-     string filename(argv[1]);
-     filename += "/brazil_covid19_cities_processado.csv";
-     cout<<filename<<endl;
+{   
+    
+    // string filename(argv[1]);
+    // filename += "/brazil_covid19_cities_processado.csv";
+    // cout<<filename<<endl;
     //RegistroCoordinates *registrosCoordinate = new RegistroCoordinates[QUANTCIDADES];
     //Registro *registros = new Registro[TAMANHOMAX];
 
@@ -553,16 +546,6 @@ int main(int argc, char *argv[])
     
     menuPrincipal(registro,registrosCoordinate,hashPrincipal,quadPrincipal,idHashing,tam);
 
-    /*
-    int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000, TAMANHOMAX};
-    Registro *registros = new Registro[tamanhoN[5]];
-    registros->leArquivo(registros,tamanhoN[5]);
-    //registros->transformaCasosAcumuladosEmCasosDiarios(registros,tamanhoN[5]);
-
-
-    RegistroCoordinates *registrosCoordinate = new RegistroCoordinates[QUANTCIDADES];
-    registrosCoordinate->leArquivoCoordi(registrosCoordinate,QUANTCIDADES);
-    moduloTeste(registros,registrosCoordinate);
-    */
+   
     return 0;
 }

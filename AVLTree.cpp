@@ -206,11 +206,13 @@ NoArv* AVLTree::auxInsere(NoArv *p, int x,Hashing *tabela)
         p->setEsq(auxInsere(p->getEsq(), x,tabela));
     else if(comparaCodigo(x,p,tabela) == -1)
         p->setDir(auxInsere(p->getDir(),x,tabela));
-    else if(comparaData(x,p,tabela))
-         p->setEsq(auxInsere(p->getEsq(), x,tabela));
-    else if(!comparaData(x,p,tabela))
-        p->setDir(auxInsere(p->getDir(),x,tabela));
-    else //valor igual, retorna pois n pode na AVL
+    else if(comparaCodigo(x,p,tabela) ==0)
+    {   
+        if(comparaData(x,p,tabela))
+            p->setEsq(auxInsere(p->getEsq(), x,tabela));
+        else
+            p->setDir(auxInsere(p->getDir(),x,tabela));
+    }else //valor igual, retorna pois n pode na AVL
         return p;
     
     // atualiza altura desse no ancestral
@@ -680,40 +682,32 @@ void AVLTree::buscaCodigo(int codigo, int &cont, Hashing *tabela)
         return;
     }
 
-    //teste com AVL padrão
-    /*else
-    {
-        while(p != NULL)
-        {
-            if(p->getInfo() == val)
-            {
-                return p;
-            }
-            else if(p->getInfo() < val)
-                p = p->getDir();
-            else if(p->getInfo() > val)
-                p = p->getEsq();
-        }
-        return NULL;
-    } */
-
     //teste com a AVL do trab memo
     else
     {
         while(p != NULL)
-        {
-            if( tabela->getCodigo(p->getInfo()) < codigo )
+        {   
+           
+
+            if( tabela->getCodigo(p->getInfo()) > codigo )
+            {   
+                
                 p = p->getEsq();
-            else if( tabela->getCodigo(p->getInfo()) > codigo )
+            }
+            else if( tabela->getCodigo(p->getInfo()) < codigo )
+            {
+                
                 p = p->getDir();
+            }   
 
             else if( tabela->getCodigo(p->getInfo()) == codigo )
-            {
+            {   
+                cout<<"id: "<<p->getInfo()<<"|Nome da cidade: "<<tabela->buscaNome(p->getInfo())<<"|Codigo: "<<tabela->getCodigo(p->getInfo())<<"|Data: "<<tabela->data(p->getInfo())<<endl;
                 cont = cont + tabela->getCasos(p->getInfo());
-                //p = p->getDir();
-                cout << "piru doido" << " na cidade " << tabela->buscaNome(p->getInfo()) << endl;
+                
                 p = p->getEsq();
                 p = p->getDir();
+                
             }
             
             
