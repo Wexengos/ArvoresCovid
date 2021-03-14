@@ -129,9 +129,9 @@ void Registro::escreveSaidaTxt(Registro *r, int size, string nomeSaidaArquivo)
     arq.close();
 }
 
-void Registro::leArquivo(Registro *r, int N)
+void Registro::leArquivo(Registro *r, int N,string nome)
 {
-
+    cout<<nome<<endl;
     ifstream arq("brazil_covid19_cities_processados.csv");
     if (!arq.is_open())
     {

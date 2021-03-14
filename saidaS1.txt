@@ -1,0 +1,144 @@
+
+Arvore B com norma(20)
+
+Arvore com 10000 Registros
+
+Execução 1
+Tempo de inserção: 0.0619998
+Tempo de Busca: 0.0009996
+
+
+Execução 2
+Tempo de inserção: 0.0959785
+Tempo de Busca: 0.0005047
+
+
+Execução 3
+Tempo de inserção: 0.0925179
+Tempo de Busca: 0.0010047
+
+
+Execução 4
+Tempo de inserção: 0.116654
+Tempo de Busca: 0.0005022
+
+
+Execução 5
+Tempo de inserção: 0.111
+Tempo de Busca: 0.0019999
+
+
+A cidade: Ritapolis teve casos: 0
+Media de Tempo em 5 execs de inserção: 0.0956302
+Media de Busca em 5 execs: 0.00100222
+Media de Comparações em 5 execs: 6671
+
+Arvore com 50000 Registros
+
+Execução 1
+Tempo de inserção: 0.543
+Tempo de Busca: 0.0029994
+
+
+Execução 2
+Tempo de inserção: 1.242
+Tempo de Busca: 0.0069992
+
+
+Execução 3
+Tempo de inserção: 0.925001
+Tempo de Busca: 0.005
+
+
+Execução 4
+Tempo de inserção: 0.831006
+Tempo de Busca: 0.0049938
+
+
+Execução 5
+Tempo de inserção: 0.748001
+Tempo de Busca: 0.0080052
+
+
+A cidade: Ritapolis teve casos: 0
+Media de Tempo em 5 execs de inserção: 0.857802
+Media de Busca em 5 execs: 0.00559952
+Media de Comparações em 5 execs: 45742
+
+Arvore com 100000 Registros
+
+Execução 1
+Tempo de inserção: 1.39
+Tempo de Busca: 0.0079936
+
+
+Execução 2
+Tempo de inserção: 1.545
+Tempo de Busca: 0.0119985
+
+
+Execução 3
+Tempo de inserção: 1.64101
+Tempo de Busca: 0.0119959
+
+
+Execução 4
+Tempo de inserção: 1.708
+Tempo de Busca: 0.015996
+
+
+Execução 5
+Tempo de inserção: 2.298
+Tempo de Busca: 0.0210001
+
+
+A cidade: Ritapolis teve casos: 0
+Media de Tempo em 5 execs de inserção: 1.7164
+Media de Busca em 5 execs: 0.0137968
+Media de Comparações em 5 execs: 134811
+
+Arvore com 500000 Registros
+
+Execução 1
+Tempo de inserção: 6.965
+Tempo de Busca: 0.0339997
+
+
+Execução 2
+Tempo de inserção: 9.194
+Tempo de Busca: 0.0669996
+
+
+Execução 3
+Tempo de inserção: 8.37657
+Tempo de Busca: 0.0489717
+
+
+Execução 4
+Tempo de inserção: 8.22798
+Tempo de Busca: 0.0659942
+
+
+Execução 5
+Tempo de inserção: 8.369
+Tempo de Busca: 0.0670008
+
+
+A cidade: Ritapolis teve casos: 0
+Media de Tempo em 5 execs de inserção: 8.22651
+Media de Busca em 5 execs: 0.0565932
+Media de Comparações em 5 execs: 540224
+
+Arvore com 1000000 Registros
+
+Execução 1
+Tempo de inserção: 15.331
+Tempo de Busca: 0.125
+
+
+Execução 2
+Tempo de inserção: 19.017
+Tempo de Busca: 0.104
+
+
+Execução 3

@@ -36,7 +36,7 @@ public:
     int getMortes();
     void transformaCasosAcumuladosEmCasosDiarios(Registro *registros, int N);
     void escreveArquivoSaidaCsv(Registro *r, int size, string nomeSaidaArquivo);
-    void leArquivo(Registro *r, int N);
+    void leArquivo(Registro *r, int N,string nome);
     void selecionandoRegistrosAleatorios(Registro *registroPrincipal,Registro *registrosAux, int N);
     void preProcessamentoComMergeSort(Registro *registros, int N);
     void exibeRegistrosPreProcessados(Registro *registros, int N);

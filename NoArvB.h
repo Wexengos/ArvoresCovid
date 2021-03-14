@@ -16,6 +16,7 @@ private:
     int n;
     bool folha;
     int tam;
+    int comparacoes;
    
 
 public:
@@ -37,7 +38,10 @@ public:
     void imprimeTXT(Hashing  *tabela,std::ofstream& myfile);
     NoArvB* busca_no_No(int k,Hashing *tabela); 
     void imprimeTXTBusca(Hashing  *tabela,std::ofstream& myfile, int k,int &cont);
-    void buscaCodigo(int codigo,Hashing *tabela,int &cont);
+    void buscaCodigo(int codigo,Hashing *tabela,int &cont,int &contaComparacao);
+    void setComparacoes(){comparacoes++;};
+    void setZeraComparacoes(){comparacoes=0;};
+    int getComparacoes(){return comparacoes;};
     ~NoArvB();
 
     friend class ArvB;

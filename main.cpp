@@ -24,8 +24,8 @@ using namespace std::chrono;
 
 //g++ -o teste -O3 *.cpp
 //.teste
-void menuPrincipal(Registro *registros,RegistroCoordinates *registrosCoord,Hashing *hashPrinci,QuadTree *quadPrinci,int *idhash,int t);
-void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashing *hashPrinci,QuadTree *quadPrinci,int *idhash,int t);
+void menuPrincipal(Registro *registros,RegistroCoordinates *registrosCoord,Hashing *hashPrinci,QuadTree *quadPrinci,int *idhash,int t,string nomeArq);
+void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashing *hashPrinci,QuadTree *quadPrinci,int *idhash,int t,string nome);
 
 
 void criaArquivoSaidaTxt(string nomeArquivo)
@@ -40,7 +40,7 @@ void testeQuadTree(RegistroCoordinates *registroCidades, int N)
     QuadTree *quad = new QuadTree();
 
     //arq."Cidades Inseridades na QuadTree"<<endl;
-    high_resolution_clock::time_point inicio = high_resolution_clock::now();
+   
     for (int i = 0; i < N; i++)
     {
         NoArvQuad *no = new NoArvQuad();
@@ -51,8 +51,8 @@ void testeQuadTree(RegistroCoordinates *registroCidades, int N)
         quad->insere(no);
       
     }
-    high_resolution_clock::time_point fim = high_resolution_clock::now();
-    int tem = duration_cast<duration<double>>(fim - inicio).count();
+   
+    
 
     if (N <= 20)
     {
@@ -65,26 +65,8 @@ void testeQuadTree(RegistroCoordinates *registroCidades, int N)
         ofstream arq; // ("a:lista.dat", ios::ate | ios::out | ios::in)
         arq.open("QuadTree.txt", ios::ate | ios::out | ios::in);
         quad->imprimeTXT(arq);
-        arq << "Tempo: " << tem << endl;
         arq.close();
     }
-
-    vector<NoArvQuad*> vet;
-    criaArquivoSaidaTxt("QuadIntervaloTXT");
-    ofstream arq1;
-    arq1.open("QuadIntervaloTXT", ios::ate | ios::out | ios::in);
-    //referencias: x -> -21.0276    y -> -44.3204 ; 
-    //                                   x0,   x,  y0,   y
-    quad->cidadesNoIntervalo(vet, arq1, -18, -16, -22, -20);
-
-    arq1<<"Contador: "<<quad->getCont() << endl;
-    for(int i=0; i<vet.size(); i++)
-    {
-        arq1<<"Nome: " << vet.at(i)->getNome() << endl;
-        cout << vet.at(i)->getNome() << endl;
-    }
-    arq1.close();
-
     cout << "Final" << endl;
 }
 
@@ -95,7 +77,7 @@ void testeHash(Registro *registro, int N)
     int cont = 0;
     register int chave, id;
 
-    high_resolution_clock::time_point inicio = high_resolution_clock::now();
+    
     for (int i = 0; i < N; i++)
     {
         
@@ -104,8 +86,7 @@ void testeHash(Registro *registro, int N)
         cont++;
        
     }
-    high_resolution_clock::time_point fim = high_resolution_clock::now();
-    double tem = duration_cast<duration<double>>(fim - inicio).count();
+    
     if (N <= 20)
     {
         cout << "Saida no Console ===> Cidades Inseridas na Hash" << endl;
@@ -117,12 +98,9 @@ void testeHash(Registro *registro, int N)
         ofstream arq; // ("a:lista.dat", ios::ate | ios::out | ios::in)
         arq.open("Hashing.txt", ios::ate | ios::out | ios::in);
         hash->imprimeTXT(arq);
-        hash->casosTotaisCidade(330010);
-        arq << "Tempo: " << tem << endl;
         arq.close();
     }
     cout << endl;
-    cout << "Ch: " << hash->getChavesArmazenadas() << endl;
     cout << "Teste finalizado" << endl;
 }
 
@@ -154,10 +132,7 @@ void testeAvl(Registro *registro, int N)
     }
   
     int cont=0;
-    avl->buscaCodigo(315610, cont, hash);
-    cout<<"(AVL) A cidade: "<<hash->getNome(315610)<<" Casos: "<<cont<<endl;
     cout << "Teste finalizado" << endl;
-  
     hash->~Hashing();
 }
 void testeAVB(Registro *registro, int N)
@@ -187,18 +162,22 @@ void testeAVB(Registro *registro, int N)
         arvB->imprimeArvTXT(hash, arq);
         
     }
-    int homer=0;
-    arvB->buscaCodigo(315610,hash, homer);
-    cout<<"(AVBuceta) A cidade: "<<hash->getNome(315610)<<" Casos: "<<homer<<endl;
+    int conti=0,conta=0;
+    high_resolution_clock::time_point inicio = high_resolution_clock::now();
+    arvB->buscaCodigo(315610,hash,conti,conta);
+    high_resolution_clock::time_point fim = high_resolution_clock::now();
+    cout<<"Tempo de busca: "<<(duration_cast<duration<double>>(fim - inicio).count())<<endl;
+
     cout << "Teste finalizado" << endl;
     cout << endl;
     
     hash->~Hashing();
 }
 
-
+//Etapa 1 Aqui armazena na QuadTree os Registros Coordinates
 void etapa1(RegistroCoordinates *registrosCoordinate, QuadTree *quadPrincipal)
 {       
+
         cout<<"Lendo Arquivo com as cidades e Armazenando na QuadTree"<<endl;
         registrosCoordinate->leArquivoCoordi(registrosCoordinate, QUANTCIDADES);
     
@@ -214,24 +193,29 @@ void etapa1(RegistroCoordinates *registrosCoordinate, QuadTree *quadPrincipal)
         }
   
 }
-void etapa2(Registro *registros,Hashing *hashingPrincipal,int *idhash)
+//Etapa 2 Aqui armazena na Hashing os Registros
+void etapa2(Registro *registros,Hashing *hashingPrincipal,int *idhash,string nome)
 {   
     cout<<"Lendo Registros e Armazenando na Hashing Table"<<endl;
-    registros->leArquivo(registros,TAMANHOMAX);
+    cout<<nome<<endl;
+    registros->leArquivo(registros,TAMANHOMAX,nome);
     int chave, id;
-
+    
     for (int i = 0; i < TAMANHOMAX; i++)
     {
         chave = registros[i].getCodigoCidade() + registros[i].getDataInt();
         id = hashingPrincipal->insere(chave, &registros[i]);
-        idhash[i]=id;
+        idhash[i]=id; //Armazenando no vetor os ids gerados pelo hashing para a proximas etapas
+                      //inserir nas Arvores B e AVL  
     }   
     
     
 }
+//Funcao que embaralha o vetor para gerar registros aletorios
 void embaralhar(int *vet, int vetSize)
 {   
     srand(time(NULL));
+
 	for (int i = 0; i < vetSize; i++)
 	{   
         if(vet[i]!=0){
@@ -249,11 +233,16 @@ void embaralhar(int *vet, int vetSize)
    
 
 }
-void insere(int tamanho,Hashing *hashing,int *idhash,ArvB *ar)
-{
+double insere(int tamanho,Hashing *hashing,int *idhash,ArvB *ar)
+{   
+    high_resolution_clock::time_point inicio = high_resolution_clock::now();
     for(int j=0;j<tamanho;j++){
         ar->insereArvB(idhash[j],hashing);  
     }
+    high_resolution_clock::time_point fim = high_resolution_clock::now();
+    
+    return (duration_cast<duration<double>>(fim - inicio).count());
+
 }
 
 void insere2(int tamanho,Hashing *hashing,int *idhash,AVLTree *ar)
@@ -262,7 +251,7 @@ void insere2(int tamanho,Hashing *hashing,int *idhash,AVLTree *ar)
         ar->insere(idhash[j],hashing);  
     }
 }
-
+//Funcao Para etapa 5 onde se geras as metricas para o txt
 void execArvB(ArvB *arv,int N,std::ofstream& myfile,int *idhash,Hashing *hash,int tam,int codigo)
 {
    
@@ -270,65 +259,158 @@ void execArvB(ArvB *arv,int N,std::ofstream& myfile,int *idhash,Hashing *hash,in
     int mediaComparacao = 0;
     double mediaTempoInsere = 0;
     double mediaBusca=0;
-    int c;
+    int val;
+    int comparaMedia;
+    int *c = new int;
+    int *comp = new int;
+
+    //Faz o teste para as quantidades de registros
+    
+    for (int exec = 0;exec < 5 ; exec++)
+    {
+        *c=0;
+        *comp=0;
+        myfile<<endl;
+
+        myfile<<"Execução "<<exec+1<<endl;
+        double tempo = insere(N,hash,idhash,arv); 
+          
+
+        myfile<<"Tempo de inserção: "<<tempo<<endl;
+        mediaTempoInsere = mediaTempoInsere + tempo;
+        
+
+        //Busca
+        high_resolution_clock::time_point inicio2 = high_resolution_clock::now();
+        arv->buscaCodigo(codigo,hash,*c,*comp); 
+        high_resolution_clock::time_point fim2 = high_resolution_clock::now();
+
+        myfile<<"Tempo de Busca: "<<(duration_cast<duration<double>>(fim2 - inicio2).count())<<endl;
+        mediaBusca = mediaBusca + (duration_cast<duration<double>>(fim2 - inicio2).count());
+
+        val=*c;
+        comparaMedia=*comp;
+        myfile<<endl;
+    }
+    myfile<<endl;
+    myfile<<"A cidade: "<<hash->getNome(codigo)<<" teve casos: "<< val/5 <<endl;
+    myfile << "Media de Tempo em 5 execs de inserção: " << mediaTempoInsere / 5 << endl;
+    myfile << "Media de Busca em 5 execs: " << mediaBusca / 5 << endl;
+    myfile << "Media de Comparações em 5 execs: " << comparaMedia/ 5 << endl;
+
+    delete c;
+    delete comp;
+    val=0;
+}
+
+//Funcao Para etapa 5 onde se geras as metricas para o txt
+void execArvB2(ArvB *arv,int N,std::ofstream& myfile,int *idhash,Hashing *hash,int tam,int codigo)
+{
+   
+    
+    int mediaComparacao = 0;
+    double mediaTempoInsere = 0;
+    double mediaBusca=0;
+    int val1;
+    int comparaMedia1;
+    int *c1 = new int;
+    int *comp1 = new int;
 
     //Faz o teste para as quantidades de registros
 
     for (int exec = 0;exec < 5 ; exec++)
     {
-        c = 0;
+        *c1=0;
+        *comp1=0;
+        myfile<<endl;
+        myfile<<"Execução "<<exec+1<<endl;
 
         high_resolution_clock::time_point inicio = high_resolution_clock::now();
-        insere(N,hash,idhash,arv);   
+            insere(N,hash,idhash,arv);   
         high_resolution_clock::time_point fim = high_resolution_clock::now();
-        mediaTempoInsere = mediaTempoInsere + (duration_cast<duration<double>>(fim - inicio).count());
 
+        myfile<<"Tempo de inserção: "<<(duration_cast<duration<double>>(fim - inicio).count())<<endl;
+        mediaTempoInsere = mediaTempoInsere + (duration_cast<duration<double>>(fim - inicio).count());
+      
         //Busca
         high_resolution_clock::time_point inicio2 = high_resolution_clock::now();
-        arv->buscaCodigo(codigo,hash,c); 
+        arv->buscaCodigo(codigo,hash,*c1,*comp1); 
         high_resolution_clock::time_point fim2 = high_resolution_clock::now();
+        
+        myfile<<"Tempo de Busca: "<<(duration_cast<duration<double>>(fim2 - inicio2).count())<<endl;
         mediaBusca = mediaBusca + (duration_cast<duration<double>>(fim2 - inicio2).count());
 
+        val1=*c1;
+        comparaMedia1=*comp1;
+        myfile<<endl;
     }
-    
-    myfile<<"A cidade: "<<hash->getNome(codigo)<<" teve casos: "<< c/5 <<endl;
+    myfile<<endl;
+    myfile<<"A cidade: "<<hash->getNome(codigo)<<" teve casos: "<< val1/5 <<endl;
     myfile << "Media de Tempo em 5 execs de inserção: " << mediaTempoInsere / 5 << endl;
     myfile << "Media de Busca em 5 execs: " << mediaBusca / 5 << endl;
-    c = 0;
-   
+    myfile << "Media de Comparações em 5 execs: " << comparaMedia1/ 5 << endl;
+
+    delete c1;
+    delete comp1;
+    val1=0;
+
 }
 
+//Funcao Para etapa 5 onde se geras as metricas para o txt
 void execAVL(AVLTree *arv,int N,std::ofstream& myfile,int *idhash,Hashing *hash,int tam,int codigo)
 {
     int mediaComparacao = 0;
     double mediaTempoInsere = 0;
     double mediaBusca=0;
-    int c;
+    int comparaMe;
+    int valor;
+    int *cA = new int;
+    int *comp2 = new int;
+
 
     //Faz o teste para as quantidades de registros
 
     for (int exec = 0;exec < 5 ; exec++)
     {
-        c = 0;
-
+        
+        
+        *cA=0;
+        *comp2=0;
+         myfile<<endl;
+        myfile<<"Execução "<<exec+1<<endl;
         high_resolution_clock::time_point inicio = high_resolution_clock::now();
         insere2(N,hash,idhash,arv);   
         high_resolution_clock::time_point fim = high_resolution_clock::now();
+        myfile<<"Tempo de inserção: "<<(duration_cast<duration<double>>(fim - inicio).count())<<endl;
         mediaTempoInsere = mediaTempoInsere + (duration_cast<duration<double>>(fim - inicio).count());
+        
 
         //Busca
         high_resolution_clock::time_point inicio2 = high_resolution_clock::now();
-        arv->buscaCodigo(codigo,c,hash); 
+        arv->buscaCodigo(codigo,*cA,hash,*comp2); 
         high_resolution_clock::time_point fim2 = high_resolution_clock::now();
+        myfile<<"Tempo de Busca: "<<(duration_cast<duration<double>>(fim2 - inicio2).count())<<endl;
         mediaBusca = mediaBusca + (duration_cast<duration<double>>(fim2 - inicio2).count());
-    }
-    
 
-    myfile<<"A cidade: "<<hash->getNome(codigo)<<" teve casos: "<<c/5<<endl;
+        valor=*cA;
+        comparaMe=*comp2;
+        myfile<<endl;
+        
+    }
+    myfile<<endl;
+    myfile<<"A cidade: "<<hash->getNome(codigo)<<" teve casos: "<<valor/5<<endl;
     myfile << "Media de Tempo em 5 execs de inserção: " << mediaTempoInsere / 5 << endl;
     myfile << "Media de Busca em 5 execs: " << mediaBusca / 5 << endl;
+    myfile << "Media de Comparações em 5 execs: " << comparaMe/ 5 << endl;
+
+    delete cA;
+    delete comp2;
+    valor=0;
+
+
 }
 
+//Função S1
 void buscaCasosS1(Hashing *hashPrinci,int *idHash,int tam)
 {   
     int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000};
@@ -353,50 +435,43 @@ void buscaCasosS1(Hashing *hashPrinci,int *idHash,int tam)
     ArvB *arvB = new ArvB(20);
     ArvB *arvB1 = new ArvB(200);
     AVLTree *arvl = new AVLTree();
-
+     arq1<<endl;
     arq1<<"Arvore B com norma(20)"<<endl;
+
     for(int i=0;i<5;i++){
-        arq1<<"Arvore com "<<tamanhoN[i]<<endl;
+        arq1<<endl;
+        arq1<<"Arvore com "<<tamanhoN[i]<<" Registros"<<endl;
         execArvB(arvB,tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
+        
     }
     
-    
+    arq1<<endl;
     arq1<<"Arvore B com norma(200)"<<endl;
     for(int i=0;i<5;i++){
-        arq1<<"Arvore com "<<tamanhoN[i]<<endl;
-        execArvB(arvB,tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
+        arq1<<endl;
+        arq1<<"Arvore com "<<tamanhoN[i]<<" Registros"<<endl;
+        execArvB2(arvB1,tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
     }
 
+    arq1<<endl;
     arq1<<"Arvore AVL"<<endl;
     for(int i=0;i<5;i++){
-        arq1<<"Arvore com "<<tamanhoN[i]<<endl;
+         arq1<<endl;
+        arq1<<"Arvore com "<<tamanhoN[i]<<" Registros"<<endl;
         execAVL(arvl,tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
     }
 
 }
+//Função S2
 void funcaoS2(Hashing *hashPrinci,int *idHash,int tam,QuadTree *quadPrinci)
 {
      
     embaralhar(idHash,tam);//VETOR COM TODOS OS IDS GERADOS PELO HASHING SERA EMBARALHADO PARA GERAR IDS ALEATORIOS
     srand(time(NULL));
     int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000};
-    int N =  rand() % 4;
-    int x0,y0,x,y;
+    float x0,y0,x,y;
     
-    ArvB *arvB = new ArvB(20);
-    AVLTree *arvl = new AVLTree();
-
-    cout<<"Quant Aleatorios=> "<<tamanhoN[N]<<endl;
-    for(int i=0;i<tamanhoN[N];i++)
-    {
-        arvB->insereArvB(idHash[i],hashPrinci);
-    }
-
-    for(int i=0; i<tamanhoN[N]; i++)
-    {
-        //cout<<"Inseriu "<<i<<endl;
-        arvl->insere(idHash[i], hashPrinci);
-    }
+    
     
     cout<<"Escolha o intervalo que deseja busca"<<endl;
     cout<<"x0: "<<endl; cin>> x0;
@@ -405,34 +480,51 @@ void funcaoS2(Hashing *hashPrinci,int *idHash,int tam,QuadTree *quadPrinci)
     cout<<"y: "<<endl; cin>> y;
 
     vector<NoArvQuad*> vet;
-    criaArquivoSaidaTxt("QuadIntervaloTXT");
-    ofstream arq1;
-    arq1.open("QuadIntervaloTXT", ios::ate | ios::out | ios::in);
+    criaArquivoSaidaTxt("saidaS2.txt");
+    ofstream arq2;
+    arq2.open("saidaS2.txt", ios::ate | ios::out | ios::in);
     
     //referencias: x -> -21.0276    y -> -44.3204 ; 
     //                                   x0,   x,  y0,   y
     //-22.4694,-48.9863,
     //-7.0918,-38.1681,
 
-    quadPrinci->cidadesNoIntervalo(vet, arq1, x0, x, y0, y);
+    arq2<<"Cidades no intervalo"<<endl;
+    quadPrinci->cidadesNoIntervalo(vet, arq2, x0, x, y0, y);
+
+    for(int i=0;i<vet.size();i++)
+    {
+        arq2<<"Nome da cidade: "<<hashPrinci->getNome(vet.at(i)->getCodigo())<<endl;
+    }
+    arq2<<"----------------------------------------------------"<<endl;
+    
+    ArvB *arvB = new ArvB(20);
+    ArvB *arvB2 = new ArvB(200);
+    AVLTree *arvl = new AVLTree();
+    
     
     for(int i=0;i<vet.size();i++){
-        int c=0;
-        int &val=c;
-        arvB->buscaCodigo(vet.at(i)->getCodigo(),hashPrinci,val);
-        cout<<"A cidade: "<<hashPrinci->getNome(vet.at(i)->getCodigo())<<"Casos: "<<val<<endl;
-    } 
+        arq2<<endl;
 
-    for(int j=0;j<vet.size();j++)
-    {
-        int cont=0;
-        int &valor=cont;
-        //arvl->buscaCodigo(vet.at(j)->getCodigo(), valor, hashPrinci);
-        cout<<"(AVL) A cidade: "<<hashPrinci->getNome(vet.at(j)->getCodigo())<<"Casos: "<<valor<<endl;
+         for(int j=0;j<5;j++){
+            arq2<<endl;
+            arq2<<"Arvore com "<<tamanhoN[j]<<endl;
+            arq2<<"Arvore B com norma(20)"<<endl;
+            execArvB(arvB,tamanhoN[j],arq2,idHash,hashPrinci,tam,vet.at(i)->getCodigo());
+            arq2<<"Arvore B com norma(200)"<<endl;
+            execArvB2(arvB2,tamanhoN[i],arq2,idHash,hashPrinci,tam,vet.at(i)->getCodigo());
+            arq2<<"Arvore AVL"<<endl;
+            execAVL(arvl,tamanhoN[j],arq2,idHash,hashPrinci,tam,vet.at(i)->getCodigo());
+        }
+         arq2<<endl;
     }
+    cout<<"Txt gerado"<<endl;
+    
+    
   
 }
 
+//Chamada da etapa 5
 void etapa5(Hashing *hashPrinci,QuadTree *quadPrinci,int *idHash,int tam)
 {  
     int opt;
@@ -456,7 +548,8 @@ void etapa5(Hashing *hashPrinci,QuadTree *quadPrinci,int *idHash,int tam)
 
 
 }
-void menuPrincipal(Registro *registros,RegistroCoordinates *registrosCoord,Hashing *hashPrinci,QuadTree *quadPrinci,int *idhash,int t)
+//Menu Princicipal
+void menuPrincipal(Registro *registros,RegistroCoordinates *registrosCoord,Hashing *hashPrinci,QuadTree *quadPrinci,int *idhash,int t,string nomeArq)
 {   
    
     
@@ -476,27 +569,27 @@ void menuPrincipal(Registro *registros,RegistroCoordinates *registrosCoord,Hashi
         system("cls");
         etapa1(registrosCoord,quadPrinci);
         cout << "Etapa 1 concluida!" << endl;
-        menuPrincipal(registros,registrosCoord,hashPrinci,quadPrinci,idhash,t);
+        menuPrincipal(registros,registrosCoord,hashPrinci,quadPrinci,idhash,t,nomeArq);
         break;
         
     case 2:
         system("cls");
-        etapa2(registros,hashPrinci,idhash);
+        etapa2(registros,hashPrinci,idhash,nomeArq);
         cout << "Etapa 2 concluida!" << endl;
-        menuPrincipal(registros,registrosCoord,hashPrinci,quadPrinci,idhash,t);
+        menuPrincipal(registros,registrosCoord,hashPrinci,quadPrinci,idhash,t,nomeArq);
         break;
         
        
     case 3:
         system("cls");
-        moduloTeste(registros, registrosCoord,hashPrinci,quadPrinci,idhash,t);
+        moduloTeste(registros, registrosCoord,hashPrinci,quadPrinci,idhash,t,nomeArq);
         cout << "Etapa 3 concluida!" << endl;
         break;
          
     case 4:
          system("cls");
          etapa5(hashPrinci,quadPrinci,idhash,t);
-        menuPrincipal(registros,registrosCoord,hashPrinci,quadPrinci,idhash,t);
+        menuPrincipal(registros,registrosCoord,hashPrinci,quadPrinci,idhash,t,nomeArq);
          
          break;
     case 5:
@@ -507,13 +600,14 @@ void menuPrincipal(Registro *registros,RegistroCoordinates *registrosCoord,Hashi
        
     default:
         cout << "Valor invalido" << endl;
-        menuPrincipal(registros,registrosCoord,hashPrinci,quadPrinci,idhash,t);
+        menuPrincipal(registros,registrosCoord,hashPrinci,quadPrinci,idhash,t,nomeArq);
         
         break;
     }
     cout << "Fim" << endl;
 }
-void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashing *hashPrinci,QuadTree *quadPrinci,int *idhash,int t)
+//Menu modulo de teste
+void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashing *hashPrinci,QuadTree *quadPrinci,int *idhash,int t,string nome)
 {
     
     int menuTeste, n;
@@ -534,7 +628,7 @@ void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashin
         cin >> n;
         criaArquivoSaidaTxt("QuadTree.txt");
         testeQuadTree(registroCidades, n);
-        moduloTeste(registro, registroCidades,hashPrinci,quadPrinci,idhash,t);
+        moduloTeste(registro, registroCidades,hashPrinci,quadPrinci,idhash,t,nome);
 
         break;
     case 2:
@@ -543,7 +637,7 @@ void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashin
         cin >> n;
         criaArquivoSaidaTxt("Hashing.txt");
         testeHash(registro, n);
-        moduloTeste(registro, registroCidades,hashPrinci,quadPrinci,idhash,t);
+        moduloTeste(registro, registroCidades,hashPrinci,quadPrinci,idhash,t,nome);
 
         break;
     case 3:
@@ -552,7 +646,7 @@ void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashin
         cin >> n;
         criaArquivoSaidaTxt("Avl.txt");
         testeAvl(registro, n);
-        moduloTeste(registro, registroCidades,hashPrinci,quadPrinci,idhash,t);
+        moduloTeste(registro, registroCidades,hashPrinci,quadPrinci,idhash,t,nome);
         break;
 
     case 4:
@@ -561,11 +655,11 @@ void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashin
         cin >> n;
         criaArquivoSaidaTxt("AvB.txt");
         testeAVB(registro, n);
-        moduloTeste(registro, registroCidades,hashPrinci,quadPrinci,idhash,t);
+        moduloTeste(registro, registroCidades,hashPrinci,quadPrinci,idhash,t,nome);
 
         break;
     case 5:
-        menuPrincipal(registro,registroCidades,hashPrinci,quadPrinci,idhash,t);
+        menuPrincipal(registro,registroCidades,hashPrinci,quadPrinci,idhash,t,nome);
     default:
         break;
     }
@@ -573,11 +667,12 @@ void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashin
 int main(int argc, char *argv[])
 {   
     
-    // string filename(argv[1]);
-    // filename += "/brazil_covid19_cities_processado.csv";
-    // cout<<filename<<endl;
-    //RegistroCoordinates *registrosCoordinate = new RegistroCoordinates[QUANTCIDADES];
-    //Registro *registros = new Registro[TAMANHOMAX];
+
+    string filename(argv[1]);
+    filename += "brazil_covid19_cities_processados.csv";
+    cout<<filename<<endl;
+    
+  
 
     QuadTree *quadPrincipal = new QuadTree();
     RegistroCoordinates *registrosCoordinate = new RegistroCoordinates[QUANTCIDADES];
@@ -587,7 +682,7 @@ int main(int argc, char *argv[])
     int *idHashing = new int[tam];
     
     
-    menuPrincipal(registro,registrosCoordinate,hashPrincipal,quadPrincipal,idHashing,tam);
+    menuPrincipal(registro,registrosCoordinate,hashPrincipal,quadPrincipal,idHashing,tam,filename);
 
    
     return 0;

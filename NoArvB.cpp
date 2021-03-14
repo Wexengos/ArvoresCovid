@@ -16,6 +16,7 @@ NoArvB::NoArvB(int tamanho,bool f)
     chaves = new int [2*tam-1];
     filhos = new NoArvB * [2*tam];
     n = 0;
+    comparacoes=0;
 }
 int NoArvB::comparaData(int x,int *ch,Hashing *tabela,int i)
 {
@@ -104,22 +105,7 @@ void NoArvB::insertFilho(int k, Hashing *tabela)
         }
         chaves[i+1] = k;
         n=n+1;
-        /*
-        int aux=chaves[0];
-          for (int i = 0; i < tam; i++)
-            {
-                for (int j = 0; j < tam; j++)
-                {
-                    if (chaves[i] < chaves[j])
-                    {
-                        aux = chaves[i];
-                        chaves[i] = chaves[j];
-                        chaves[j] = aux;
-                    }
-                }
-            }
-        n++;
-        */
+       
     }else{
         
         
@@ -127,7 +113,7 @@ void NoArvB::insertFilho(int k, Hashing *tabela)
         {
             i--;
         }
-       
+        // verifca OverFlow do no N folha
         if(filhos[i+1]->getN()==2*tam-1)
         {
             split(i+1,filhos[i+1],tabela);
@@ -139,26 +125,36 @@ void NoArvB::insertFilho(int k, Hashing *tabela)
     }
    
 }
-void NoArvB::buscaCodigo(int codigo, Hashing *tabela,int &cont)
+void NoArvB::buscaCodigo(int codigo, Hashing *tabela,int &cont,int &contaComparacao)
 {
     int i;
+    
+    if(tabela->getCodigo(this->chaves[0]) > codigo)
+        return;
 
+    /*
+    if(folha == true)
+        return ;
+    */
     for(i = 0; i<this->n;i++)
-    {
+    {   
+        contaComparacao = contaComparacao + 1;
         if(this->folha == false)
         {
-            this->filhos[i]->buscaCodigo(codigo,tabela,cont);
+            this->filhos[i]->buscaCodigo(codigo,tabela,cont,contaComparacao);
         }
         
         if(tabela->getCodigo(this->chaves[i]) == codigo)
-        {
+        {   
+            this->setComparacoes();
             cont = cont + tabela->getCasos(chaves[i]);
         }
+
         
     }
 
     if(this->folha == false){
-        this->filhos[i]->buscaCodigo(codigo,tabela,cont);
+        this->filhos[i]->buscaCodigo(codigo,tabela,cont,contaComparacao);
     }
 }
 void NoArvB::imprimeTXTBusca(Hashing  *tabela,std::ofstream& myfile, int k,int &cont)
@@ -197,7 +193,6 @@ NoArvB* NoArvB::busca_no_No(int k,Hashing *tabela)
     if(tabela->getCodigo(chaves[i]) == tabela->getCodigo(k)){
         //cout<<"Chave encotrada: "<<chaves[i]<<endl;
         cout<<"Nome: "<<tabela->buscaNome(k)<<endl;
-        //return this;
         return filhos[i]->busca_no_No(k,tabela);
     }
     

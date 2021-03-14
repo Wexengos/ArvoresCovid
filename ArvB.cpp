@@ -18,7 +18,7 @@ ArvB::ArvB(int tam)
     
 }
 ArvB::~ArvB(){}
-
+//Função de comparar Datas na Hashing
 int ArvB::comparaData(int x,int *ch,Hashing *tabela,int i)
 {
   
@@ -28,6 +28,7 @@ int ArvB::comparaData(int x,int *ch,Hashing *tabela,int i)
         return 2;
 }
 
+//Funcao de comparar Codigo na Hashing
 int ArvB::compara(int x,int *ch,Hashing *tabela,int i)
 {
   
@@ -44,29 +45,26 @@ int ArvB::compara(int x,int *ch,Hashing *tabela,int i)
 }
 
 
-
+//Inserção na Arvore
 void ArvB::insereArvB(int chave,Hashing *tabela)
 {
     if(raiz == NULL)
     {   
-        
+        //se a Raiz cria nova e seta como folha
         raiz = new NoArvB(tamanhodoNo,true);
         raiz->setChave(0, chave);
         raiz->setN(1);
-        //cout<<"tam: "<<raiz->getN()<<endl;
-
-            
+        
     }else{
 
         if(raiz->getN() == 2*tamanhodoNo-1){
             
             //Se raiz estiver cheia
-          
             NoArvB *p = new NoArvB(tamanhodoNo, false);
             p->setFilhos(0,raiz);
             p->split(0,raiz,tabela);
 
-            //Aumenta o index para a achar a chave corresponde
+            //Aumenta o index para a achar a chave correta e inserir em seu filho
             //que seja maior do que a chave que quer ser inserida assim ligando a folha correta
             int i = 0;
             
@@ -78,7 +76,7 @@ void ArvB::insereArvB(int chave,Hashing *tabela)
             p->getFilhos(i)->insertFilho(chave,tabela);
             raiz = p;
         }else{
-            //cout<<"Raiz n ta cheia"<<endl;
+
             raiz->insertFilho(chave,tabela);
         }
     }
@@ -91,12 +89,7 @@ void ArvB::imprimeArv(Hashing *tabela)
         raiz->imprime(tabela);
     }
 
-    /*
-    for (int i = 0; i < raiz->getN(); i++)
-    {
-        cout<<" /"<<raiz->chaves[i];
-    }
-    */
+    
 }
 void ArvB::imprimeArvTXT(Hashing *tabela,std::ofstream& myfile)
 {
@@ -117,11 +110,13 @@ NoArvB* ArvB::busca(int chave,Hashing *tabela)
     return (raiz == NULL) ? NULL : raiz->busca_no_No(chave,tabela);
 }
 
-void ArvB::buscaCodigo(int codigo,Hashing *tabela,int &cont)
+
+void ArvB::buscaCodigo(int codigo,Hashing *tabela,int &cont,int &contaComparacao)
 {
     if(raiz!=NULL)
     {   
-        cont = 0;
-        raiz->buscaCodigo(codigo,tabela,cont);
+        raiz->buscaCodigo(codigo,tabela,cont,contaComparacao);
+        
     }
 }
+

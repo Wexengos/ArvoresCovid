@@ -23,7 +23,8 @@ public:
     int comparaData(int x,int *ch,Hashing *tabela,int i);
     void imprimeArvTXT(Hashing *tabela,std::ofstream& myfile);
     void imprimeArvTXTBusca(Hashing *tabela,std::ofstream& myfile,int k,int &cont);
-    void buscaCodigo(int codigo,Hashing *tabela,int &cont);
+    void buscaCodigo(int codigo,Hashing *tabela,int &cont,int &contaComparacao);
+   
 };
 
 
