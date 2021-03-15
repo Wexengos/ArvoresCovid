@@ -202,6 +202,7 @@ void Hashing::imprime()
     
 }
 
+
 void Hashing::imprimeTXT(std::ofstream& myfile)
 {   
     int i;

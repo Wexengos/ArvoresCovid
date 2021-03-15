@@ -110,12 +110,15 @@ void testeAvl(Registro *registro, int N)
     register int chave, id;
     AVLTree *avl = new AVLTree();
 
+    high_resolution_clock::time_point inicio = high_resolution_clock::now();
     for (int i = 0; i < N; i++)
     {
         chave = registro[i].getCodigoCidade() + registro[i].getDataInt();
         id = hash->insere(chave, &registro[i]);
         avl->insere(id, hash);
     }
+     high_resolution_clock::time_point fim = high_resolution_clock::now();
+     cout<<"Tempo de Insercao: "<<(duration_cast<duration<double>>(fim - inicio).count())<<endl;
 
     if (N <= 20)
     {
@@ -140,14 +143,17 @@ void testeAVB(Registro *registro, int N)
     Hashing *hash = new Hashing(N);
     int cont = 0;
     register int chave, id;
-    ArvB *arvB = new ArvB(20);
+    ArvB *arvB = new ArvB(200);
 
+    high_resolution_clock::time_point inicio = high_resolution_clock::now();
     for (int i = 0; i < N; i++)
     {
         chave = registro[i].getCodigoCidade() + registro[i].getDataInt();
         id = hash->insere(chave, &registro[i]);
         arvB->insereArvB(id, hash);
     }
+    high_resolution_clock::time_point fim = high_resolution_clock::now();
+    cout<<"Tempo de Insercao: "<<(duration_cast<duration<double>>(fim - inicio).count())<<endl;
 
     if (N <= 20)
     {
@@ -162,12 +168,9 @@ void testeAVB(Registro *registro, int N)
         arvB->imprimeArvTXT(hash, arq);
         
     }
-    int conti=0,conta=0;
-    high_resolution_clock::time_point inicio = high_resolution_clock::now();
-    arvB->buscaCodigo(315610,hash,conti,conta);
-    high_resolution_clock::time_point fim = high_resolution_clock::now();
-    cout<<"Tempo de busca: "<<(duration_cast<duration<double>>(fim - inicio).count())<<endl;
-
+   
+    
+   
     cout << "Teste finalizado" << endl;
     cout << endl;
     
@@ -233,14 +236,16 @@ void embaralhar(int *vet, int vetSize)
    
 
 }
+
 double insere(int tamanho,Hashing *hashing,int *idhash,ArvB *ar)
 {   
     high_resolution_clock::time_point inicio = high_resolution_clock::now();
+
     for(int j=0;j<tamanho;j++){
         ar->insereArvB(idhash[j],hashing);  
     }
+
     high_resolution_clock::time_point fim = high_resolution_clock::now();
-    
     return (duration_cast<duration<double>>(fim - inicio).count());
 
 }
@@ -251,8 +256,9 @@ void insere2(int tamanho,Hashing *hashing,int *idhash,AVLTree *ar)
         ar->insere(idhash[j],hashing);  
     }
 }
+
 //Funcao Para etapa 5 onde se geras as metricas para o txt
-void execArvB(ArvB *arv,int N,std::ofstream& myfile,int *idhash,Hashing *hash,int tam,int codigo)
+void execArvB(int TAM,int N,std::ofstream& myfile,int *idhash,Hashing *hash,int tam,int codigo)
 {
    
     
@@ -265,24 +271,22 @@ void execArvB(ArvB *arv,int N,std::ofstream& myfile,int *idhash,Hashing *hash,in
     int *comp = new int;
 
     //Faz o teste para as quantidades de registros
-    
     for (int exec = 0;exec < 5 ; exec++)
-    {
+    {   
+        ArvB *arvB = new ArvB(TAM);
         *c=0;
         *comp=0;
         myfile<<endl;
 
         myfile<<"Execução "<<exec+1<<endl;
-        double tempo = insere(N,hash,idhash,arv); 
-          
-
+        double tempo = insere(N,hash,idhash,arvB); 
         myfile<<"Tempo de inserção: "<<tempo<<endl;
         mediaTempoInsere = mediaTempoInsere + tempo;
         
 
         //Busca
         high_resolution_clock::time_point inicio2 = high_resolution_clock::now();
-        arv->buscaCodigo(codigo,hash,*c,*comp); 
+        arvB->buscaCodigo(codigo,hash,*c,*comp); 
         high_resolution_clock::time_point fim2 = high_resolution_clock::now();
 
         myfile<<"Tempo de Busca: "<<(duration_cast<duration<double>>(fim2 - inicio2).count())<<endl;
@@ -292,6 +296,7 @@ void execArvB(ArvB *arv,int N,std::ofstream& myfile,int *idhash,Hashing *hash,in
         comparaMedia=*comp;
         myfile<<endl;
     }
+
     myfile<<endl;
     myfile<<"A cidade: "<<hash->getNome(codigo)<<" teve casos: "<< val/5 <<endl;
     myfile << "Media de Tempo em 5 execs de inserção: " << mediaTempoInsere / 5 << endl;
@@ -303,61 +308,10 @@ void execArvB(ArvB *arv,int N,std::ofstream& myfile,int *idhash,Hashing *hash,in
     val=0;
 }
 
-//Funcao Para etapa 5 onde se geras as metricas para o txt
-void execArvB2(ArvB *arv,int N,std::ofstream& myfile,int *idhash,Hashing *hash,int tam,int codigo)
-{
-   
-    
-    int mediaComparacao = 0;
-    double mediaTempoInsere = 0;
-    double mediaBusca=0;
-    int val1;
-    int comparaMedia1;
-    int *c1 = new int;
-    int *comp1 = new int;
 
-    //Faz o teste para as quantidades de registros
-
-    for (int exec = 0;exec < 5 ; exec++)
-    {
-        *c1=0;
-        *comp1=0;
-        myfile<<endl;
-        myfile<<"Execução "<<exec+1<<endl;
-
-        high_resolution_clock::time_point inicio = high_resolution_clock::now();
-            insere(N,hash,idhash,arv);   
-        high_resolution_clock::time_point fim = high_resolution_clock::now();
-
-        myfile<<"Tempo de inserção: "<<(duration_cast<duration<double>>(fim - inicio).count())<<endl;
-        mediaTempoInsere = mediaTempoInsere + (duration_cast<duration<double>>(fim - inicio).count());
-      
-        //Busca
-        high_resolution_clock::time_point inicio2 = high_resolution_clock::now();
-        arv->buscaCodigo(codigo,hash,*c1,*comp1); 
-        high_resolution_clock::time_point fim2 = high_resolution_clock::now();
-        
-        myfile<<"Tempo de Busca: "<<(duration_cast<duration<double>>(fim2 - inicio2).count())<<endl;
-        mediaBusca = mediaBusca + (duration_cast<duration<double>>(fim2 - inicio2).count());
-
-        val1=*c1;
-        comparaMedia1=*comp1;
-        myfile<<endl;
-    }
-    myfile<<endl;
-    myfile<<"A cidade: "<<hash->getNome(codigo)<<" teve casos: "<< val1/5 <<endl;
-    myfile << "Media de Tempo em 5 execs de inserção: " << mediaTempoInsere / 5 << endl;
-    myfile << "Media de Busca em 5 execs: " << mediaBusca / 5 << endl;
-    myfile << "Media de Comparações em 5 execs: " << comparaMedia1/ 5 << endl;
-
-    delete c1;
-    delete comp1;
-    val1=0;
-
-}
 
 //Funcao Para etapa 5 onde se geras as metricas para o txt
-void execAVL(AVLTree *arv,int N,std::ofstream& myfile,int *idhash,Hashing *hash,int tam,int codigo)
+void execAVL(int N,std::ofstream& myfile,int *idhash,Hashing *hash,int tam,int codigo)
 {
     int mediaComparacao = 0;
     double mediaTempoInsere = 0;
@@ -373,13 +327,14 @@ void execAVL(AVLTree *arv,int N,std::ofstream& myfile,int *idhash,Hashing *hash,
     for (int exec = 0;exec < 5 ; exec++)
     {
         
+        AVLTree *arvl = new AVLTree();
         
         *cA=0;
         *comp2=0;
-         myfile<<endl;
+        myfile<<endl;
         myfile<<"Execução "<<exec+1<<endl;
         high_resolution_clock::time_point inicio = high_resolution_clock::now();
-        insere2(N,hash,idhash,arv);   
+        insere2(N,hash,idhash,arvl);   
         high_resolution_clock::time_point fim = high_resolution_clock::now();
         myfile<<"Tempo de inserção: "<<(duration_cast<duration<double>>(fim - inicio).count())<<endl;
         mediaTempoInsere = mediaTempoInsere + (duration_cast<duration<double>>(fim - inicio).count());
@@ -387,7 +342,7 @@ void execAVL(AVLTree *arv,int N,std::ofstream& myfile,int *idhash,Hashing *hash,
 
         //Busca
         high_resolution_clock::time_point inicio2 = high_resolution_clock::now();
-        arv->buscaCodigo(codigo,*cA,hash,*comp2); 
+        arvl->buscaCodigo(codigo,*cA,hash,*comp2); 
         high_resolution_clock::time_point fim2 = high_resolution_clock::now();
         myfile<<"Tempo de Busca: "<<(duration_cast<duration<double>>(fim2 - inicio2).count())<<endl;
         mediaBusca = mediaBusca + (duration_cast<duration<double>>(fim2 - inicio2).count());
@@ -432,33 +387,31 @@ void buscaCasosS1(Hashing *hashPrinci,int *idHash,int tam)
     ofstream arq1;
     arq1.open("saidaS1.txt", ios::ate | ios::out | ios::in);
 
-    ArvB *arvB = new ArvB(20);
-    ArvB *arvB1 = new ArvB(200);
-    AVLTree *arvl = new AVLTree();
-     arq1<<endl;
+    
+    
     arq1<<"Arvore B com norma(20)"<<endl;
-
     for(int i=0;i<5;i++){
         arq1<<endl;
         arq1<<"Arvore com "<<tamanhoN[i]<<" Registros"<<endl;
-        execArvB(arvB,tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
+        execArvB(20,tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
         
     }
     
     arq1<<endl;
     arq1<<"Arvore B com norma(200)"<<endl;
+
     for(int i=0;i<5;i++){
         arq1<<endl;
         arq1<<"Arvore com "<<tamanhoN[i]<<" Registros"<<endl;
-        execArvB2(arvB1,tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
+        execArvB(200,tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
     }
 
     arq1<<endl;
     arq1<<"Arvore AVL"<<endl;
     for(int i=0;i<5;i++){
-         arq1<<endl;
+        arq1<<endl;
         arq1<<"Arvore com "<<tamanhoN[i]<<" Registros"<<endl;
-        execAVL(arvl,tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
+        execAVL(tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
     }
 
 }
@@ -498,9 +451,8 @@ void funcaoS2(Hashing *hashPrinci,int *idHash,int tam,QuadTree *quadPrinci)
     }
     arq2<<"----------------------------------------------------"<<endl;
     
-    ArvB *arvB = new ArvB(20);
-    ArvB *arvB2 = new ArvB(200);
-    AVLTree *arvl = new AVLTree();
+  
+   
     
     
     for(int i=0;i<vet.size();i++){
@@ -510,11 +462,11 @@ void funcaoS2(Hashing *hashPrinci,int *idHash,int tam,QuadTree *quadPrinci)
             arq2<<endl;
             arq2<<"Arvore com "<<tamanhoN[j]<<endl;
             arq2<<"Arvore B com norma(20)"<<endl;
-            execArvB(arvB,tamanhoN[j],arq2,idHash,hashPrinci,tam,vet.at(i)->getCodigo());
+            execArvB(20,tamanhoN[j],arq2,idHash,hashPrinci,tam,vet.at(i)->getCodigo());
             arq2<<"Arvore B com norma(200)"<<endl;
-            execArvB2(arvB2,tamanhoN[i],arq2,idHash,hashPrinci,tam,vet.at(i)->getCodigo());
+            execArvB(200,tamanhoN[i],arq2,idHash,hashPrinci,tam,vet.at(i)->getCodigo());
             arq2<<"Arvore AVL"<<endl;
-            execAVL(arvl,tamanhoN[j],arq2,idHash,hashPrinci,tam,vet.at(i)->getCodigo());
+            execAVL(tamanhoN[j],arq2,idHash,hashPrinci,tam,vet.at(i)->getCodigo());
         }
          arq2<<endl;
     }
@@ -594,7 +546,6 @@ void menuPrincipal(Registro *registros,RegistroCoordinates *registrosCoord,Hashi
          break;
     case 5:
         cout << "Fechando Exec!" << endl;
-        cout << "Muito obrigado Caniato" << endl;
         exit(1);
         break;
        

@@ -84,7 +84,7 @@ RegistroCoordinates::~RegistroCoordinates() {}
 
 void RegistroCoordinates::leArquivoCoordi(RegistroCoordinates *r,int N)
 {
-    ifstream arq("brazil_cities_coordinates.csv");
+    ifstream arq("Arquivos/brazil_cities_coordinates.csv");
 
     if(!arq.is_open()){
         cout<<"ERRO LEITURA DE ARQUIVO!"<<endl;

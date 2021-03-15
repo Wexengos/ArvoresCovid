@@ -132,7 +132,7 @@ void Registro::escreveSaidaTxt(Registro *r, int size, string nomeSaidaArquivo)
 void Registro::leArquivo(Registro *r, int N,string nome)
 {
     cout<<nome<<endl;
-    ifstream arq("brazil_covid19_cities_processados.csv");
+    ifstream arq(nome);
     if (!arq.is_open())
     {
         cout << "Problema ao abrir o Arquivo!" << endl;
