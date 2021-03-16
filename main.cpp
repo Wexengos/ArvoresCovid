@@ -243,7 +243,6 @@ double insere(int tamanho,Hashing *hashing,int *idhash,ArvB *ar)
         ar->insereArvB(id,hashing);  
     }
     high_resolution_clock::time_point fim = high_resolution_clock::now();
-    cout<<(duration_cast<duration<double>>(fim - inicio).count());
     return (duration_cast<duration<double>>(fim - inicio).count());
 
 }
