@@ -16,6 +16,8 @@ private:
     Registro *tabelaHash;
     int tam;
     int chavesArmazenadas;
+    vector<int> tabeladeIndex;
+    
 
 public:
     Hashing(int tam);
@@ -38,6 +40,8 @@ public:
     int getCodigo(int i);
     int getData(int i);
     int getCasos(int i);
+    int getID(int i);
+    void embaralhar();
     int getTam(){return tam;};
     string getNome(int codigo);
     void casosTotaisCidadePorNome(string nome);

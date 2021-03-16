@@ -129,13 +129,7 @@ void NoArvB::buscaCodigo(int codigo, Hashing *tabela,int &cont,int &contaCompara
 {
     int i;
     
-    if(tabela->getCodigo(this->chaves[0]) > codigo)
-        return;
-
-    /*
-    if(folha == true)
-        return ;
-    */
+  
     for(i = 0; i<this->n;i++)
     {   
         contaComparacao = contaComparacao + 1;
@@ -146,8 +140,21 @@ void NoArvB::buscaCodigo(int codigo, Hashing *tabela,int &cont,int &contaCompara
         
         if(tabela->getCodigo(this->chaves[i]) == codigo)
         {   
+            contaComparacao = contaComparacao + 1;
             this->setComparacoes();
             cont = cont + tabela->getCasos(chaves[i]);
+        }
+
+        if(tabela->getCodigo(this->chaves[i]) > codigo){
+            contaComparacao = contaComparacao + 1;
+            break;
+            
+        }
+    
+        if(this->folha == true){
+            contaComparacao = contaComparacao + 1;
+            break;
+            
         }
 
         

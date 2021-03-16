@@ -117,8 +117,8 @@ void testeAvl(Registro *registro, int N)
         id = hash->insere(chave, &registro[i]);
         avl->insere(id, hash);
     }
-     high_resolution_clock::time_point fim = high_resolution_clock::now();
-     cout<<"Tempo de Insercao: "<<(duration_cast<duration<double>>(fim - inicio).count())<<endl;
+    high_resolution_clock::time_point fim = high_resolution_clock::now();
+    cout<<"Tempo de Insercao: "<<(duration_cast<duration<double>>(fim - inicio).count())<<endl;
 
     if (N <= 20)
     {
@@ -138,12 +138,12 @@ void testeAvl(Registro *registro, int N)
     cout << "Teste finalizado" << endl;
     hash->~Hashing();
 }
-void testeAVB(Registro *registro, int N)
+void testeAVB(Registro *registro, int N,int *idhash,int tam)
 {
     Hashing *hash = new Hashing(N);
     int cont = 0;
     register int chave, id;
-    ArvB *arvB = new ArvB(200);
+    ArvB *arvB = new ArvB(20);
 
     high_resolution_clock::time_point inicio = high_resolution_clock::now();
     for (int i = 0; i < N; i++)
@@ -154,9 +154,9 @@ void testeAVB(Registro *registro, int N)
     }
     high_resolution_clock::time_point fim = high_resolution_clock::now();
     cout<<"Tempo de Insercao: "<<(duration_cast<duration<double>>(fim - inicio).count())<<endl;
-
     if (N <= 20)
     {
+
         cout << "Saida no Console ===> Cidades Inseridas na Hash" << endl;
         arvB->imprimeArv(hash);
     }
@@ -191,7 +191,6 @@ void etapa1(RegistroCoordinates *registrosCoordinate, QuadTree *quadPrincipal)
             no->setLongitude(registrosCoordinate[i].getLongitude());
             no->setNome(registrosCoordinate[i].getcidade_nome());
             no->setCodigo(registrosCoordinate[i].getcidadeCodigo());
-           
             quadPrincipal->insere(no);
         }
   
@@ -233,19 +232,18 @@ void embaralhar(int *vet, int vetSize)
         }
     }
 
-   
-
 }
 
 double insere(int tamanho,Hashing *hashing,int *idhash,ArvB *ar)
 {   
     high_resolution_clock::time_point inicio = high_resolution_clock::now();
-
     for(int j=0;j<tamanho;j++){
-        ar->insereArvB(idhash[j],hashing);  
-    }
 
+        int id=hashing->getID(j);
+        ar->insereArvB(id,hashing);  
+    }
     high_resolution_clock::time_point fim = high_resolution_clock::now();
+    cout<<(duration_cast<duration<double>>(fim - inicio).count());
     return (duration_cast<duration<double>>(fim - inicio).count());
 
 }
@@ -253,7 +251,8 @@ double insere(int tamanho,Hashing *hashing,int *idhash,ArvB *ar)
 void insere2(int tamanho,Hashing *hashing,int *idhash,AVLTree *ar)
 {
     for(int j=0;j<tamanho;j++){
-        ar->insere(idhash[j],hashing);  
+      
+        ar->insere(hashing->getID(j),hashing);
     }
 }
 
@@ -375,35 +374,29 @@ void buscaCasosS1(Hashing *hashPrinci,int *idHash,int tam)
     cout<<"Escolha como quer buscar a cidade" << endl;
     cout<<"Digite o Codigo da cidade"<<endl;
     cin >> codigo;
-    //hashPrinci->casosTotaisCidade(codigo);
-
-    //Randomização
-    embaralhar(idHash,tam);//VETOR COM TODOS OS IDS GERADOS PELO HASHING SERA EMBARALHADO PARA GERAR IDS ALEATORIOS
-    srand(time(NULL));
+    hashPrinci->embaralhar();
     
-   
-
     criaArquivoSaidaTxt("saidaS1.txt");
     ofstream arq1;
     arq1.open("saidaS1.txt", ios::ate | ios::out | ios::in);
 
     
     
-    arq1<<"Arvore B com norma(20)"<<endl;
+    arq1<<"Arvore B com norma(10)"<<endl;
     for(int i=0;i<5;i++){
         arq1<<endl;
         arq1<<"Arvore com "<<tamanhoN[i]<<" Registros"<<endl;
-        execArvB(20,tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
+        execArvB(10,tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
         
     }
     
     arq1<<endl;
-    arq1<<"Arvore B com norma(200)"<<endl;
+    arq1<<"Arvore B com norma(100)"<<endl;
 
     for(int i=0;i<5;i++){
         arq1<<endl;
         arq1<<"Arvore com "<<tamanhoN[i]<<" Registros"<<endl;
-        execArvB(200,tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
+        execArvB(100,tamanhoN[i],arq1,idHash,hashPrinci,tam,codigo);
     }
 
     arq1<<endl;
@@ -605,7 +598,7 @@ void moduloTeste(Registro *registro, RegistroCoordinates *registroCidades,Hashin
         cout << "Digite N cidades que sera inseridas na ARV B" << endl;
         cin >> n;
         criaArquivoSaidaTxt("AvB.txt");
-        testeAVB(registro, n);
+        testeAVB(registro, n,idhash,t);
         moduloTeste(registro, registroCidades,hashPrinci,quadPrinci,idhash,t,nome);
 
         break;

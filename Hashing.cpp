@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <vector>
 #include <math.h>
+#include <algorithm> 
 #include <string>
 #include "Registro.h"
 #include "Hashing.h"
@@ -119,6 +120,7 @@ int Hashing::insere(int val,Registro *r)
                 chavesArmazenadas ++;
                 tabelaHash[novoh] = *r;
                 tabelaHash[novoh].setVisitado(true);
+                tabeladeIndex.push_back(h);
                 return novoh;
             }
             
@@ -131,57 +133,48 @@ int Hashing::insere(int val,Registro *r)
         chavesArmazenadas ++;
         tabelaHash[h] = *r;
         tabelaHash[h].setVisitado(true);
+        tabeladeIndex.push_back(h);
         return h;
     }
-
-     return h;
-
-}
-
-
-/*
-int Hashing::hash(int val)
-{
-    
-    double a = (sqrt(5)-1)/2;
-    int f1 = floor(((val * a) - floor(val * a)) * tam);
-    int f2 = 1+(val%17);
-    int i = 0;
-    int h = f1 +(i*f2); //((val%tam)+i)%tam; //f1 +(i*f2);
-
-
-    //Tratamento de colisão sodagem dupla
-    
-    
-}
-
-
-
-int Hashing::insere(int codigo, Registro r)
-{
-    
-    int h = hash(codigo);
-   
-    if(h == -1)
-    {
-        cout<<"nao foi possivel inserir o elemento "<<endl;
-    }
-    else
-    {   
-        tabelaHash[h] = r;
-        tabelaHash[h].setVisitado(true);
-        
-        
-        
-    }
+    tabeladeIndex.push_back(h);
     return h;
-    
-
-  
 
 }
 
-*/
+void Hashing::embaralhar()
+{
+     srand(time(NULL));
+	for (int i = 0; i < tam; i++)
+	{   
+        if(tabelaHash[i].getVisitado()==true){
+            int r = rand() % tam;
+
+            if(tabelaHash[r].getVisitado()==true)
+            {
+                Registro temp = tabelaHash[i];
+                tabelaHash[i] = tabelaHash[r];
+                tabelaHash[r] = temp;
+            }
+        }
+    }
+}
+
+int Hashing::getID(int i)
+{   
+   
+    if(tabelaHash[i].getVisitado()==true)
+    {
+        return i;
+    }else{
+
+        while (tabelaHash[i].getVisitado()==false)
+        {
+           i++;
+        }
+        return i;
+    }
+}
+
 int Hashing::getChavesArmazenadas()
 {
     return chavesArmazenadas;
