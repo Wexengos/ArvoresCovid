@@ -143,7 +143,7 @@ int Hashing::insere(int val,Registro *r)
 
 void Hashing::embaralhar()
 {
-     srand(time(NULL));
+    srand(time(NULL));
 	for (int i = 0; i < tam; i++)
 	{   
         if(tabelaHash[i].getVisitado()==true){

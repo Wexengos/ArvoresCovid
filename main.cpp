@@ -411,7 +411,7 @@ void buscaCasosS1(Hashing *hashPrinci,int *idHash,int tam)
 void funcaoS2(Hashing *hashPrinci,int *idHash,int tam,QuadTree *quadPrinci)
 {
      
-    embaralhar(idHash,tam);//VETOR COM TODOS OS IDS GERADOS PELO HASHING SERA EMBARALHADO PARA GERAR IDS ALEATORIOS
+    hashPrinci->embaralhar();//VETOR COM TODOS OS IDS GERADOS PELO HASHING SERA EMBARALHADO PARA GERAR IDS ALEATORIOS
     srand(time(NULL));
     int tamanhoN[] = {10000, 50000, 100000, 500000, 1000000};
     float x0,y0,x,y;
@@ -443,10 +443,6 @@ void funcaoS2(Hashing *hashPrinci,int *idHash,int tam,QuadTree *quadPrinci)
     }
     arq2<<"----------------------------------------------------"<<endl;
     
-  
-   
-    
-    
     for(int i=0;i<vet.size();i++){
         arq2<<endl;
 
@@ -454,9 +450,9 @@ void funcaoS2(Hashing *hashPrinci,int *idHash,int tam,QuadTree *quadPrinci)
             arq2<<endl;
             arq2<<"Arvore com "<<tamanhoN[j]<<endl;
             arq2<<"Arvore B com norma(20)"<<endl;
-            execArvB(20,tamanhoN[j],arq2,idHash,hashPrinci,tam,vet.at(i)->getCodigo());
+            execArvB(10,tamanhoN[j],arq2,idHash,hashPrinci,tam,vet.at(i)->getCodigo());
             arq2<<"Arvore B com norma(200)"<<endl;
-            execArvB(200,tamanhoN[i],arq2,idHash,hashPrinci,tam,vet.at(i)->getCodigo());
+            execArvB(100,tamanhoN[i],arq2,idHash,hashPrinci,tam,vet.at(i)->getCodigo());
             arq2<<"Arvore AVL"<<endl;
             execAVL(tamanhoN[j],arq2,idHash,hashPrinci,tam,vet.at(i)->getCodigo());
         }
@@ -485,12 +481,6 @@ void etapa5(Hashing *hashPrinci,QuadTree *quadPrinci,int *idHash,int tam)
     {
         funcaoS2(hashPrinci,idHash,tam,quadPrinci);
     }
-
-    
-  
-    
-
-
 }
 //Menu Princicipal
 void menuPrincipal(Registro *registros,RegistroCoordinates *registrosCoord,Hashing *hashPrinci,QuadTree *quadPrinci,int *idhash,int t,string nomeArq)
